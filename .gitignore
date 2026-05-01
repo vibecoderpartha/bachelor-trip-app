@@ -4,3 +4,9 @@ dist
 .env.local
 .DS_Store
 *.local
+
+# Emergent platform internals (do not commit)
+.emergent/
+memory/
+test_reports/
+/frontend

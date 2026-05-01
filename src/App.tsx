@@ -92,7 +92,7 @@ export function App() {
           </p>
           <BaliTitle />
           <p className="font-mono text-center mt-1 mb-3" style={{ fontSize: 9, letterSpacing: 3, color: '#333' }}>
-            JUN 14–19 · SEMINYAK · NUSA PENIDA · AMED
+            MAY 22–27 · SEMINYAK · NUSA PENIDA · AMED
           </p>
           <UserChips activeUser={user} onSelect={handleSelect} />
           {user && (
@@ -108,7 +108,7 @@ export function App() {
             <>
               {activeTab === 'trip'  && <TripTab user={user} />}
               {activeTab === 'scan'  && <ScanTab />}
-              {activeTab === 'split' && <SplitTab />}
+              {activeTab === 'split' && <SplitTab user={user} />}
               {activeTab === 'fx'    && <FXTab />}
               {activeTab === 'ai'    && <AITab />}
             </>
