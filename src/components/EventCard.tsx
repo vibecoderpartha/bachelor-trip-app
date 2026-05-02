@@ -91,10 +91,19 @@ export function EventCard({ event, status, onDelete }: Props) {
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete() }}
                 className="font-ui"
-                style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1, padding: '2px 4px', background: 'none', border: 'none', cursor: 'pointer' }}
-                title="Remove event"
+                style={{
+                  fontSize: 12,
+                  color: '#fff',
+                  background: '#FF2D78',
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '4px 10px',
+                  cursor: 'pointer',
+                  letterSpacing: 0.3,
+                  fontWeight: 500,
+                }}
               >
-                ×
+                Remove
               </button>
             )}
           </div>
