@@ -136,7 +136,7 @@ export function TripTab({ user }: Props) {
                     event={e}
                     status={statusOf(e)}
                     userColor={user.color}
-                    onDelete={() => supabase.from('events').delete().eq('id', e.id)}
+                    onDelete={() => { supabase.from('events').delete().eq('id', e.id).then(() => {}) }}
                   />
                 ))}
               </div>
