@@ -5,6 +5,7 @@ import { computeBalances, settleUp } from '../lib/splitting'
 import { USER_MAP, type User } from '../constants/users'
 import { formatIDR, formatINR, toINR } from '../lib/currency'
 import { NeonBtn } from './ui/NeonBtn'
+import { Avatar } from './ui/Avatar'
 
 interface Props {
   currentUser: User
@@ -89,10 +90,10 @@ export function SettleUpModal({ currentUser, expenses, settlements, onClose }: P
                     data-testid={`settle-txn-${i}`}
                   >
                     <div className="flex items-center gap-2 flex-1 min-w-0">
-                      <span style={{ fontSize: 20 }}>{from?.emoji}</span>
+                      {from && <Avatar name={from.name} color={from.color} size={24} />}
                       <span className="serif-display" style={{ fontSize: 14, color: 'var(--text-primary)' }}>{from?.name}</span>
                       <span style={{ color: 'var(--text-quaternary)' }}>→</span>
-                      <span style={{ fontSize: 20 }}>{to?.emoji}</span>
+                      {to && <Avatar name={to.name} color={to.color} size={24} />}
                       <span className="serif-display" style={{ fontSize: 14, color: 'var(--text-primary)' }}>{to?.name}</span>
                     </div>
                     <div className="text-right">

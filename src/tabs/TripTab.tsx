@@ -3,6 +3,7 @@ import { type User } from '../constants/users'
 import { useEvents, userSeesEvent, type DBEvent } from '../hooks/useEvents'
 import { supabase } from '../lib/supabase'
 import { EditEventModal } from '../components/EditEventModal'
+import { AddEventModal } from '../components/AddEventModal'
 import { TabHero } from '../components/TabHero'
 import { EventCard, type EventStatus } from '../components/EventCard'
 import { CountdownClock } from '../components/CountdownClock'
@@ -15,6 +16,7 @@ export function TripTab({ user }: Props) {
   const { events, loading } = useEvents()
   const [showClock, setShowClock] = useState(false)
   const [editingEvent, setEditingEvent] = useState<DBEvent | null>(null)
+  const [showAddEvent, setShowAddEvent] = useState(false)
   const now = Date.now()
 
   const visible = useMemo(
@@ -100,9 +102,19 @@ export function TripTab({ user }: Props) {
             <p className="serif-eyebrow" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
               your itinerary
             </p>
-            <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.18em' }}>
-              {visible.length} ITEMS · WITA = IST + 2h30
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.18em' }}>
+                {visible.length} ITEMS · WITA = IST + 2h30
+              </span>
+              <button
+                onClick={() => setShowAddEvent(true)}
+                className="font-ui"
+                style={{ fontSize: 11, color: 'var(--accent)', background: 'none', border: '1px solid var(--accent)44', borderRadius: 8, padding: '3px 10px', cursor: 'pointer' }}
+                data-testid="add-event-btn"
+              >
+                + Add
+              </button>
+            </div>
           </div>
 
           <div className="relative" data-testid="trip-timeline">
@@ -149,6 +161,9 @@ export function TripTab({ user }: Props) {
       </div>
       {editingEvent && (
         <EditEventModal event={editingEvent} onClose={() => setEditingEvent(null)} />
+      )}
+      {showAddEvent && (
+        <AddEventModal currentUser={user} onClose={() => setShowAddEvent(false)} />
       )}
     </div>
   )

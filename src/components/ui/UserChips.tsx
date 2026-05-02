@@ -1,5 +1,6 @@
 import { type CSSProperties } from 'react'
 import { USERS, type User } from '../../constants/users'
+import { Avatar } from './Avatar'
 
 interface Props {
   activeUser: User | null
@@ -34,7 +35,7 @@ export function UserChips({ activeUser, onSelect, compact = false }: Props) {
             style={style}
             data-testid={`chip-${u.name.toLowerCase()}`}
           >
-            <span style={{ fontSize: compact ? 12 : 14 }}>{u.emoji}</span>
+            <Avatar name={u.name} color={u.color} size={compact ? 18 : 20} />
             <span>{u.name}</span>
           </button>
         )

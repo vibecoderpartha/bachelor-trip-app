@@ -1,5 +1,6 @@
 import { type CSSProperties } from 'react'
 import { USERS, type User } from '../constants/users'
+import { Avatar } from './ui/Avatar'
 
 interface Props {
   onSelect: (user: User) => void
@@ -65,7 +66,7 @@ export function PersonaPicker({ onSelect }: Props) {
             }}
             data-testid={`persona-${u.name.toLowerCase()}`}
           >
-            <span style={{ fontSize: 26 }}>{u.emoji}</span>
+            <Avatar name={u.name} color={u.color} size={44} />
             <div className="flex-1 min-w-0">
               <p
                 className="serif-display"

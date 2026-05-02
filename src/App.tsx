@@ -6,6 +6,7 @@ import { ScanTab } from './tabs/ScanTab'
 import { SplitTab } from './tabs/SplitTab'
 import { FXTab } from './tabs/FXTab'
 import { useCurrentUser } from './hooks/useCurrentUser'
+import { Avatar } from './components/ui/Avatar'
 import { type User } from './constants/users'
 import type { TabId } from './constants/tabAssets'
 
@@ -66,7 +67,7 @@ export function App() {
               data-testid="header-current-user"
               title={user.vibe}
             >
-              <span style={{ fontSize: 14 }}>{user.emoji}</span>
+              <Avatar name={user.name} color={user.color} size={22} />
               <span
                 className="font-ui"
                 style={{ fontSize: 13, color: 'var(--text-secondary)', letterSpacing: 0.5 }}

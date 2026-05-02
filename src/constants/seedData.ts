@@ -13,6 +13,7 @@ export interface SeedEvent {
   airline?: string
   terminal?: string
   color: string
+  gmap_url?: string
   expense?: {
     amount: number
     currency: string

@@ -1,6 +1,7 @@
 import { type CSSProperties } from 'react'
 import { type User, USERS } from '../constants/users'
 import { formatIDR, formatINR, toINR } from '../lib/currency'
+import { Avatar } from './ui/Avatar'
 
 interface Props {
   balances: Record<string, number>
@@ -69,7 +70,7 @@ export function BalanceHero({ balances, currentUser }: Props) {
           }
           return (
             <div key={user.name} style={cell} data-testid={`balance-roster-${user.name.toLowerCase()}`}>
-              <span style={{ fontSize: 16 }}>{user.emoji}</span>
+              <Avatar name={user.name} color={user.color} size={28} />
               <p
                 className="font-mono"
                 style={{

@@ -132,10 +132,34 @@ export function EventCard({ event, status, onDelete, onEdit }: Props) {
         </p>
 
         <div className="flex items-center justify-between gap-2">
-          <div className="flex gap-1" data-testid={`event-crew-${event.id}`}>
-            {crewEmojis.map((e, i) => (
-              <span key={i} style={{ fontSize: 13, opacity: 0.85 }}>{e}</span>
-            ))}
+          <div className="flex items-center gap-1.5">
+            <div className="flex gap-1" data-testid={`event-crew-${event.id}`}>
+              {crewEmojis.map((e, i) => (
+                <span key={i} style={{ fontSize: 13, opacity: 0.85 }}>{e}</span>
+              ))}
+            </div>
+            {event.gmap_url && (
+              <a
+                href={event.gmap_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="font-ui"
+                style={{
+                  fontSize: 10,
+                  color: 'var(--text-tertiary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 6,
+                  padding: '2px 7px',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 3,
+                }}
+              >
+                <span>↗</span> Maps
+              </a>
+            )}
           </div>
           {event.expense && (
             <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
