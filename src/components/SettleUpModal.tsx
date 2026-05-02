@@ -35,16 +35,15 @@ export function SettleUpModal({ currentUser, expenses, settlements, onClose }: P
     position: 'fixed', inset: 0, zIndex: 200,
     background: 'rgba(15, 11, 8, 0.78)',
     backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
   }
   const sheet: CSSProperties = {
     width: '100%', maxWidth: 480,
     background: 'var(--bg-elevated)',
     border: '1px solid var(--border)',
-    borderBottom: 'none',
-    borderRadius: '20px 20px 0 0',
+    borderRadius: 20,
     padding: 22,
-    maxHeight: '92vh',
+    maxHeight: '88vh',
     overflowY: 'auto',
   }
 

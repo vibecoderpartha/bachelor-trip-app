@@ -83,6 +83,12 @@ export function ScanTab({ user }: { user: User }) {
   const getPublicUrl = (path: string) =>
     supabase.storage.from('tickets').getPublicUrl(path).data.publicUrl
 
+  const deleteDoc = async (id: string, storagePath: string) => {
+    await supabase.storage.from('tickets').remove([storagePath])
+    await supabase.from('events').delete().eq('id', id)
+    setScannedDocs(prev => prev.filter(d => d.id !== id))
+  }
+
   return (
     <div data-testid="scan-tab">
       <TabHero tab="scan" user={user} />
@@ -221,15 +227,24 @@ export function ScanTab({ user }: { user: User }) {
                     {formatDate(doc.date_ist)}
                   </span>
                 </div>
-                <a
-                  href={getPublicUrl(doc.doc_storage_path)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-ui ml-3 shrink-0"
-                  style={{ fontSize: 12, color: 'var(--accent)', textDecoration: 'none' }}
-                >
-                  View ↗
-                </a>
+                <div className="flex items-center gap-3 ml-3 shrink-0">
+                  <a
+                    href={getPublicUrl(doc.doc_storage_path)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-ui"
+                    style={{ fontSize: 12, color: 'var(--accent)', textDecoration: 'none' }}
+                  >
+                    View ↗
+                  </a>
+                  <button
+                    onClick={() => deleteDoc(doc.id, doc.doc_storage_path)}
+                    className="font-ui"
+                    style={{ fontSize: 12, color: '#fff', background: '#FF2D78', border: 'none', borderRadius: 6, padding: '3px 8px', cursor: 'pointer', fontWeight: 500 }}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>
