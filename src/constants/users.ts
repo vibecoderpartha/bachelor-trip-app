@@ -9,11 +9,11 @@ export interface User {
 }
 
 export const USERS: User[] = [
-  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'Made a 47-slide trip deck. Nobody opened it.',            image: `${STORAGE}/partha.png`   },
-  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'Bali, sure. Whatever. Pass the drink.',                    image: `${STORAGE}/astitva.png`  },
-  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'Has an opening line ready. Has had it for 3 years.',       image: `${STORAGE}/vaibhav.png`  },
+  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'The bachelor. The legend. The reason we\'re all in Bali.',  image: `${STORAGE}/partha.png`   },
+  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'Bill? Split it. Flight? Book it. Thinking? Not tonight.',  image: `${STORAGE}/astitva.png`  },
+  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'Made eye contact with a girl. Ordered another drink.',     image: `${STORAGE}/vaibhav.png`  },
   { name: 'Suryansh', emoji: '🐺', color: '#BF5FFF', vibe: 'Said "I\'m not even that drunk" and fell asleep standing.', image: `${STORAGE}/suryansh.png` },
-  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'Unbothered. Undefeated.',                                  image: `${STORAGE}/bittu.png`    },
+  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'Knows a guy in Bali. The guy does not know him.',          image: `${STORAGE}/bittu.png`    },
 ]
 
 export const USER_MAP: Record<string, User> = Object.fromEntries(
