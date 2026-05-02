@@ -88,38 +88,54 @@ Deno.serve(async (req) => {
             contentBlock,
             {
               type: 'text',
-              text: `Extract travel booking information from this document. Return ONLY a valid JSON object — no markdown fences, no explanation.
+              text: `You are extracting a flight/ferry/hotel booking from a ticket image or PDF.
 
-=== CRITICAL TIME RULES (read carefully) ===
-- "date_ist" = the DEPARTURE time (when the plane/ferry leaves). This is a clock time like "06:15" or "14:30", NOT a duration like "5h 30m".
-- "end_date_ist" = the ARRIVAL time (when you reach the destination). Again a clock time, NOT a duration.
-- NEVER use flight/journey duration (e.g. "2h 45m", "5h 10m") as a time. Duration is NOT a departure or arrival time.
-- If the ticket shows local times, convert to IST (UTC+5:30):
-    • Indian cities (DEL, BOM, BLR, etc.) are already IST — no conversion needed.
-    • Bali / Indonesia (DPS, Denpasar) is WITA (UTC+8) — subtract 2h30m to get IST.
-    • Example: Bali departure 09:00 WITA → 06:30 IST → "2026-05-22T06:30:00+05:30"
-- If a time is ambiguous, prefer the earlier-looking time as departure and the later one as arrival.
-- For hotels: date_ist = check-in datetime, end_date_ist = check-out datetime.
+STEP 1 — IDENTIFY TIMES (do this mentally before writing JSON):
+A ticket contains TWO completely different kinds of numbers that look similar. Do NOT confuse them:
 
-=== FIELDS ===
+  DEPARTURE TIME — a 24-hour clock time printed next to the word "Departs", "Departure", "STD", or the origin airport code.
+    • Looks like: 06:15  14:30  23:55  (hours 00–23, minutes 00–59)
+    • The hours can be 0–23. Minutes can be 0–59.
+    • This is what goes in "date_ist".
+
+  FLIGHT DURATION — how long the journey takes. Printed between the two times or near an arrow.
+    • Looks like: 5h 30m  2h 45m  3h 10m  or  5:30h
+    • Duration hours are usually 1–12. It ALWAYS has an "h" or "hrs" or "hours" label.
+    • THIS IS NOT A TIME. NEVER put this in date_ist or end_date_ist.
+
+  ARRIVAL TIME — a 24-hour clock time next to "Arrives", "Arrival", "STA", or the destination airport code.
+    • Same format as departure time. This is what goes in "end_date_ist".
+
+EXAMPLE — given a ticket showing:
+  DEL 06:15  ——5h 30m——  DPS 11:45+1  (or 14:15 IST)
+  → date_ist = "2026-05-22T06:15:00+05:30"   (departure 06:15 IST)
+  → end_date_ist = "2026-05-22T11:45:00+05:30"  (arrival in local time converted to IST)
+  WRONG would be: date_ist using "05:30" (that's the duration, not a time)
+
+TIMEZONE CONVERSIONS:
+  • India (DEL, BOM, BLR, CCU, MAA…) = IST (UTC+5:30) — no change needed.
+  • Bali / Indonesia (DPS, Denpasar) = WITA (UTC+8) — subtract 2h 30m to convert to IST.
+    Example: 09:00 WITA → 06:30 IST
+
+STEP 2 — OUTPUT this exact JSON and nothing else (no markdown fences):
 {
-  "type": "flight" | "hotel" | "ferry" | "activity" | "food" | "transport",
-  "title": "<airline + flight number + route, e.g. IndiGo 6E-123 · DEL → DPS>",
-  "date_ist": "<ISO 8601 DEPARTURE timestamp in IST, e.g. 2026-05-22T06:15:00+05:30>",
-  "end_date_ist": "<ISO 8601 ARRIVAL timestamp in IST, or null>",
-  "location": "<departure airport / terminal / venue>",
-  "location_to": "<arrival airport / destination, or null>",
-  "notes": "<seat numbers, check-in time, baggage allowance, booking instructions, or null>",
-  "dep_code": "<IATA 3-letter departure code or null>",
-  "arr_code": "<IATA 3-letter arrival code or null>",
-  "flight_no": "<flight number e.g. 6E-123, or null>",
+  "type": "flight" | "hotel" | "ferry" | "activity" | "transport",
+  "title": "<Airline FlightNo · DEP → ARR, e.g. IndiGo 6E-123 · DEL → DPS>",
+  "date_ist": "<ISO 8601 DEPARTURE clock-time in IST, e.g. 2026-05-22T06:15:00+05:30>",
+  "end_date_ist": "<ISO 8601 ARRIVAL clock-time in IST, or null>",
+  "location": "<departure airport / terminal / hotel name>",
+  "location_to": "<arrival airport or null>",
+  "notes": "<seat, check-in time, baggage, PNR details — or null>",
+  "dep_code": "<IATA 3-letter code or null>",
+  "arr_code": "<IATA 3-letter code or null>",
+  "flight_no": "<e.g. 6E-123 or null>",
   "airline": "<airline name or null>",
-  "terminal": "<terminal name/number or null>",
-  "booking_ref": "<PNR / booking reference or null>",
+  "terminal": "<terminal info or null>",
+  "booking_ref": "<PNR / booking ref or null>",
   "for_users": null
 }
 
-This trip is 22–27 May 2026. If the document does not show a year, use 2026.`,
+This trip is 22–27 May 2026. If no year is shown, use 2026.`,
             },
           ],
         }],
