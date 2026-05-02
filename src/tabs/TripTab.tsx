@@ -113,17 +113,16 @@ export function TripTab({ user }: Props) {
                   <button
                     key={t}
                     onClick={() => setTz(t)}
-                    className="font-mono transition-all"
+                    className="font-ui transition-all"
                     style={{
                       fontSize: 10,
                       padding: '3px 10px',
-                      letterSpacing: '0.1em',
                       background: tz === t ? 'var(--accent)' : 'transparent',
                       color: tz === t ? '#1A0A03' : 'var(--text-tertiary)',
                       fontWeight: tz === t ? 600 : 400,
                     }}
                   >
-                    {t}
+                    {t === 'IST' ? 'India' : 'Bali'}
                   </button>
                 ))}
               </div>
