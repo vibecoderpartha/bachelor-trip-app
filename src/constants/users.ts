@@ -9,11 +9,11 @@ export interface User {
 }
 
 export const USERS: User[] = [
-  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'Planned the entire Bali trip. The boys said "haan haan" for 6 months and showed up with 0 ideas. Still the alpha.',  image: `${STORAGE}/partha.png`   },
-  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'Screamed "LET\'S GOOO" at every beach, every temple, every menu. Bali didn\'t know what hit it.',                    image: `${STORAGE}/astitva.png`  },
-  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'Asked the bartender for "something smooth." Got a Bintang. Said "perfect." No notes.',                               image: `${STORAGE}/vaibhav.png`  },
-  { name: 'Suryansh', emoji: '🐺', color: '#BF5FFF', vibe: 'Rented a scooter with no license, no helmet, no idea where he\'s going. Bali\'s problem now.',                       image: `${STORAGE}/suryansh.png` },
-  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'Showed up to a beach club in jeans. Paid the most. Complained the least. Actual legend.',                            image: `${STORAGE}/bittu.png`    },
+  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'Carries sunscreen for everyone. Uses none.',              image: `${STORAGE}/partha.png`   },
+  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'Ordered the most expensive thing. Venmo requested.',       image: `${STORAGE}/astitva.png`  },
+  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'Checked in online. Still arrived last.',                   image: `${STORAGE}/vaibhav.png`  },
+  { name: 'Suryansh', emoji: '🐺', color: '#BF5FFF', vibe: 'Said "I\'m not even that drunk" and fell asleep standing.', image: `${STORAGE}/suryansh.png` },
+  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'Knows a guy in Bali. The guy does not know him.',          image: `${STORAGE}/bittu.png`    },
 ]
 
 export const USER_MAP: Record<string, User> = Object.fromEntries(
