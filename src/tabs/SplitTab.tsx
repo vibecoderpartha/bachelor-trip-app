@@ -10,7 +10,7 @@ import { AddExpenseModal } from '../components/AddExpenseModal'
 import { EditExpenseModal } from '../components/EditExpenseModal'
 import { SettleUpModal } from '../components/SettleUpModal'
 import { NeonBtn } from '../components/ui/NeonBtn'
-import { formatIDR } from '../lib/currency'
+import { formatIDR, formatINR, toINR } from '../lib/currency'
 
 interface Props { user: User }
 
@@ -46,7 +46,7 @@ export function SplitTab({ user }: Props) {
               expense log
             </p>
             <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.18em' }}>
-              POOL · {formatIDR(totalPool)}
+              POOL · {formatINR(toINR(totalPool))}
             </span>
           </div>
 
@@ -82,9 +82,14 @@ export function SplitTab({ user }: Props) {
                   <p className="font-ui" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
                     {s.from_user} → {s.to_user}
                   </p>
-                  <p className="serif-display" style={{ fontSize: 13, color: 'var(--text-primary)' }}>
-                    {formatIDR(Number(s.amount))}
-                  </p>
+                  <div className="text-right">
+                    <p className="serif-display" style={{ fontSize: 13, color: 'var(--text-primary)' }}>
+                      {formatINR(toINR(Number(s.amount)))}
+                    </p>
+                    <p className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
+                      {formatIDR(Number(s.amount))}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

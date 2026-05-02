@@ -84,7 +84,7 @@ export function ExpenseCard({ expense: e, currentUserName, onEdit }: Props) {
         </div>
         <div className="flex items-center gap-2">
           <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
-            {formatIDR(perHead)} / head
+            {formatINR(toINR(perHead))} / head
           </p>
           {onEdit && (
             <button

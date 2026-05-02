@@ -97,8 +97,8 @@ export function SettleUpModal({ currentUser, expenses, settlements, onClose }: P
                       <span className="serif-display" style={{ fontSize: 14, color: 'var(--text-primary)' }}>{to?.name}</span>
                     </div>
                     <div className="text-right">
-                      <p className="serif-display" style={{ fontSize: 15, color: 'var(--text-primary)' }}>{formatIDR(t.amount)}</p>
-                      <p className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>≈ {formatINR(toINR(t.amount))}</p>
+                      <p className="serif-display" style={{ fontSize: 15, color: 'var(--text-primary)' }}>{formatINR(toINR(t.amount))}</p>
+                      <p className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-tertiary)' }}>{formatIDR(t.amount)}</p>
                     </div>
                     {mine && (
                       <NeonBtn

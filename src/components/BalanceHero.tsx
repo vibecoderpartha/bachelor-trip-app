@@ -79,7 +79,7 @@ export function BalanceHero({ balances, currentUser }: Props) {
                   letterSpacing: 0.3,
                 }}
               >
-                {neutral ? 'even' : `${owedByMe ? '−' : '+'}${formatIDR(abs)}`}
+                {neutral ? 'even' : `${owedByMe ? '−' : '+'}${formatINR(toINR(abs))}`}
               </p>
             </div>
           )
