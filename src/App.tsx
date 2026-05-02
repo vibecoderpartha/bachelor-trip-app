@@ -46,7 +46,7 @@ export function App() {
               className="serif-display"
               style={{ fontSize: 20, color: 'var(--text-primary)', fontWeight: 400 }}
             >
-              Bali Bachelor
+              Bakchodi in Bali
             </p>
             <p
               className="font-mono"

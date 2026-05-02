@@ -9,11 +9,11 @@ export interface User {
 }
 
 export const USERS: User[] = [
-  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'The Alpha',      image: `${STORAGE}/partha.png`   },
-  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'The Hype Man',   image: `${STORAGE}/astitva.png`  },
-  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'The Smooth One', image: `${STORAGE}/vaibhav.png`  },
-  { name: 'Suryansh', emoji: '🐺', color: '#BF5FFF', vibe: 'The Wild Card',  image: `${STORAGE}/suryansh.png` },
-  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'The Legend',     image: `${STORAGE}/bittu.png`    },
+  { name: 'Partha',   emoji: '🦁', color: '#FF2D78', vibe: 'Bali mein entry, dost log entry free',         image: `${STORAGE}/partha.png`   },
+  { name: 'Astitva',  emoji: '🐯', color: '#00FFD1', vibe: 'Beach pe hain, bill pe nahi sochte',           image: `${STORAGE}/astitva.png`  },
+  { name: 'Vaibhav',  emoji: '🦊', color: '#FFD600', vibe: 'Sunset dekha, cocktail piya, yaar ne photo li', image: `${STORAGE}/vaibhav.png`  },
+  { name: 'Suryansh', emoji: '🐺', color: '#BF5FFF', vibe: 'Plan kya hai? Plan hi nahi — yahi toh plan hai', image: `${STORAGE}/suryansh.png` },
+  { name: 'Bittu',    emoji: '🦅', color: '#FF6B00', vibe: 'Bali ek baar, yaadein baar baar',              image: `${STORAGE}/bittu.png`    },
 ]
 
 export const USER_MAP: Record<string, User> = Object.fromEntries(
