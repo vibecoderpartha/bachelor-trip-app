@@ -72,7 +72,7 @@ export function GroupTotals({ expenses }: Props) {
         style={{ gridTemplateColumns: '1fr 72px 72px 72px', borderBottom: '1px solid var(--border)' }}
       >
         <span />
-        {['Paid', 'Owed', 'Net'].map(label => (
+        {['Paid', 'Total Share', 'Net'].map(label => (
           <p key={label} className="font-ui text-right" style={{ fontSize: 9.5, color: 'var(--text-quaternary)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
             {label}
           </p>
