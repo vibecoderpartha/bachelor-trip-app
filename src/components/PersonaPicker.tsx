@@ -1,76 +1,91 @@
 import { type CSSProperties } from 'react'
 import { USERS, type User } from '../constants/users'
-import { NeonText } from './ui/NeonText'
 
 interface Props {
   onSelect: (user: User) => void
 }
 
 export function PersonaPicker({ onSelect }: Props) {
-  const overlayStyle: CSSProperties = {
+  const overlay: CSSProperties = {
     position: 'fixed',
     inset: 0,
     zIndex: 100,
-    background: 'rgba(5, 3, 8, 0.97)',
-    backdropFilter: 'blur(8px)',
+    background: 'rgba(15, 11, 8, 0.96)',
+    backdropFilter: 'blur(18px)',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '24px',
-    gap: '32px',
+    padding: '32px 24px',
+    gap: 28,
   }
 
   return (
-    <div style={overlayStyle}>
+    <div style={overlay} data-testid="persona-picker">
       <div className="text-center">
-        <p className="font-mono mb-2" style={{ fontSize: 9, letterSpacing: 6, color: '#444' }}>
-          ◈ THE BOYS ARE IN ◈
+        <p
+          className="font-mono"
+          style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.28em', marginBottom: 8 }}
+        >
+          MAY 22 — 27 · 2026
         </p>
-        <NeonText color="var(--neon-gold)" className="font-display text-2xl block animate-flicker">
-          B A L I  ✦  BACHELOR
-        </NeonText>
-        <p className="font-mono mt-3" style={{ fontSize: 10, letterSpacing: 4, color: '#555' }}>
-          WHO ARE YOU?
+        <p
+          className="serif-display"
+          style={{ fontSize: 36, color: 'var(--text-primary)', fontWeight: 400, lineHeight: 1.05 }}
+        >
+          Bali Bachelor
+        </p>
+        <p
+          className="serif-eyebrow"
+          style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 14, fontStyle: 'italic' }}
+        >
+          who are you?
         </p>
       </div>
 
-      <div className="flex flex-col gap-3 w-full max-w-[280px]">
-        {USERS.map(u => {
-          const btnStyle: CSSProperties = {
-            borderColor: `${u.color}44`,
-            background: `${u.color}0a`,
-            transition: 'all 0.2s ease',
-          }
-          return (
-            <button
-              key={u.name}
-              onClick={() => onSelect(u)}
-              className="flex items-center gap-4 border rounded-lg px-5 py-3 w-full text-left active:scale-95"
-              style={btnStyle}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = u.color
-                e.currentTarget.style.boxShadow = `0 0 16px ${u.color}44`
-                e.currentTarget.style.background = `${u.color}18`
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = `${u.color}44`
-                e.currentTarget.style.boxShadow = 'none'
-                e.currentTarget.style.background = `${u.color}0a`
-              }}
-            >
-              <span className="text-3xl">{u.emoji}</span>
-              <div>
-                <div className="font-display text-base tracking-wider" style={{ color: u.color }}>
-                  {u.name.toUpperCase()}
-                </div>
-                <div className="font-mono" style={{ fontSize: 10, color: `${u.color}88`, letterSpacing: 2 }}>
-                  {u.vibe}
-                </div>
-              </div>
-            </button>
-          )
-        })}
+      <div className="flex flex-col gap-2 w-full" style={{ maxWidth: 320 }}>
+        {USERS.map(u => (
+          <button
+            key={u.name}
+            onClick={() => onSelect(u)}
+            className="flex items-center gap-4 px-4 py-3 transition-all active:scale-[0.985]"
+            style={{
+              background: 'rgba(245, 241, 235, 0.03)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-md)',
+              textAlign: 'left',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'rgba(245, 241, 235, 0.06)'
+              e.currentTarget.style.borderColor = `${u.color}55`
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'rgba(245, 241, 235, 0.03)'
+              e.currentTarget.style.borderColor = 'var(--border)'
+            }}
+            data-testid={`persona-${u.name.toLowerCase()}`}
+          >
+            <span style={{ fontSize: 26 }}>{u.emoji}</span>
+            <div className="flex-1 min-w-0">
+              <p
+                className="serif-display"
+                style={{ fontSize: 17, color: 'var(--text-primary)', fontWeight: 400, lineHeight: 1.1 }}
+              >
+                {u.name}
+              </p>
+              <p
+                className="font-ui"
+                style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 1 }}
+              >
+                {u.vibe}
+              </p>
+            </div>
+            <span
+              aria-hidden="true"
+              style={{ width: 6, height: 6, borderRadius: '50%', background: u.color, opacity: 0.85 }}
+            />
+          </button>
+        ))}
       </div>
     </div>
   )

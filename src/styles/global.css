@@ -2,39 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Variables ─────────────────────────────────────── */
+/* ─── Palette ─────────────────────────────────────────────
+   Warm late-twilight base · sunset coral accent · per-user
+   neons preserved but used as quiet 1px markers, not floods.
+*/
 :root {
-  --bg-base: #050308;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --bg-base: #0F0B08;
+  --bg-elevated: #16110D;
+  --bg-card: rgba(245, 241, 235, 0.035);
+  --bg-card-hover: rgba(245, 241, 235, 0.06);
 
+  --text-primary: #F5F1EB;
+  --text-secondary: rgba(245, 241, 235, 0.62);
+  --text-tertiary: rgba(245, 241, 235, 0.38);
+  --text-quaternary: rgba(245, 241, 235, 0.18);
+
+  --border: rgba(245, 241, 235, 0.08);
+  --border-strong: rgba(245, 241, 235, 0.16);
+
+  --accent: #FF8B4D;          /* warm coral sunset */
+  --accent-deep: #E66B2C;
+  --accent-soft: rgba(255, 139, 77, 0.14);
+
+  /* per-user accents — kept as values, used sparingly */
   --neon-pink: #FF2D78;
   --neon-gold: #FFD600;
   --neon-cyan: #00FFD1;
   --neon-purple: #BF5FFF;
   --neon-orange: #FF6B00;
 
-  --user-partha: #FF2D78;
-  --user-astitva: #00FFD1;
-  --user-vaibhav: #FFD600;
-  --user-suryansh: #BF5FFF;
-  --user-bittu: #FF6B00;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-mono: 'Share Tech Mono', ui-monospace, monospace;
 
-  --font-display: 'Black Ops One', sans-serif;
-  --font-ui: 'Barlow Condensed', sans-serif;
-  --font-mono: 'Share Tech Mono', monospace;
-
-  --glow-sm: 0 0 8px currentColor;
-  --glow-md: 0 0 16px currentColor, 0 0 32px currentColor44;
-  --glow-lg: 0 0 20px currentColor, 0 0 40px currentColor66;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
 }
 
-/* ─── Base Reset ────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body, #root {
   height: 100%;
@@ -44,179 +51,116 @@ html, body, #root {
 
 body {
   background-color: var(--bg-base);
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: var(--font-ui);
+  font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
-/* ─── Scrollbar ─────────────────────────────────────────── */
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--neon-pink); border-radius: 1px; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
 
-/* ─── Keyframes ─────────────────────────────────────────── */
-@keyframes neonPulse {
-  0%, 100% { text-shadow: 0 0 20px currentColor, 0 0 40px currentColor66; }
-  50%       { text-shadow: 0 0 8px currentColor; }
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ─── Animations · subtle ─────────────────────────────── */
+@keyframes fadeIn   { from { opacity: 0; }                          to { opacity: 1; } }
+@keyframes slideUp  { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulseSoft { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+@keyframes spin     { to { transform: rotate(360deg); } }
+
+.animate-fade-in   { animation: fadeIn 0.45s ease-out both; }
+.animate-slide-up  { animation: slideUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-pulse-soft{ animation: pulseSoft 2.4s ease-in-out infinite; }
+.animate-spin-slow { animation: spin 1.6s linear infinite; }
+
+/* ─── Typography utilities ─────────────────────────────── */
+.font-display { font-family: var(--font-display); font-feature-settings: "ss01"; letter-spacing: -0.02em; }
+.font-ui      { font-family: var(--font-ui); }
+.font-mono    { font-family: var(--font-mono); letter-spacing: 0.04em; }
+
+/* Optical-size aware Fraunces */
+.serif-display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 96, "SOFT" 30, "wght" 400;
+  letter-spacing: -0.025em;
+}
+.serif-eyebrow {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 14, "SOFT" 50, "wght" 400;
+  font-style: italic;
+  letter-spacing: 0;
 }
 
-@keyframes scanlineBeam {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(100vh); }
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92%       { opacity: 1; }
-  93%       { opacity: 0.4; }
-  94%       { opacity: 1; }
-  97%       { opacity: 0.6; }
-}
-
-@keyframes countTick {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.06); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%       { transform: translateX(-8px); }
-  40%       { transform: translateX(8px); }
-  60%       { transform: translateX(-6px); }
-  80%       { transform: translateX(6px); }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ─── Scanline Overlay ──────────────────────────────────── */
-.scanlines {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 1px,
-    rgba(0, 0, 0, 0.08) 1px,
-    rgba(0, 0, 0, 0.08) 2px
-  );
-}
-
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 40%,
-    rgba(255, 255, 255, 0.015) 50%,
-    transparent 60%
-  );
-  animation: scanlineBeam 8s linear infinite;
-}
-
-/* ─── Corner Brackets ───────────────────────────────────── */
-.corner-bracket {
-  position: relative;
-}
-
-.corner-bracket::before,
-.corner-bracket::after {
-  content: '';
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border-color: currentColor;
-  border-style: solid;
-  opacity: 0.6;
-}
-
-.corner-bracket::before {
-  top: 0;
-  left: 0;
-  border-width: 1.5px 0 0 1.5px;
-}
-
-.corner-bracket::after {
-  bottom: 0;
-  right: 0;
-  border-width: 0 1.5px 1.5px 0;
-}
-
-/* ─── Neon Card ─────────────────────────────────────────── */
-.neon-card {
+/* ─── Surface · cards ─────────────────────────────────── */
+.surface {
   background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  transition: background 0.2s;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+.surface:hover { background: var(--bg-card-hover); border-color: var(--border-strong); }
+.surface-flat { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); }
 
-.neon-card:hover {
-  background: var(--bg-card-hover);
-}
+.divider { height: 1px; background: var(--border); }
 
-/* ─── Per-User Color Classes ────────────────────────────── */
-.user-partha   { color: var(--user-partha);   }
-.user-astitva  { color: var(--user-astitva);  }
-.user-vaibhav  { color: var(--user-vaibhav);  }
-.user-suryansh { color: var(--user-suryansh); }
-.user-bittu    { color: var(--user-bittu);    }
-
-/* Dynamic active-color via CSS variable set on #root or app container */
-.top-bar {
-  height: 2px;
-  background: var(--active-color, var(--neon-gold));
-  box-shadow: 0 0 8px var(--active-color, var(--neon-gold));
-  transition: background 0.4s, box-shadow 0.4s;
-}
-
+/* ─── Tab nav ─────────────────────────────────────────── */
 .nav-tab {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 8px 0;
+  gap: 4px;
+  padding: 10px 0 12px;
   background: none;
-  border-top: 2px solid transparent;
-  border-right: none;
-  border-bottom: none;
-  border-left: none;
+  border: none;
   cursor: pointer;
-  color: #444;
-  transition: all 0.25s ease;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+  position: relative;
+}
+.nav-tab.active { color: var(--text-primary); }
+.nav-tab.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
 }
 
-.nav-tab.active {
-  color: var(--active-color, var(--neon-gold));
-  border-top-color: var(--active-color, var(--neon-gold));
-  filter: drop-shadow(0 0 6px var(--active-color, var(--neon-gold)));
+/* ─── Pill ─────────────────────────────────────────────── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--border-strong);
+  background: rgba(245, 241, 235, 0.02);
+  color: var(--text-secondary);
 }
 
-/* ─── Typography Utilities ──────────────────────────────── */
-.font-display { font-family: var(--font-display); }
-.font-ui      { font-family: var(--font-ui); }
-.font-mono    { font-family: var(--font-mono); }
+/* ─── Hero gradient overlay ───────────────────────────── */
+.hero-fade {
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 11, 8, 0.15) 0%,
+    rgba(15, 11, 8, 0.35) 40%,
+    rgba(15, 11, 8, 0.85) 80%,
+    var(--bg-base) 100%
+  );
+}
 
-/* ─── Animation Utilities ───────────────────────────────── */
-.animate-flicker  { animation: flicker 4s ease-in-out infinite; }
-.animate-float    { animation: float 3s ease-in-out infinite; }
-.animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
-.animate-shake    { animation: shake 0.4s ease-out; }
-.animate-spin-slow { animation: spin 2s linear infinite; }
+/* ─── Inputs ──────────────────────────────────────────── */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }

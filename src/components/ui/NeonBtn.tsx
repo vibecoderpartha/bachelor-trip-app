@@ -3,27 +3,32 @@ import { type CSSProperties, type ReactNode, type ButtonHTMLAttributes } from 'r
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   color?: string
   children: ReactNode
-  variant?: 'solid' | 'outline'
+  variant?: 'solid' | 'outline' | 'ghost'
 }
 
-export function NeonBtn({ color = 'var(--neon-pink)', children, variant = 'solid', className = '', style: externalStyle, ...rest }: Props) {
-  const base: CSSProperties = variant === 'solid'
-    ? {
-        background: `${color}22`,
-        border: `1px solid ${color}`,
-        color,
-        boxShadow: `0 0 12px ${color}44`,
-      }
-    : {
-        background: 'transparent',
-        border: `1px solid ${color}66`,
-        color,
-      }
+export function NeonBtn({
+  color = 'var(--accent)',
+  children,
+  variant = 'solid',
+  className = '',
+  style: externalStyle,
+  ...rest
+}: Props) {
+  const base: CSSProperties = (() => {
+    if (variant === 'solid')   return { background: color, border: `1px solid ${color}`, color: '#1A0A03' }
+    if (variant === 'outline') return { background: 'transparent', border: `1px solid ${color}55`, color }
+    return { background: 'rgba(245,241,235,0.04)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }
+  })()
 
   return (
     <button
-      className={`px-4 py-2 text-sm tracking-widest uppercase font-ui transition-all duration-200 hover:brightness-125 active:scale-95 rounded-sm ${className}`}
-      style={{ fontFamily: 'var(--font-ui)', ...base, ...externalStyle }}
+      className={`px-4 py-2.5 text-sm font-ui transition-all duration-200 hover:brightness-110 active:scale-[0.985] rounded-full ${className}`}
+      style={{
+        fontWeight: 500,
+        letterSpacing: 0.2,
+        ...base,
+        ...externalStyle,
+      }}
       {...rest}
     >
       {children}

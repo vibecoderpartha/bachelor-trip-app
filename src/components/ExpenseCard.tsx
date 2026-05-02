@@ -11,96 +11,78 @@ interface Props {
 export function ExpenseCard({ expense: e, currentUserName }: Props) {
   const payer = USER_MAP[e.paid_by]
   const inr = toINR(Number(e.amount_idr) || 0)
-  const perHead =
-    e.split_among && e.split_among.length
-      ? (Number(e.amount_idr) || 0) / e.split_among.length
-      : 0
-
+  const perHead = e.split_among.length ? (Number(e.amount_idr) || 0) / e.split_among.length : 0
   const iAmIn = e.split_among.includes(currentUserName)
-  const iPaid = e.paid_by === currentUserName
 
-  const cardStyle: CSSProperties = {
-    background: 'rgba(255,255,255,0.03)',
-    border: `1px solid ${iAmIn || iPaid ? `${payer?.color ?? '#fff'}22` : 'rgba(255,255,255,0.05)'}`,
-    borderRadius: 8,
-    padding: 12,
+  const card: CSSProperties = {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-md)',
+    padding: 14,
+    transition: 'background-color 0.2s, border-color 0.2s',
+    opacity: iAmIn || e.paid_by === currentUserName ? 1 : 0.85,
   }
 
   return (
-    <div style={cardStyle} data-testid={`expense-card-${e.id}`}>
-      <div className="flex items-start justify-between gap-2 mb-1">
-        <div className="flex items-center gap-2 min-w-0 flex-1">
+    <div style={card} data-testid={`expense-card-${e.id}`}>
+      <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
           <span
             style={{
-              fontSize: 20,
+              fontSize: 18,
               width: 36,
               height: 36,
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: '50%',
-              border: `2px solid ${payer?.color ?? '#fff'}`,
-              boxShadow: `0 0 10px ${payer?.color ?? '#fff'}44`,
+              background: 'var(--bg-elevated)',
+              border: `1px solid ${payer?.color ?? 'var(--border)'}66`,
               flexShrink: 0,
             }}
           >
-            {payer?.emoji ?? '◆'}
+            {payer?.emoji ?? '·'}
           </span>
           <div className="min-w-0">
             <p
-              className="font-ui tracking-wide truncate"
-              style={{ fontSize: 13, color: '#fff' }}
+              className="serif-display truncate"
+              style={{ fontSize: 15, color: 'var(--text-primary)', fontWeight: 400, lineHeight: 1.2 }}
             >
               {e.description}
             </p>
             <p
-              className="font-mono"
-              style={{ fontSize: 10, color: '#666', letterSpacing: 1 }}
+              className="font-ui"
+              style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}
             >
-              {payer?.name.toUpperCase() ?? '—'} PAID
-              {e.split_mode !== 'equal' && ` · ${e.split_mode.toUpperCase()}`}
+              {payer?.name ?? '—'} paid
+              {e.split_mode !== 'equal' ? ` · ${e.split_mode}` : ''}
             </p>
           </div>
         </div>
         <div className="text-right flex-shrink-0">
           <p
-            className="font-display"
-            style={{
-              fontSize: 14,
-              color: payer?.color ?? '#fff',
-              textShadow: `0 0 6px ${payer?.color ?? '#fff'}55`,
-            }}
+            className="serif-display"
+            style={{ fontSize: 16, color: 'var(--text-primary)', fontWeight: 400 }}
           >
             {formatIDR(Number(e.amount_idr) || 0)}
           </p>
-          <p className="font-mono" style={{ fontSize: 9, color: '#555' }}>
+          <p className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
             ≈ {formatINR(inr)}
           </p>
         </div>
       </div>
 
       <div
-        className="flex items-center justify-between gap-2 mt-2 pt-2"
-        style={{ borderTop: '1px dashed rgba(255,255,255,0.05)' }}
+        className="flex items-center justify-between gap-2 pt-2"
+        style={{ borderTop: '1px solid var(--border)' }}
       >
         <div className="flex gap-0.5">
           {e.split_among.length === USERS.length
-            ? USERS.map(u => (
-                <span key={u.name} style={{ fontSize: 12, opacity: 0.85 }}>
-                  {u.emoji}
-                </span>
-              ))
-            : e.split_among.map(n => (
-                <span key={n} style={{ fontSize: 12, opacity: 0.85 }}>
-                  {USER_MAP[n]?.emoji ?? '◆'}
-                </span>
-              ))}
+            ? USERS.map(u => <span key={u.name} style={{ fontSize: 12, opacity: 0.85 }}>{u.emoji}</span>)
+            : e.split_among.map(n => <span key={n} style={{ fontSize: 12, opacity: 0.85 }}>{USER_MAP[n]?.emoji ?? '·'}</span>)}
         </div>
-        <p
-          className="font-mono"
-          style={{ fontSize: 10, color: '#888', letterSpacing: 1 }}
-        >
-          {formatIDR(perHead)} <span style={{ color: '#444' }}>/ head</span>
+        <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+          {formatIDR(perHead)} / head
         </p>
       </div>
     </div>

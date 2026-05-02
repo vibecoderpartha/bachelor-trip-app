@@ -8,230 +8,177 @@ interface Props {
   userColor: string
 }
 
-const CIRCUMFERENCE = 2 * Math.PI * 80 // ≈ 502.65
+const CIRCUMFERENCE = 2 * Math.PI * 78
 const ONE_DAY_MS = 86400000
 
-function pad(n: number): string {
-  return n.toString().padStart(2, '0')
-}
+function pad(n: number): string { return n.toString().padStart(2, '0') }
 
 export function CountdownClock({ event, userColor }: Props) {
-  const [countdown, setCountdown] = useState<CountdownParts>(() =>
+  const [c, setC] = useState<CountdownParts>(() =>
     event ? getCountdown(new Date(event.date_ist)) : { days: 0, hours: 0, minutes: 0, seconds: 0, totalMs: 0 },
   )
 
   useEffect(() => {
     if (!event) return
     const target = new Date(event.date_ist)
-    setCountdown(getCountdown(target))
-    const id = window.setInterval(() => {
-      setCountdown(getCountdown(target))
-    }, 1000)
+    setC(getCountdown(target))
+    const id = window.setInterval(() => setC(getCountdown(target)), 1000)
     return () => window.clearInterval(id)
   }, [event])
 
-  // ── No flight ─────────────────────────────────────────
+  const wrap: CSSProperties = {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-lg)',
+    padding: 22,
+  }
+
   if (!event) {
     return (
-      <div
-        className="neon-card corner-bracket text-center py-8 px-6"
-        style={{ color: 'var(--neon-gold)' }}
-        data-testid="countdown-no-flight"
-      >
-        <VIPBadge color="var(--neon-gold)">NO FLIGHT FOUND</VIPBadge>
-        <p className="font-mono mt-3" style={{ fontSize: 10, color: '#666', letterSpacing: 2 }}>
-          THE WHEELS HAVE LANDED · ENJOY BALI
+      <div style={wrap} className="text-center" data-testid="countdown-no-flight">
+        <VIPBadge color="var(--text-tertiary)">No flight scheduled</VIPBadge>
+        <p
+          className="font-ui mt-3"
+          style={{ fontSize: 13, color: 'var(--text-tertiary)' }}
+        >
+          The wheels have landed. Enjoy Bali.
         </p>
       </div>
     )
   }
 
   const dep = new Date(event.date_ist)
-  const departed = event.type === 'flight' && countdown.totalMs <= 0
+  const departed = event.type === 'flight' && c.totalMs <= 0
 
-  // ── Departed flight ───────────────────────────────────
   if (departed) {
     return (
-      <div
-        className="neon-card corner-bracket text-center py-6 px-6"
-        style={{ color: userColor }}
-        data-testid="countdown-departed"
-      >
-        <VIPBadge color={userColor}>DEPARTED</VIPBadge>
+      <div style={wrap} className="text-center" data-testid="countdown-departed">
+        <VIPBadge color={userColor}>Departed</VIPBadge>
         <p
-          className="font-display mt-3 tracking-widest"
-          style={{ fontSize: 22, color: userColor, textShadow: `0 0 12px ${userColor}` }}
+          className="serif-display mt-3"
+          style={{ fontSize: 28, color: 'var(--text-primary)', fontWeight: 400 }}
         >
-          {event.dep_code ?? '---'} → {event.arr_code ?? '---'}
+          {event.dep_code ?? '—'} → {event.arr_code ?? '—'}
         </p>
-        <div className="flex justify-center gap-6 mt-3 font-mono" style={{ fontSize: 11 }}>
-          <span style={{ color: userColor }}>
-            {fmtIST(dep)} <span style={{ color: '#555' }}>IST</span>
-          </span>
-          <span style={{ color: userColor }}>
-            {fmtWITA(dep)} <span style={{ color: '#555' }}>WITA</span>
-          </span>
-        </div>
+        <p className="font-mono mt-2" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+          {fmtIST(dep)} IST · {fmtWITA(dep)} WITA
+        </p>
       </div>
     )
   }
 
-  // ── Full clock ────────────────────────────────────────
-  const fraction = Math.min(1, Math.max(0, (ONE_DAY_MS - countdown.totalMs) / ONE_DAY_MS))
+  const fraction = Math.min(1, Math.max(0, (ONE_DAY_MS - c.totalMs) / ONE_DAY_MS))
   const dashOffset = CIRCUMFERENCE * (1 - fraction)
 
-  const ticks = Array.from({ length: 12 }, (_, i) => {
-    const a = (i / 12) * 2 * Math.PI - Math.PI / 2
-    return {
-      x1: 92 + Math.cos(a) * 74,
-      y1: 92 + Math.sin(a) * 74,
-      x2: 92 + Math.cos(a) * 68,
-      y2: 92 + Math.sin(a) * 68,
-    }
-  })
-
-  const arcStyle: CSSProperties = {
-    filter: `drop-shadow(0 0 8px ${userColor})`,
-    transition: 'stroke-dashoffset 1s linear',
-  }
-
   return (
-    <div
-      className="neon-card corner-bracket px-4 py-5 animate-slide-up"
-      style={{ color: userColor }}
-      data-testid="countdown-clock"
-    >
-      <div className="text-center mb-3">
-        <VIPBadge color="var(--neon-gold)">⚡ COUNTDOWN TO LIFTOFF</VIPBadge>
+    <div style={wrap} className="animate-slide-up" data-testid="countdown-clock">
+      <div className="flex items-center justify-between mb-4">
+        <p
+          className="serif-eyebrow"
+          style={{ fontSize: 12, color: 'var(--accent)' }}
+        >
+          countdown to liftoff
+        </p>
+        <VIPBadge color={userColor}>{event.flight_no ?? 'Flight'}</VIPBadge>
       </div>
 
-      {/* Route */}
-      <div className="flex items-center justify-center gap-2 mb-4">
+      <div className="flex items-baseline justify-center gap-3 mb-5">
         <span
-          className="font-display tracking-widest"
-          style={{ fontSize: 24, color: userColor, textShadow: `0 0 12px ${userColor}` }}
+          className="serif-display"
+          style={{ fontSize: 32, color: 'var(--text-primary)', fontWeight: 400 }}
         >
-          {event.dep_code ?? '---'}
+          {event.dep_code ?? '—'}
         </span>
-        <span style={{ flex: 1, height: 1, background: `${userColor}44`, maxWidth: 40 }} />
-        <span style={{ color: userColor, fontSize: 14 }}>✈</span>
-        <span style={{ flex: 1, height: 1, background: `${userColor}44`, maxWidth: 40 }} />
+        <span style={{ color: 'var(--text-quaternary)', fontSize: 14 }}>—</span>
+        <span style={{ color: 'var(--text-tertiary)', fontSize: 14 }}>✈</span>
+        <span style={{ color: 'var(--text-quaternary)', fontSize: 14 }}>—</span>
         <span
-          className="font-display tracking-widest"
-          style={{ fontSize: 24, color: userColor, textShadow: `0 0 12px ${userColor}` }}
+          className="serif-display"
+          style={{ fontSize: 32, color: 'var(--text-primary)', fontWeight: 400 }}
         >
-          {event.arr_code ?? '---'}
+          {event.arr_code ?? '—'}
         </span>
       </div>
 
-      {/* SVG dial */}
-      <div className="flex justify-center mb-4">
-        <svg width={184} height={184} viewBox="0 0 184 184">
+      <div className="flex justify-center mb-5">
+        <svg width={180} height={180} viewBox="0 0 180 180">
+          <circle cx={90} cy={90} r={78} fill="none" stroke="var(--border)" strokeWidth={3} />
           <circle
-            cx={92}
-            cy={92}
-            r={80}
+            cx={90}
+            cy={90}
+            r={78}
             fill="none"
-            stroke="rgba(255,255,255,0.08)"
-            strokeWidth={8}
-          />
-          <circle
-            cx={92}
-            cy={92}
-            r={80}
-            fill="none"
-            stroke={userColor}
-            strokeWidth={8}
-            strokeLinecap="square"
+            stroke="var(--accent)"
+            strokeWidth={3}
+            strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={dashOffset}
-            transform="rotate(-90 92 92)"
-            style={arcStyle}
+            transform="rotate(-90 90 90)"
+            style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
-          {ticks.map((t, i) => (
-            <line
-              key={i}
-              x1={t.x1}
-              y1={t.y1}
-              x2={t.x2}
-              y2={t.y2}
-              stroke="rgba(255,255,255,0.18)"
-              strokeWidth={1}
-            />
-          ))}
           <text
-            x={92}
-            y={72}
+            x={90}
+            y={68}
             textAnchor="middle"
-            className="font-display"
-            fill="#fff"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 16 }}
+            fill="var(--text-tertiary)"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.18em' }}
           >
-            {countdown.days}d
+            {c.days} DAYS
           </text>
           <text
-            x={92}
-            y={104}
+            x={90}
+            y={106}
             textAnchor="middle"
-            className="font-display"
-            fill={userColor}
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 32,
-              filter: `drop-shadow(0 0 6px ${userColor})`,
-            }}
+            fill="var(--text-primary)"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 38, fontWeight: 300, letterSpacing: '-0.04em' }}
           >
-            {pad(countdown.hours)}:{pad(countdown.minutes)}
+            {pad(c.hours)}:{pad(c.minutes)}
           </text>
           <text
-            x={92}
+            x={90}
             y={128}
             textAnchor="middle"
-            fill={userColor}
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 18,
-              opacity: 0.85,
-            }}
+            fill="var(--text-tertiary)"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 12 }}
           >
-            {pad(countdown.seconds)}
+            :{pad(c.seconds)}
           </text>
         </svg>
       </div>
 
-      {/* IST / WITA */}
-      <div className="grid grid-cols-2 gap-2 mb-3">
+      <div className="grid grid-cols-2 gap-3">
         <div
-          className="text-center py-2 rounded-sm"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '10px 12px',
+            textAlign: 'center',
+          }}
         >
-          <p className="font-display" style={{ fontSize: 16, color: userColor }}>{fmtIST(dep)}</p>
-          <p className="font-mono" style={{ fontSize: 9, color: '#666', letterSpacing: 3 }}>IST</p>
+          <p className="serif-display" style={{ fontSize: 17, color: 'var(--text-primary)' }}>{fmtIST(dep)}</p>
+          <p className="font-mono" style={{ fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.2em', marginTop: 2 }}>IST</p>
         </div>
         <div
-          className="text-center py-2 rounded-sm"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '10px 12px',
+            textAlign: 'center',
+          }}
         >
-          <p className="font-display" style={{ fontSize: 16, color: userColor }}>{fmtWITA(dep)}</p>
-          <p className="font-mono" style={{ fontSize: 9, color: '#666', letterSpacing: 3 }}>WITA</p>
+          <p className="serif-display" style={{ fontSize: 17, color: 'var(--text-primary)' }}>{fmtWITA(dep)}</p>
+          <p className="font-mono" style={{ fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.2em', marginTop: 2 }}>WITA</p>
         </div>
       </div>
 
-      {/* Info */}
-      <div
-        className="font-mono px-3 py-2 rounded-sm"
-        style={{
-          fontSize: 10,
-          color: '#888',
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.04)',
-          letterSpacing: 1,
-        }}
+      <p
+        className="font-ui mt-3"
+        style={{ fontSize: 11, color: 'var(--text-tertiary)', textAlign: 'center' }}
       >
-        {[event.airline, event.flight_no].filter(Boolean).join(' ')}
-        {event.terminal ? ` · ${event.terminal}` : ''}
-        {event.notes ? ` · ${event.notes}` : ''}
-      </div>
+        {[event.airline, event.flight_no, event.terminal].filter(Boolean).join(' · ')}
+      </p>
     </div>
   )
 }

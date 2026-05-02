@@ -9,25 +9,33 @@ interface Props {
 
 export function UserChips({ activeUser, onSelect, compact = false }: Props) {
   return (
-    <div className="flex gap-2 justify-center flex-wrap">
+    <div className={`flex ${compact ? 'gap-1.5' : 'gap-2'} justify-start overflow-x-auto`} style={{ scrollbarWidth: 'none' }}>
       {USERS.map(u => {
-        const isActive = activeUser?.name === u.name
-        const chipStyle: CSSProperties = {
-          borderColor: isActive ? u.color : `${u.color}44`,
-          color: isActive ? u.color : `${u.color}99`,
-          boxShadow: isActive ? `0 0 12px ${u.color}66, 0 0 24px ${u.color}33` : 'none',
-          background: isActive ? `${u.color}15` : 'transparent',
-          transition: 'all 0.25s ease',
+        const active = activeUser?.name === u.name
+        const style: CSSProperties = {
+          flex: '0 0 auto',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: compact ? 5 : 6,
+          padding: compact ? '4px 9px' : '6px 12px',
+          borderRadius: 999,
+          fontSize: compact ? 11 : 12,
+          fontFamily: 'var(--font-ui)',
+          letterSpacing: 0.3,
+          background: active ? 'rgba(245,241,235,0.08)' : 'rgba(245,241,235,0.02)',
+          border: `1px solid ${active ? `${u.color}88` : 'var(--border)'}`,
+          color: active ? 'var(--text-primary)' : 'var(--text-tertiary)',
+          transition: 'all 0.2s ease',
         }
         return (
           <button
             key={u.name}
             onClick={() => onSelect(u)}
-            className={`border rounded-sm flex items-center gap-1.5 font-ui tracking-wider uppercase transition-all ${compact ? 'px-2 py-0.5 text-[10px]' : 'px-3 py-1 text-xs'}`}
-            style={chipStyle}
+            style={style}
+            data-testid={`chip-${u.name.toLowerCase()}`}
           >
-            <span>{u.emoji}</span>
-            {!compact && <span>{u.name.toUpperCase()}</span>}
+            <span style={{ fontSize: compact ? 12 : 14 }}>{u.emoji}</span>
+            <span>{u.name}</span>
           </button>
         )
       })}

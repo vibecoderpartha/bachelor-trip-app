@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from 'react'
 import { supabase } from '../lib/supabase'
-import { USERS, USER_MAP, USER_NAMES, type User } from '../constants/users'
+import { USERS, USER_NAMES, type User } from '../constants/users'
 import { toIDR } from '../lib/currency'
 import { NeonBtn } from './ui/NeonBtn'
 import { NeonInput } from './ui/NeonInput'
@@ -19,10 +19,8 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  function toggleSplit(name: string) {
-    setSplitAmong(prev =>
-      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name],
-    )
+  function toggle(n: string) {
+    setSplitAmong(prev => prev.includes(n) ? prev.filter(x => x !== n) : [...prev, n])
   }
 
   async function save() {
@@ -34,12 +32,11 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
 
     setSaving(true)
     try {
-      const amount_idr = toIDR(n, currency)
       const { error: insErr } = await supabase.from('expenses').insert({
         description: description.trim(),
         amount: n,
         currency,
-        amount_idr,
+        amount_idr: toIDR(n, currency),
         paid_by: paidBy,
         split_among: splitAmong,
         split_mode: 'equal',
@@ -56,42 +53,32 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
   }
 
   const overlay: CSSProperties = {
-    position: 'fixed',
-    inset: 0,
-    zIndex: 200,
-    background: 'rgba(5,3,8,0.92)',
-    backdropFilter: 'blur(8px)',
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    position: 'fixed', inset: 0, zIndex: 200,
+    background: 'rgba(15, 11, 8, 0.78)',
+    backdropFilter: 'blur(14px)',
+    display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
   }
-
   const sheet: CSSProperties = {
-    width: '100%',
-    maxWidth: 480,
-    background: '#0a0510',
-    borderTop: `2px solid ${currentUser.color}`,
-    borderRadius: '16px 16px 0 0',
-    padding: 20,
+    width: '100%', maxWidth: 480,
+    background: 'var(--bg-elevated)',
+    border: '1px solid var(--border)',
+    borderBottom: 'none',
+    borderRadius: '20px 20px 0 0',
+    padding: 22,
     maxHeight: '92vh',
     overflowY: 'auto',
-    boxShadow: `0 -20px 40px ${currentUser.color}22`,
   }
 
   return (
     <div style={overlay} onClick={onClose} data-testid="add-expense-modal">
-      <div style={sheet} onClick={e => e.stopPropagation()}>
+      <div style={sheet} onClick={e => e.stopPropagation()} className="animate-slide-up">
         <div className="flex items-center justify-between mb-4">
-          <p
-            className="font-display tracking-widest"
-            style={{ fontSize: 16, color: currentUser.color, textShadow: `0 0 10px ${currentUser.color}` }}
-          >
-            + ADD EXPENSE
+          <p className="serif-display" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 400 }}>
+            New expense
           </p>
           <button
             onClick={onClose}
-            className="font-mono"
-            style={{ fontSize: 18, color: '#666' }}
+            style={{ fontSize: 18, color: 'var(--text-tertiary)' }}
             data-testid="add-expense-close"
             aria-label="Close"
           >
@@ -99,44 +86,46 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
           </button>
         </div>
 
-        {/* Description */}
-        <label className="font-mono block mb-3" style={{ fontSize: 9, color: '#555', letterSpacing: 3 }}>
-          DESCRIPTION
+        <label className="block mb-3.5">
+          <p className="font-ui mb-1.5" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500 }}>
+            Description
+          </p>
           <NeonInput
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="e.g. Warung lunch, Scooter rental"
-            color={currentUser.color}
-            className="mt-1.5"
+            placeholder="Warung lunch, scooter rental…"
             data-testid="add-expense-description"
           />
         </label>
 
-        {/* Amount + currency */}
-        <label className="font-mono block mb-3" style={{ fontSize: 9, color: '#555', letterSpacing: 3 }}>
-          AMOUNT
-          <div className="flex gap-2 mt-1.5">
+        <label className="block mb-3.5">
+          <p className="font-ui mb-1.5" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500 }}>
+            Amount
+          </p>
+          <div className="flex gap-2">
             <NeonInput
               type="number"
               inputMode="decimal"
               value={amount}
               onChange={e => setAmount(e.target.value)}
               placeholder="0"
-              color={currentUser.color}
               className="flex-1"
               data-testid="add-expense-amount"
             />
-            <div className="flex rounded-sm overflow-hidden" style={{ border: `1px solid ${currentUser.color}44` }}>
+            <div
+              className="flex rounded-md overflow-hidden"
+              style={{ border: '1px solid var(--border)' }}
+            >
               {(['IDR', 'INR'] as const).map(c => (
                 <button
                   key={c}
                   onClick={() => setCurrency(c)}
-                  className="px-3 font-mono transition-all"
+                  className="px-3.5 font-ui transition-all"
                   style={{
-                    fontSize: 11,
-                    letterSpacing: 2,
-                    background: currency === c ? `${currentUser.color}33` : 'transparent',
-                    color: currency === c ? currentUser.color : '#666',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    background: currency === c ? 'var(--accent)' : 'transparent',
+                    color: currency === c ? '#1A0A03' : 'var(--text-secondary)',
                   }}
                   data-testid={`add-expense-currency-${c.toLowerCase()}`}
                 >
@@ -147,9 +136,10 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
           </div>
         </label>
 
-        {/* Paid by */}
-        <div className="mb-3">
-          <p className="font-mono mb-1.5" style={{ fontSize: 9, color: '#555', letterSpacing: 3 }}>PAID BY</p>
+        <div className="mb-3.5">
+          <p className="font-ui mb-1.5" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500 }}>
+            Paid by
+          </p>
           <div className="flex gap-1.5 flex-wrap">
             {USERS.map(u => {
               const active = paidBy === u.name
@@ -157,36 +147,35 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
                 <button
                   key={u.name}
                   onClick={() => setPaidBy(u.name)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm font-ui transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all"
                   style={{
-                    fontSize: 11,
-                    letterSpacing: 1,
-                    background: active ? `${u.color}22` : 'transparent',
-                    border: `1px solid ${active ? u.color : `${u.color}33`}`,
-                    color: active ? u.color : `${u.color}88`,
-                    boxShadow: active ? `0 0 10px ${u.color}44` : 'none',
+                    fontSize: 12,
+                    background: active ? 'rgba(245,241,235,0.06)' : 'transparent',
+                    border: `1px solid ${active ? `${u.color}88` : 'var(--border)'}`,
+                    color: active ? 'var(--text-primary)' : 'var(--text-tertiary)',
                   }}
                   data-testid={`paidby-${u.name.toLowerCase()}`}
                 >
-                  <span>{u.emoji}</span>
-                  <span className="uppercase">{u.name}</span>
+                  <span style={{ fontSize: 13 }}>{u.emoji}</span>
+                  <span>{u.name}</span>
                 </button>
               )
             })}
           </div>
         </div>
 
-        {/* Split among */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <p className="font-mono" style={{ fontSize: 9, color: '#555', letterSpacing: 3 }}>SPLIT EQUALLY AMONG</p>
+            <p className="font-ui" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500 }}>
+              Split equally among
+            </p>
             <button
               onClick={() => setSplitAmong(splitAmong.length === USERS.length ? [currentUser.name] : USER_NAMES)}
-              className="font-mono"
-              style={{ fontSize: 9, color: currentUser.color, letterSpacing: 2 }}
+              className="font-ui"
+              style={{ fontSize: 11, color: 'var(--accent)' }}
               data-testid="toggle-all-split"
             >
-              {splitAmong.length === USERS.length ? 'CLEAR' : 'ALL'}
+              {splitAmong.length === USERS.length ? 'Clear' : 'All'}
             </button>
           </div>
           <div className="flex gap-1.5 flex-wrap">
@@ -195,19 +184,18 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
               return (
                 <button
                   key={u.name}
-                  onClick={() => toggleSplit(u.name)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm font-ui transition-all"
+                  onClick={() => toggle(u.name)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all"
                   style={{
-                    fontSize: 11,
-                    letterSpacing: 1,
-                    background: active ? `${u.color}22` : 'transparent',
-                    border: `1px solid ${active ? u.color : 'rgba(255,255,255,0.08)'}`,
-                    color: active ? u.color : '#444',
+                    fontSize: 12,
+                    background: active ? 'rgba(245,241,235,0.06)' : 'transparent',
+                    border: `1px solid ${active ? `${u.color}88` : 'var(--border)'}`,
+                    color: active ? 'var(--text-primary)' : 'var(--text-quaternary)',
                   }}
                   data-testid={`split-${u.name.toLowerCase()}`}
                 >
-                  <span>{u.emoji}</span>
-                  <span className="uppercase">{u.name}</span>
+                  <span style={{ fontSize: 13 }}>{u.emoji}</span>
+                  <span>{u.name}</span>
                 </button>
               )
             })}
@@ -215,33 +203,19 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
         </div>
 
         {error && (
-          <p className="font-mono mb-3" style={{ fontSize: 11, color: 'var(--neon-pink)', letterSpacing: 1 }}>
+          <p className="font-ui mb-3" style={{ fontSize: 12, color: 'var(--accent)' }}>
             {error}
           </p>
         )}
 
         <div className="flex gap-2">
-          <NeonBtn
-            color={currentUser.color}
-            onClick={save}
-            disabled={saving}
-            className="flex-1"
-            data-testid="add-expense-save"
-          >
-            {saving ? 'SAVING…' : 'SAVE'}
+          <NeonBtn onClick={save} disabled={saving} className="flex-1" data-testid="add-expense-save">
+            {saving ? 'Saving…' : 'Save expense'}
           </NeonBtn>
-          <NeonBtn
-            color="rgba(255,255,255,0.25)"
-            variant="outline"
-            onClick={onClose}
-            data-testid="add-expense-cancel"
-          >
-            CANCEL
+          <NeonBtn variant="ghost" onClick={onClose} data-testid="add-expense-cancel">
+            Cancel
           </NeonBtn>
         </div>
-
-        {/* prevent USER_MAP unused warning */}
-        <span hidden>{USER_MAP[currentUser.name]?.emoji}</span>
       </div>
     </div>
   )

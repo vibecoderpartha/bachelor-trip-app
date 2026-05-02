@@ -1,3 +1,4 @@
+// Scanlines overlay disabled in the new minimal design.
 export function Scanlines() {
-  return <div className="scanlines" aria-hidden="true" />
+  return null
 }

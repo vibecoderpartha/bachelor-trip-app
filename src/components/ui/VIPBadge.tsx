@@ -6,18 +6,21 @@ interface Props {
   className?: string
 }
 
-export function VIPBadge({ color = 'var(--neon-gold)', children, className = '' }: Props) {
+export function VIPBadge({ color = 'var(--accent)', children, className = '' }: Props) {
   const style: CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 4,
+    padding: '3px 8px',
+    fontSize: 10,
+    fontFamily: 'var(--font-ui)',
+    fontWeight: 500,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
     color,
-    borderColor: color,
-    boxShadow: `0 0 6px ${color}44`,
+    border: `1px solid ${color}55`,
+    background: 'transparent',
+    borderRadius: 999,
   }
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 text-[10px] tracking-widest border font-mono uppercase rounded-sm ${className}`}
-      style={style}
-    >
-      {children}
-    </span>
-  )
+  return <span className={className} style={style}>{children}</span>
 }
