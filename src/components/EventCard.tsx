@@ -12,9 +12,10 @@ interface Props {
   event: DBEvent
   status: EventStatus
   userColor: string
+  onDelete?: () => void
 }
 
-export function EventCard({ event, status }: Props) {
+export function EventCard({ event, status, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false)
   const meta = EVENT_TYPE_MAP[event.type] ?? EVENT_TYPE_MAP.other
   const date = new Date(event.date_ist)
@@ -83,8 +84,20 @@ export function EventCard({ event, status }: Props) {
           >
             {event.title}
           </h3>
-          {isNext && <VIPBadge color="var(--accent)">Next</VIPBadge>}
-          {isLive && <VIPBadge color="var(--accent)">● Live</VIPBadge>}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {isNext && <VIPBadge color="var(--accent)">Next</VIPBadge>}
+            {isLive && <VIPBadge color="var(--accent)">● Live</VIPBadge>}
+            {onDelete && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onDelete() }}
+                className="font-ui"
+                style={{ fontSize: 14, color: 'var(--text-quaternary)', lineHeight: 1, padding: '0 2px', background: 'none', border: 'none', cursor: 'pointer' }}
+                title="Remove event"
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">

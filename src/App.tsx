@@ -5,7 +5,6 @@ import { TripTab } from './tabs/TripTab'
 import { ScanTab } from './tabs/ScanTab'
 import { SplitTab } from './tabs/SplitTab'
 import { FXTab } from './tabs/FXTab'
-import { AITab } from './tabs/AITab'
 import { useCurrentUser } from './hooks/useCurrentUser'
 import { type User } from './constants/users'
 import type { TabId } from './constants/tabAssets'
@@ -15,7 +14,6 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'scan',  label: 'Scan' },
   { id: 'split', label: 'Split' },
   { id: 'fx',    label: 'FX' },
-  { id: 'ai',    label: 'Concierge' },
 ]
 
 export function App() {
@@ -101,10 +99,9 @@ export function App() {
         {user ? (
           <div key={activeTab} className="animate-fade-in">
             {activeTab === 'trip'  && <TripTab user={user} />}
-            {activeTab === 'scan'  && <ScanTab />}
+            {activeTab === 'scan'  && <ScanTab user={user} />}
             {activeTab === 'split' && <SplitTab user={user} />}
             {activeTab === 'fx'    && <FXTab />}
-            {activeTab === 'ai'    && <AITab />}
           </div>
         ) : (
           <div className="flex items-center justify-center py-20">

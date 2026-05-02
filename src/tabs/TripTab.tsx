@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { type User } from '../constants/users'
 import { useEvents, userSeesEvent, type DBEvent } from '../hooks/useEvents'
+import { supabase } from '../lib/supabase'
 import { TabHero } from '../components/TabHero'
 import { EventCard, type EventStatus } from '../components/EventCard'
 import { CountdownClock } from '../components/CountdownClock'
@@ -130,7 +131,13 @@ export function TripTab({ user }: Props) {
             ) : (
               <div className="space-y-3">
                 {visible.map(e => (
-                  <EventCard key={e.id} event={e} status={statusOf(e)} userColor={user.color} />
+                  <EventCard
+                    key={e.id}
+                    event={e}
+                    status={statusOf(e)}
+                    userColor={user.color}
+                    onDelete={() => supabase.from('events').delete().eq('id', e.id)}
+                  />
                 ))}
               </div>
             )}

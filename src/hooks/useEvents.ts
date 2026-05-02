@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { supabase } from '../lib/supabase'
-import { SEED_EVENTS, type SeedEvent } from '../constants/seedData'
+import type { SeedEvent } from '../constants/seedData'
 
 export interface DBEvent extends SeedEvent {
   id: string
@@ -9,10 +9,6 @@ export interface DBEvent extends SeedEvent {
 export function userSeesEvent(event: DBEvent, userName: string): boolean {
   if (!event.for_users || event.for_users.length === 0) return true
   return event.for_users.includes(userName)
-}
-
-function seedFallback(): DBEvent[] {
-  return SEED_EVENTS.map((e, i) => ({ ...e, id: `seed-${i}` }))
 }
 
 export function useEvents(): { events: DBEvent[]; loading: boolean } {
@@ -29,13 +25,10 @@ export function useEvents(): { events: DBEvent[]; loading: boolean } {
 
       if (!mountedRef.current) return
 
-      if (error || !data || data.length === 0) {
-        setEvents(seedFallback())
-      } else {
-        setEvents(data as DBEvent[])
-      }
+      if (error) throw error
+      setEvents((data ?? []) as DBEvent[])
     } catch {
-      if (mountedRef.current) setEvents(seedFallback())
+      if (mountedRef.current) setEvents([])
     } finally {
       if (mountedRef.current) setLoading(false)
     }
