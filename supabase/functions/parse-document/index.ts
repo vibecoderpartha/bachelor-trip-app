@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
+        max_tokens: 2048,
         messages: [{
           role: 'user',
           content: [
@@ -116,6 +116,8 @@ TIMEZONE CONVERSIONS:
   • India (DEL, BOM, BLR, CCU, MAA…) = IST (UTC+5:30) — no change needed.
   • Bali / Indonesia (DPS, Denpasar) = WITA (UTC+8) — subtract 2h 30m to convert to IST.
     Example: 09:00 WITA → 06:30 IST
+
+MULTI-PAGE DOCUMENTS: If this is a multi-page itinerary with several bookings, extract ONLY the FIRST / PRIMARY booking (the one that appears earliest in the document). Output a single JSON object, not an array.
 
 STEP 2 — OUTPUT this exact JSON and nothing else (no markdown fences):
 {
@@ -155,7 +157,8 @@ This trip is 22–27 May 2026. If no year is shown, use 2026.`,
     try {
       parsed = JSON.parse(clean)
     } catch {
-      throw new Error(`Could not parse Claude response as JSON: ${raw.slice(0, 200)}`)
+      // Surface enough of the raw response to diagnose truncation
+      throw new Error(`Could not parse Claude response as JSON. stop_reason=${claudeData.stop_reason ?? '?'} raw=${raw.slice(0, 400)}`)
     }
 
     // Sanity-check timestamps: end must be after start; gap must be < 48h; year must be 2026
