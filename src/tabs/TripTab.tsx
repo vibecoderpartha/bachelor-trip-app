@@ -96,10 +96,10 @@ export function TripTab({ user }: Props) {
 
         {/* Timeline */}
         <section>
+          <p className="font-ui mb-1" style={{ fontSize: 13, color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+            "{user.vibe}"
+          </p>
           <div className="flex items-baseline justify-between mb-3">
-            <p className="serif-eyebrow" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-              your itinerary
-            </p>
             <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.18em' }}>
               {visible.length} ITEMS · WITA = IST + 2h30
             </span>
