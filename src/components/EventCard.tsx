@@ -13,9 +13,10 @@ interface Props {
   status: EventStatus
   userColor: string
   onDelete?: () => void
+  onEdit?: () => void
 }
 
-export function EventCard({ event, status, onDelete }: Props) {
+export function EventCard({ event, status, onDelete, onEdit }: Props) {
   const [expanded, setExpanded] = useState(false)
   const meta = EVENT_TYPE_MAP[event.type] ?? EVENT_TYPE_MAP.other
   const date = new Date(event.date_ist)
@@ -87,21 +88,20 @@ export function EventCard({ event, status, onDelete }: Props) {
           <div className="flex items-center gap-1.5 shrink-0">
             {isNext && <VIPBadge color="var(--accent)">Next</VIPBadge>}
             {isLive && <VIPBadge color="var(--accent)">● Live</VIPBadge>}
+            {onEdit && (
+              <button
+                onClick={(e) => { e.stopPropagation(); onEdit() }}
+                className="font-ui"
+                style={{ fontSize: 12, color: 'var(--text-tertiary)', background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '4px 10px', cursor: 'pointer' }}
+              >
+                Edit
+              </button>
+            )}
             {onDelete && (
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete() }}
                 className="font-ui"
-                style={{
-                  fontSize: 12,
-                  color: '#fff',
-                  background: '#FF2D78',
-                  border: 'none',
-                  borderRadius: 8,
-                  padding: '4px 10px',
-                  cursor: 'pointer',
-                  letterSpacing: 0.3,
-                  fontWeight: 500,
-                }}
+                style={{ fontSize: 12, color: '#fff', background: '#FF2D78', border: 'none', borderRadius: 8, padding: '4px 10px', cursor: 'pointer', fontWeight: 500 }}
               >
                 Remove
               </button>

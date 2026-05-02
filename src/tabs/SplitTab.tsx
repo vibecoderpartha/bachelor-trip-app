@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react'
 import { type User } from '../constants/users'
 import { useExpenses } from '../hooks/useExpenses'
 import { useSettlements } from '../hooks/useSettlements'
-import { computeBalances } from '../lib/splitting'
+import { computeBalances, type Expense } from '../lib/splitting'
 import { TabHero } from '../components/TabHero'
 import { BalanceHero } from '../components/BalanceHero'
 import { ExpenseCard } from '../components/ExpenseCard'
 import { AddExpenseModal } from '../components/AddExpenseModal'
+import { EditExpenseModal } from '../components/EditExpenseModal'
 import { SettleUpModal } from '../components/SettleUpModal'
 import { NeonBtn } from '../components/ui/NeonBtn'
 import { formatIDR } from '../lib/currency'
@@ -18,6 +19,7 @@ export function SplitTab({ user }: Props) {
   const { settlements } = useSettlements()
   const [showAdd, setShowAdd] = useState(false)
   const [showSettle, setShowSettle] = useState(false)
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
 
   const balances = useMemo(() => computeBalances(expenses, settlements), [expenses, settlements])
   const totalPool = useMemo(() => expenses.reduce((s, e) => s + (Number(e.amount_idr) || 0), 0), [expenses])
@@ -60,7 +62,7 @@ export function SplitTab({ user }: Props) {
             </p>
           ) : (
             <div className="space-y-2" data-testid="expense-list">
-              {expenses.map(e => <ExpenseCard key={e.id} expense={e} currentUserName={user.name} />)}
+              {expenses.map(e => <ExpenseCard key={e.id} expense={e} currentUserName={user.name} onEdit={() => setEditingExpense(e)} />)}
             </div>
           )}
         </section>
@@ -90,6 +92,7 @@ export function SplitTab({ user }: Props) {
         )}
       </div>
 
+      {editingExpense && <EditExpenseModal expense={editingExpense} currentUser={user} onClose={() => setEditingExpense(null)} />}
       {showAdd && <AddExpenseModal currentUser={user} onClose={() => setShowAdd(false)} />}
       {showSettle && (
         <SettleUpModal

@@ -6,9 +6,10 @@ import { formatIDR, formatINR, toINR } from '../lib/currency'
 interface Props {
   expense: Expense
   currentUserName: string
+  onEdit?: () => void
 }
 
-export function ExpenseCard({ expense: e, currentUserName }: Props) {
+export function ExpenseCard({ expense: e, currentUserName, onEdit }: Props) {
   const payer = USER_MAP[e.paid_by]
   const inr = toINR(Number(e.amount_idr) || 0)
   const perHead = e.split_among.length ? (Number(e.amount_idr) || 0) / e.split_among.length : 0
@@ -81,9 +82,20 @@ export function ExpenseCard({ expense: e, currentUserName }: Props) {
             ? USERS.map(u => <span key={u.name} style={{ fontSize: 12, opacity: 0.85 }}>{u.emoji}</span>)
             : e.split_among.map(n => <span key={n} style={{ fontSize: 12, opacity: 0.85 }}>{USER_MAP[n]?.emoji ?? '·'}</span>)}
         </div>
-        <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
-          {formatIDR(perHead)} / head
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+            {formatIDR(perHead)} / head
+          </p>
+          {onEdit && (
+            <button
+              onClick={onEdit}
+              className="font-ui"
+              style={{ fontSize: 11, color: 'var(--text-tertiary)', background: 'none', border: '1px solid var(--border)', borderRadius: 6, padding: '2px 8px', cursor: 'pointer' }}
+            >
+              Edit
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

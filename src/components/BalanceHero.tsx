@@ -46,11 +46,11 @@ export function BalanceHero({ balances, currentUser }: Props) {
         }}
         data-testid="balance-hero-amount-idr"
       >
-        {settled ? 'Rp 0' : formatIDR(absMine)}
+        {settled ? '₹0' : formatINR(toINR(absMine))}
       </p>
       {!settled && (
         <p className="font-mono" style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>
-          ≈ {formatINR(toINR(absMine))}
+          {formatIDR(absMine)}
         </p>
       )}
 

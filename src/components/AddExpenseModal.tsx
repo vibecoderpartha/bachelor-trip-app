@@ -13,7 +13,7 @@ interface Props {
 export function AddExpenseModal({ currentUser, onClose }: Props) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [currency, setCurrency] = useState<'IDR' | 'INR'>('IDR')
+  const [currency, setCurrency] = useState<'IDR' | 'INR'>('INR')
   const [paidBy, setPaidBy] = useState<string>(currentUser.name)
   const [splitAmong, setSplitAmong] = useState<string[]>(USER_NAMES)
   const [saving, setSaving] = useState(false)

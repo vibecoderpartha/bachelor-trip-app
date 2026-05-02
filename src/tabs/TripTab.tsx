@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { type User } from '../constants/users'
 import { useEvents, userSeesEvent, type DBEvent } from '../hooks/useEvents'
 import { supabase } from '../lib/supabase'
+import { EditEventModal } from '../components/EditEventModal'
 import { TabHero } from '../components/TabHero'
 import { EventCard, type EventStatus } from '../components/EventCard'
 import { CountdownClock } from '../components/CountdownClock'
@@ -13,6 +14,7 @@ interface Props { user: User }
 export function TripTab({ user }: Props) {
   const { events, loading } = useEvents()
   const [showClock, setShowClock] = useState(false)
+  const [editingEvent, setEditingEvent] = useState<DBEvent | null>(null)
   const now = Date.now()
 
   const visible = useMemo(
@@ -136,6 +138,7 @@ export function TripTab({ user }: Props) {
                     event={e}
                     status={statusOf(e)}
                     userColor={user.color}
+                    onEdit={() => setEditingEvent(e)}
                     onDelete={() => { supabase.from('events').delete().eq('id', e.id).then(() => {}) }}
                   />
                 ))}
@@ -144,6 +147,9 @@ export function TripTab({ user }: Props) {
           </div>
         </section>
       </div>
+      {editingEvent && (
+        <EditEventModal event={editingEvent} onClose={() => setEditingEvent(null)} />
+      )}
     </div>
   )
 }

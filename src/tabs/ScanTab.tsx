@@ -33,15 +33,11 @@ export function ScanTab({ user }: { user: User }) {
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [scannedDocs, setScannedDocs] = useState<ScannedEvent[]>([])
-  const [forUsers, setForUsers] = useState<string[]>([user.name])
+  const [forEveryone, setForEveryone] = useState(false)
+  const forUsers = forEveryone ? USERS.map(u => u.name) : [user.name]
 
-  // Reset forUsers when active profile changes
-  useEffect(() => { setForUsers([user.name]) }, [user.name])
-
-  function toggleUser(name: string) {
-    if (name === user.name) return // current user always included
-    setForUsers(prev => prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name])
-  }
+  // Reset when active profile changes
+  useEffect(() => { setForEveryone(false) }, [user.name])
 
   const loadScannedDocs = async () => {
     const { data } = await supabase
@@ -146,35 +142,34 @@ export function ScanTab({ user }: { user: User }) {
           </p>
         )}
 
-        {/* Crew picker */}
-        <div className="mt-5">
-          <p className="font-ui mb-2" style={{ fontSize: 11, color: 'var(--text-tertiary)', letterSpacing: 1.2, textTransform: 'uppercase' }}>
-            Assign to
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {USERS.map(u => {
-              const selected = forUsers.includes(u.name)
-              const isMe = u.name === user.name
-              return (
-                <button
-                  key={u.name}
-                  onClick={() => toggleUser(u.name)}
-                  className="font-ui flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all"
-                  style={{
-                    fontSize: 12,
-                    border: `1px solid ${selected ? u.color : 'var(--border)'}`,
-                    background: selected ? `${u.color}18` : 'transparent',
-                    color: selected ? u.color : 'var(--text-tertiary)',
-                    opacity: isMe ? 0.7 : 1,
-                    cursor: isMe ? 'default' : 'pointer',
-                  }}
-                >
-                  <span>{u.emoji}</span>
-                  <span>{u.name}</span>
-                </button>
-              )
-            })}
+        {/* Assign to everyone toggle */}
+        <div className="mt-5 flex items-center justify-between">
+          <div>
+            <p className="font-ui" style={{ fontSize: 13, color: 'var(--text-primary)' }}>
+              Assign to everyone?
+            </p>
+            <p className="font-ui" style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}>
+              {forEveryone ? 'Visible to all crew' : `Only ${user.name}`}
+            </p>
           </div>
+          <button
+            onClick={() => setForEveryone(v => !v)}
+            style={{
+              width: 48, height: 28, borderRadius: 14,
+              background: forEveryone ? 'var(--accent)' : 'var(--border-strong)',
+              border: 'none', cursor: 'pointer', position: 'relative',
+              transition: 'background 0.2s',
+            }}
+          >
+            <span style={{
+              position: 'absolute', top: 3,
+              left: forEveryone ? 23 : 3,
+              width: 22, height: 22, borderRadius: '50%',
+              background: '#fff',
+              transition: 'left 0.2s',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+            }} />
+          </button>
         </div>
 
         {/* Scan button */}
