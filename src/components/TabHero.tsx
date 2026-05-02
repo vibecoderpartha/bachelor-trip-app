@@ -1,34 +1,27 @@
 import { type CSSProperties } from 'react'
 import { TAB_ASSETS, type TabId } from '../constants/tabAssets'
+import { type User } from '../constants/users'
 
 interface Props {
   tab: TabId
+  user?: User
   height?: number
 }
 
-/**
- * Editorial-style hero image at the top of each tab.
- * Image bleeds to edges with a soft gradient fade to bg.
- * Eyebrow + tagline overlay bottom-left.
- */
-export function TabHero({ tab, height = 220 }: Props) {
+export function TabHero({ tab, user, height: _height = 220 }: Props) {
   const asset = TAB_ASSETS[tab]
+  const imageSrc = user?.image ?? asset.image
 
   const wrapStyle: CSSProperties = {
     position: 'relative',
     width: '100%',
-    height,
-    overflow: 'hidden',
     isolation: 'isolate',
   }
 
   const imgStyle: CSSProperties = {
-    position: 'absolute',
-    inset: 0,
+    display: 'block',
     width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    objectPosition: 'center 30%',
+    height: 'auto',
     filter: 'saturate(0.92) contrast(1.02)',
   }
 
@@ -40,7 +33,7 @@ export function TabHero({ tab, height = 220 }: Props) {
 
   return (
     <div style={wrapStyle} data-testid={`tab-hero-${tab}`}>
-      <img src={asset.image} alt="" style={imgStyle} loading="eager" />
+      <img src={imageSrc} alt="" style={imgStyle} loading="eager" />
       <div className="hero-fade" style={gradStyle} />
       <div
         style={{

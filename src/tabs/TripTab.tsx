@@ -37,7 +37,7 @@ export function TripTab({ user }: Props) {
 
   return (
     <div data-testid="trip-tab">
-      <TabHero tab="trip" />
+      <TabHero tab="trip" user={user} />
 
       <div className="px-5 pt-5 pb-8 space-y-6">
         <CrewStatus events={events} currentUserName={user.name} />

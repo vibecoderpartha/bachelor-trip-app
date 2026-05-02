@@ -1,9 +1,11 @@
 import { TabHero } from '../components/TabHero'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 
 export function AITab() {
+  const { user } = useCurrentUser()
   return (
     <div data-testid="ai-tab">
-      <TabHero tab="ai" />
+      <TabHero tab="ai" user={user ?? undefined} />
 
       <div className="px-5 pt-8 pb-8 text-center">
         <p className="serif-display" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 400, lineHeight: 1.25 }}>

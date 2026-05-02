@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { TabHero } from '../components/TabHero'
 import { NeonInput } from '../components/ui/NeonInput'
 import { RATES, formatIDR, formatINR } from '../lib/currency'
+import { useCurrentUser } from '../hooks/useCurrentUser'
 
 type Direction = 'INR_TO_IDR' | 'IDR_TO_INR'
 
@@ -24,6 +25,7 @@ const PRICE_GUIDE: PriceRow[] = [
 ]
 
 export function FXTab() {
+  const { user } = useCurrentUser()
   const [dir, setDir] = useState<Direction>('INR_TO_IDR')
   const [inr, setInr] = useState('1000')
   const [idr, setIdr] = useState('')
@@ -74,7 +76,7 @@ export function FXTab() {
 
   return (
     <div data-testid="fx-tab">
-      <TabHero tab="fx" />
+      <TabHero tab="fx" user={user ?? undefined} />
 
       <div className="px-5 pt-5 pb-8 space-y-6">
         {/* Converter */}

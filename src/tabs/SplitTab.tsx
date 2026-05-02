@@ -24,7 +24,7 @@ export function SplitTab({ user }: Props) {
 
   return (
     <div data-testid="split-tab">
-      <TabHero tab="split" />
+      <TabHero tab="split" user={user} />
 
       <div className="px-5 pt-5 pb-8 space-y-5">
         <BalanceHero balances={balances} currentUser={user} />
