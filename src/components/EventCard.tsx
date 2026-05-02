@@ -12,11 +12,12 @@ interface Props {
   event: DBEvent
   status: EventStatus
   userColor: string
+  tz?: 'IST' | 'WITA'
   onDelete?: () => void
   onEdit?: () => void
 }
 
-export function EventCard({ event, status, onDelete, onEdit }: Props) {
+export function EventCard({ event, status, tz = 'IST', onDelete, onEdit }: Props) {
   const [expanded, setExpanded] = useState(false)
   const meta = EVENT_TYPE_MAP[event.type] ?? EVENT_TYPE_MAP.other
   const date = new Date(event.date_ist)
@@ -115,9 +116,9 @@ export function EventCard({ event, status, onDelete, onEdit }: Props) {
           </span>
           <span style={{ color: 'var(--text-quaternary)', fontSize: 12 }}>·</span>
           <span className="font-mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-            {fmtIST(date)} <span style={{ color: 'var(--text-tertiary)' }}>IST</span>
-            <span style={{ color: 'var(--text-quaternary)', margin: '0 6px' }}>·</span>
-            {fmtWITA(date)} <span style={{ color: 'var(--text-tertiary)' }}>WITA</span>
+            {tz === 'IST'
+              ? <>{fmtIST(date)} <span style={{ color: 'var(--text-tertiary)' }}>IST</span></>
+              : <>{fmtWITA(date)} <span style={{ color: 'var(--text-tertiary)' }}>WITA</span></>}
           </span>
         </div>
 

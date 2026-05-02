@@ -17,6 +17,7 @@ export function TripTab({ user }: Props) {
   const [showClock, setShowClock] = useState(false)
   const [editingEvent, setEditingEvent] = useState<DBEvent | null>(null)
   const [showAddEvent, setShowAddEvent] = useState(false)
+  const [tz, setTz] = useState<'IST' | 'WITA'>('IST')
   const now = Date.now()
 
   const visible = useMemo(
@@ -98,14 +99,34 @@ export function TripTab({ user }: Props) {
 
         {/* Timeline */}
         <section>
-          <div className="flex items-baseline justify-between mb-3">
+          <div className="flex items-center justify-between mb-3">
             <p className="serif-eyebrow" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
               your itinerary
             </p>
-            <div className="flex items-center gap-3">
-              <span className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)', letterSpacing: '0.18em' }}>
-                {visible.length} ITEMS · WITA = IST + 2h30
-              </span>
+            <div className="flex items-center gap-2">
+              {/* Timezone toggle */}
+              <div
+                className="flex rounded-full overflow-hidden"
+                style={{ border: '1px solid var(--border)', background: 'var(--bg-elevated)' }}
+              >
+                {(['IST', 'WITA'] as const).map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setTz(t)}
+                    className="font-mono transition-all"
+                    style={{
+                      fontSize: 10,
+                      padding: '3px 10px',
+                      letterSpacing: '0.1em',
+                      background: tz === t ? 'var(--accent)' : 'transparent',
+                      color: tz === t ? '#1A0A03' : 'var(--text-tertiary)',
+                      fontWeight: tz === t ? 600 : 400,
+                    }}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
               <button
                 onClick={() => setShowAddEvent(true)}
                 className="font-ui"
@@ -150,6 +171,7 @@ export function TripTab({ user }: Props) {
                     event={e}
                     status={statusOf(e)}
                     userColor={user.color}
+                    tz={tz}
                     onEdit={() => setEditingEvent(e)}
                     onDelete={() => { supabase.from('events').delete().eq('id', e.id).then(() => {}) }}
                   />
