@@ -44,13 +44,13 @@ export function App() {
           <div>
             <p
               className="serif-display"
-              style={{ fontSize: 18, color: 'var(--text-primary)', fontWeight: 400 }}
+              style={{ fontSize: 20, color: 'var(--text-primary)', fontWeight: 400 }}
             >
               Bali Bachelor
             </p>
             <p
               className="font-mono"
-              style={{ fontSize: 9, color: 'var(--text-tertiary)', letterSpacing: '0.18em', marginTop: 2 }}
+              style={{ fontSize: 11, color: 'var(--text-tertiary)', letterSpacing: '0.18em', marginTop: 2 }}
             >
               MAY 22 — 27 · 2026
             </p>
@@ -69,7 +69,7 @@ export function App() {
               <span style={{ fontSize: 14 }}>{user.emoji}</span>
               <span
                 className="font-ui"
-                style={{ fontSize: 11, color: 'var(--text-secondary)', letterSpacing: 0.5 }}
+                style={{ fontSize: 13, color: 'var(--text-secondary)', letterSpacing: 0.5 }}
               >
                 {user.name}
               </span>
@@ -132,7 +132,7 @@ export function App() {
           >
             <span
               className="serif-display"
-              style={{ fontSize: 13, fontWeight: 400 }}
+              style={{ fontSize: 16, fontWeight: 400 }}
             >
               {tab.label}
             </span>

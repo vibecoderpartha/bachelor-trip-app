@@ -62,12 +62,12 @@ export function ExpenseCard({ expense: e, currentUserName }: Props) {
         <div className="text-right flex-shrink-0">
           <p
             className="serif-display"
-            style={{ fontSize: 16, color: 'var(--text-primary)', fontWeight: 400 }}
+            style={{ fontSize: 18, color: 'var(--text-primary)', fontWeight: 400 }}
           >
-            {formatIDR(Number(e.amount_idr) || 0)}
+            {formatINR(inr)}
           </p>
-          <p className="font-mono" style={{ fontSize: 10, color: 'var(--text-tertiary)' }}>
-            ≈ {formatINR(inr)}
+          <p className="font-mono" style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
+            {formatIDR(Number(e.amount_idr) || 0)}
           </p>
         </div>
       </div>

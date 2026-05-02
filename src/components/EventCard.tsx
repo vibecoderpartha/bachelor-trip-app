@@ -80,7 +80,7 @@ export function EventCard({ event, status, onDelete }: Props) {
         <div className="flex items-start justify-between gap-3 mb-1.5">
           <h3
             className="serif-display"
-            style={{ fontSize: 16, fontWeight: 400, color: 'var(--text-primary)', lineHeight: 1.25 }}
+            style={{ fontSize: 18, fontWeight: 400, color: 'var(--text-primary)', lineHeight: 1.25 }}
           >
             {event.title}
           </h3>
@@ -91,7 +91,7 @@ export function EventCard({ event, status, onDelete }: Props) {
               <button
                 onClick={(e) => { e.stopPropagation(); onDelete() }}
                 className="font-ui"
-                style={{ fontSize: 14, color: 'var(--text-quaternary)', lineHeight: 1, padding: '0 2px', background: 'none', border: 'none', cursor: 'pointer' }}
+                style={{ fontSize: 16, color: 'var(--text-secondary)', lineHeight: 1, padding: '2px 4px', background: 'none', border: 'none', cursor: 'pointer' }}
                 title="Remove event"
               >
                 ×
@@ -101,18 +101,18 @@ export function EventCard({ event, status, onDelete }: Props) {
         </div>
 
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
-          <span className="font-ui" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+          <span className="font-ui" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
             {fmtDate(date)}
           </span>
-          <span style={{ color: 'var(--text-quaternary)', fontSize: 11 }}>·</span>
-          <span className="font-mono" style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+          <span style={{ color: 'var(--text-quaternary)', fontSize: 12 }}>·</span>
+          <span className="font-mono" style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
             {fmtIST(date)} <span style={{ color: 'var(--text-tertiary)' }}>IST</span>
             <span style={{ color: 'var(--text-quaternary)', margin: '0 6px' }}>·</span>
             {fmtWITA(date)} <span style={{ color: 'var(--text-tertiary)' }}>WITA</span>
           </span>
         </div>
 
-        <p className="font-ui mb-2.5" style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+        <p className="font-ui mb-2.5" style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
           {event.location}
           {event.location_to && (
             <>
