@@ -9,6 +9,7 @@ import { ExpenseCard } from '../components/ExpenseCard'
 import { AddExpenseModal } from '../components/AddExpenseModal'
 import { EditExpenseModal } from '../components/EditExpenseModal'
 import { SettleUpModal } from '../components/SettleUpModal'
+import { GroupTotals } from '../components/GroupTotals'
 import { NeonBtn } from '../components/ui/NeonBtn'
 import { formatIDR, formatINR, toINR } from '../lib/currency'
 
@@ -30,6 +31,8 @@ export function SplitTab({ user }: Props) {
 
       <div className="px-5 pt-5 pb-8 space-y-5">
         <BalanceHero balances={balances} currentUser={user} />
+
+        {expenses.length > 0 && <GroupTotals expenses={expenses} />}
 
         <div className="flex gap-2">
           <NeonBtn onClick={() => setShowAdd(true)} className="flex-1" data-testid="add-expense-btn">

@@ -2,6 +2,7 @@ import { type CSSProperties } from 'react'
 import type { Expense } from '../lib/splitting'
 import { USER_MAP, USERS } from '../constants/users'
 import { formatIDR, formatINR, toINR } from '../lib/currency'
+import { Avatar } from './ui/Avatar'
 
 interface Props {
   expense: Expense
@@ -11,6 +12,7 @@ interface Props {
 
 export function ExpenseCard({ expense: e, currentUserName, onEdit }: Props) {
   const payer = USER_MAP[e.paid_by]
+  const isMultiPayer = e.paid_by_splits && Object.keys(e.paid_by_splits).length > 1
   const inr = toINR(Number(e.amount_idr) || 0)
   const perHead = e.split_among.length ? (Number(e.amount_idr) || 0) / e.split_among.length : 0
   const iAmIn = e.split_among.includes(currentUserName)
@@ -28,22 +30,20 @@ export function ExpenseCard({ expense: e, currentUserName, onEdit }: Props) {
     <div style={card} data-testid={`expense-card-${e.id}`}>
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span
-            style={{
-              fontSize: 18,
-              width: 36,
-              height: 36,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '50%',
-              background: 'var(--bg-elevated)',
-              border: `1px solid ${payer?.color ?? 'var(--border)'}66`,
-              flexShrink: 0,
-            }}
-          >
-            {payer?.emoji ?? '·'}
-          </span>
+          {isMultiPayer ? (
+            <div style={{ display: 'flex', flexDirection: 'row', width: 36, height: 36, position: 'relative', flexShrink: 0 }}>
+              {Object.keys(e.paid_by_splits!).slice(0, 3).map((name, idx) => {
+                const u = USER_MAP[name]
+                return u ? (
+                  <span key={name} style={{ position: 'absolute', left: idx * 10, top: idx * 0, zIndex: 3 - idx }}>
+                    <Avatar name={u.name} color={u.color} size={22} />
+                  </span>
+                ) : null
+              })}
+            </div>
+          ) : (
+            <Avatar name={payer?.name ?? '?'} color={payer?.color ?? 'var(--border)'} size={36} />
+          )}
           <div className="min-w-0">
             <p
               className="serif-display truncate"
@@ -55,7 +55,9 @@ export function ExpenseCard({ expense: e, currentUserName, onEdit }: Props) {
               className="font-ui"
               style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 2 }}
             >
-              {payer?.name ?? '—'} paid
+              {isMultiPayer
+                ? Object.keys(e.paid_by_splits!).join(', ') + ' split the bill'
+                : `${payer?.name ?? '—'} paid`}
               {e.split_mode !== 'equal' ? ` · ${e.split_mode}` : ''}
             </p>
           </div>

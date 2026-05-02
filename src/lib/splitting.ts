@@ -10,6 +10,7 @@ export interface Expense {
   currency: string
   amount_idr: number
   paid_by: string
+  paid_by_splits: Record<string, number> | null  // multi-payer: name → IDR amount paid
   split_among: string[]
   split_mode: SplitMode
   custom_splits: Record<string, number> | null
@@ -82,7 +83,14 @@ export function computeBalances(
 
   for (const e of expenses) {
     const paid = Number(e.amount_idr) || 0
-    bal[e.paid_by] = (bal[e.paid_by] ?? 0) + paid
+
+    if (e.paid_by_splits && Object.keys(e.paid_by_splits).length > 0) {
+      for (const [u, v] of Object.entries(e.paid_by_splits)) {
+        bal[u] = (bal[u] ?? 0) + Number(v)
+      }
+    } else {
+      bal[e.paid_by] = (bal[e.paid_by] ?? 0) + paid
+    }
 
     const shares = computeShares(e)
     for (const [u, v] of Object.entries(shares)) {
