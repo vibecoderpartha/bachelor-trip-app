@@ -105,6 +105,8 @@ export function TripTab({ user }: Props) {
             </p>
             <div className="flex items-center gap-2">
               {/* Timezone toggle */}
+              <div className="flex flex-col items-center gap-0.5">
+              <p className="font-ui" style={{ fontSize: 9, color: 'var(--text-quaternary)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Timezone</p>
               <div
                 className="flex rounded-full overflow-hidden"
                 style={{ border: '1px solid var(--border)', background: 'var(--bg-elevated)' }}
@@ -125,6 +127,7 @@ export function TripTab({ user }: Props) {
                     {t === 'IST' ? 'India' : 'Bali'}
                   </button>
                 ))}
+              </div>
               </div>
               <button
                 onClick={() => setShowAddEvent(true)}
