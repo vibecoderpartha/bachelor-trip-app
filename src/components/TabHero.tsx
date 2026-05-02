@@ -11,6 +11,7 @@ interface Props {
 export function TabHero({ tab, user, height: _height = 220 }: Props) {
   const asset = TAB_ASSETS[tab]
   const imageSrc = user?.image ?? asset.image
+  const tagline = (tab === 'trip' && user?.vibe) ? user.vibe : asset.tagline
 
   const wrapStyle: CSSProperties = {
     position: 'relative',
@@ -65,7 +66,7 @@ export function TabHero({ tab, user, height: _height = 220 }: Props) {
             maxWidth: 360,
           }}
         >
-          {asset.tagline}
+          {tagline}
         </p>
       </div>
     </div>
