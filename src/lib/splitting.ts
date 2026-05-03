@@ -110,7 +110,7 @@ export function computeBalances(
 
 /** Greedy minimum-transactions settle-up. Returns pairs to pay. */
 export function settleUp(balances: Record<string, number>): SettleTxn[] {
-  const EPS = 1 // ignore sub-rupiah rounding noise
+  const EPS = 1
   const creditors: { name: string; amount: number }[] = []
   const debtors: { name: string; amount: number }[] = []
 
@@ -120,19 +120,41 @@ export function settleUp(balances: Record<string, number>): SettleTxn[] {
     else if (b < -EPS) debtors.push({ name, amount: -b })
   }
 
-  creditors.sort((a, b) => b.amount - a.amount)
-  debtors.sort((a, b) => b.amount - a.amount)
+  const byAmountDesc = (a: { amount: number }, b: { amount: number }) => b.amount - a.amount
+  creditors.sort(byAmountDesc)
+  debtors.sort(byAmountDesc)
 
   const txns: SettleTxn[] = []
-  let i = 0
-  let j = 0
-  while (i < debtors.length && j < creditors.length) {
-    const amt = Math.min(debtors[i].amount, creditors[j].amount)
-    txns.push({ from: debtors[i].name, to: creditors[j].name, amount: amt })
-    debtors[i].amount -= amt
-    creditors[j].amount -= amt
-    if (debtors[i].amount < EPS) i++
-    if (creditors[j].amount < EPS) j++
+
+  while (debtors.length > 0 && creditors.length > 0) {
+    let di = 0
+    let ci = 0
+
+    // Least-preferred pair: Astitva → Partha.
+    // When the natural greedy would produce that match, route around it if any
+    // alternative exists. Falls back to Astitva→Partha only when unavoidable.
+    if (debtors[di].name === 'Astitva' && creditors[ci].name === 'Partha') {
+      const altCi = creditors.findIndex(c => c.name !== 'Partha')
+      const altDi = debtors.findIndex(d => d.name !== 'Astitva')
+      if (altCi !== -1) ci = altCi        // Astitva pays someone else
+      else if (altDi !== -1) di = altDi   // someone else pays Partha
+      // else: only these two remain — must do Astitva→Partha
+    }
+
+    const debtor = debtors[di]
+    const creditor = creditors[ci]
+    const amt = Math.min(debtor.amount, creditor.amount)
+
+    txns.push({ from: debtor.name, to: creditor.name, amount: amt })
+    debtor.amount -= amt
+    creditor.amount -= amt
+
+    if (debtor.amount < EPS) debtors.splice(di, 1)
+    if (creditor.amount < EPS) creditors.splice(ci, 1)
+
+    creditors.sort(byAmountDesc)
+    debtors.sort(byAmountDesc)
   }
+
   return txns
 }
