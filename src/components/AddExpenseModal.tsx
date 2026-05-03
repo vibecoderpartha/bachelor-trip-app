@@ -1,11 +1,11 @@
-import { useState, useMemo, type CSSProperties } from 'react'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { useState, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { USERS, USER_NAMES, type User } from '../constants/users'
 import { toIDR, toINR, formatINR } from '../lib/currency'
 import { NeonBtn } from './ui/NeonBtn'
 import { NeonInput } from './ui/NeonInput'
 import { Avatar } from './ui/Avatar'
+import { Modal } from './ui/Modal'
 
 interface Props {
   currentUser: User
@@ -25,7 +25,6 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useBodyScrollLock()
   const totalIDR = useMemo(() => toIDR(parseFloat(amount) || 0, currency), [amount, currency])
 
   const splitTotal = useMemo(() =>
@@ -94,24 +93,8 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
     }
   }
 
-  const overlay: CSSProperties = {
-    position: 'fixed', inset: 0, zIndex: 200,
-    background: 'rgba(15, 11, 8, 0.78)',
-    backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
-  }
-  const sheet: CSSProperties = {
-    width: '100%', maxWidth: 480,
-    background: 'var(--bg-elevated)',
-    border: '1px solid var(--border)',
-    borderRadius: 20,
-    padding: 22,
-    margin: '16px auto',
-  }
-
   return (
-    <div style={overlay} onClick={onClose} data-testid="add-expense-modal">
-      <div style={sheet} onClick={e => e.stopPropagation()} className="animate-slide-up">
+    <Modal onClose={onClose} testId="add-expense-modal">
         <div className="flex items-center justify-between mb-4">
           <p className="serif-display" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 400 }}>
             New expense
@@ -259,7 +242,6 @@ export function AddExpenseModal({ currentUser, onClose }: Props) {
           </NeonBtn>
           <NeonBtn variant="ghost" onClick={onClose} data-testid="add-expense-cancel">Cancel</NeonBtn>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

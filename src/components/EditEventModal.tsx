@@ -1,10 +1,10 @@
-import { useState, type CSSProperties } from 'react'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { USERS } from '../constants/users'
 import { NeonBtn } from './ui/NeonBtn'
 import { NeonInput } from './ui/NeonInput'
 import { Avatar } from './ui/Avatar'
+import { Modal } from './ui/Modal'
 import type { DBEvent } from '../hooks/useEvents'
 
 interface Props {
@@ -43,7 +43,6 @@ export function EditEventModal({ event, onClose }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  useBodyScrollLock()
   const allSelected = forUsers.length === 0 || forUsers.length === USERS.length
 
   function toggle(name: string) {
@@ -79,20 +78,6 @@ export function EditEventModal({ event, onClose }: Props) {
     }
   }
 
-  const overlay: CSSProperties = {
-    position: 'fixed', inset: 0, zIndex: 200,
-    background: 'rgba(15, 11, 8, 0.78)',
-    backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
-  }
-  const sheet: CSSProperties = {
-    width: '100%', maxWidth: 480,
-    background: 'var(--bg-elevated)',
-    border: '1px solid var(--border)',
-    borderRadius: 20,
-    padding: 22,
-    margin: '16px auto',
-  }
   const label = (text: string, opt = false) => (
     <p className="font-ui mb-1.5" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500, letterSpacing: 1, textTransform: 'uppercase' }}>
       {text}{opt && <span style={{ opacity: 0.5, letterSpacing: 0, textTransform: 'none' }}> (opt.)</span>}
@@ -100,8 +85,7 @@ export function EditEventModal({ event, onClose }: Props) {
   )
 
   return (
-    <div style={overlay} onClick={onClose}>
-      <div style={sheet} onClick={e => e.stopPropagation()} className="animate-slide-up">
+    <Modal onClose={onClose}>
         <div className="flex items-center justify-between mb-4">
           <p className="serif-display" style={{ fontSize: 20, color: 'var(--text-primary)', fontWeight: 400 }}>
             Edit event
@@ -193,7 +177,6 @@ export function EditEventModal({ event, onClose }: Props) {
           </NeonBtn>
           <NeonBtn variant="ghost" onClick={onClose}>Cancel</NeonBtn>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }

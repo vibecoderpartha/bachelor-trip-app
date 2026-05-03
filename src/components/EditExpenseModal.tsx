@@ -1,11 +1,11 @@
-import { useState, useMemo, type CSSProperties } from 'react'
-import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
+import { useState, useMemo } from 'react'
 import { supabase } from '../lib/supabase'
 import { USERS, USER_NAMES, type User } from '../constants/users'
 import { toIDR, toINR, formatINR } from '../lib/currency'
 import { NeonBtn } from './ui/NeonBtn'
 import { NeonInput } from './ui/NeonInput'
 import { Avatar } from './ui/Avatar'
+import { Modal } from './ui/Modal'
 import type { Expense } from '../lib/splitting'
 
 interface Props {
@@ -45,7 +45,6 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
   )
   const splitTotalIDR = useMemo(() => toIDR(splitTotal, currency), [splitTotal, currency])
   const splitDiff = useMemo(() => Math.abs(splitTotalIDR - totalIDR), [splitTotalIDR, totalIDR])
-  useBodyScrollLock()
   const splitOk = splitDiff < 2
 
   function toggle(n: string) {
@@ -101,24 +100,8 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
     }
   }
 
-  const overlay: CSSProperties = {
-    position: 'fixed', inset: 0, zIndex: 200,
-    background: 'rgba(15, 11, 8, 0.78)',
-    backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
-  }
-  const sheet: CSSProperties = {
-    width: '100%', maxWidth: 480,
-    background: 'var(--bg-elevated)',
-    border: '1px solid var(--border)',
-    borderRadius: 20,
-    padding: 22,
-    margin: '16px auto',
-  }
-
   return (
-    <div style={overlay} onClick={onClose}>
-      <div style={sheet} onClick={e => e.stopPropagation()} className="animate-slide-up">
+    <Modal onClose={onClose}>
         <div className="flex items-center justify-between mb-4">
           <p className="serif-display" style={{ fontSize: 22, color: 'var(--text-primary)', fontWeight: 400 }}>Edit expense</p>
           <button onClick={onClose} style={{ fontSize: 18, color: 'var(--text-tertiary)', background: 'none', border: 'none', cursor: 'pointer' }}>✕</button>
@@ -249,7 +232,6 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
           <NeonBtn onClick={save} disabled={saving} className="flex-1">{saving ? 'Saving…' : 'Save changes'}</NeonBtn>
           <NeonBtn variant="ghost" onClick={onClose}>Cancel</NeonBtn>
         </div>
-      </div>
-    </div>
+    </Modal>
   )
 }
