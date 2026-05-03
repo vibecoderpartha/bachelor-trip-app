@@ -102,7 +102,7 @@ export function App() {
             {activeTab === 'trip'  && <TripTab user={user} />}
             {activeTab === 'scan'  && <ScanTab user={user} />}
             {activeTab === 'split' && <SplitTab user={user} />}
-            {activeTab === 'fx'    && <FXTab />}
+            {activeTab === 'fx'    && <FXTab user={user ?? undefined} />}
           </div>
         ) : (
           <div className="flex items-center justify-center py-20">

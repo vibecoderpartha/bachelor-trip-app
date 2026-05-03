@@ -2,7 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { TabHero } from '../components/TabHero'
 import { NeonInput } from '../components/ui/NeonInput'
 import { RATES, formatIDR, formatINR } from '../lib/currency'
-import { useCurrentUser } from '../hooks/useCurrentUser'
+import type { User } from '../constants/users'
 
 type Direction = 'INR_TO_IDR' | 'IDR_TO_INR'
 
@@ -24,8 +24,9 @@ const PRICE_GUIDE: PriceRow[] = [
   { icon: '💆', label: 'Balinese massage · 60min',     idr: 250_000 },
 ]
 
-export function FXTab() {
-  const { user } = useCurrentUser()
+interface Props { user?: User }
+
+export function FXTab({ user }: Props) {
   const [dir, setDir] = useState<Direction>('INR_TO_IDR')
   const [inr, setInr] = useState('1000')
   const [idr, setIdr] = useState('')
