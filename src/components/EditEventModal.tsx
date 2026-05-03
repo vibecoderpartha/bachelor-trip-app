@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from 'react'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { supabase } from '../lib/supabase'
 import { USERS } from '../constants/users'
 import { NeonBtn } from './ui/NeonBtn'
@@ -42,6 +43,7 @@ export function EditEventModal({ event, onClose }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useBodyScrollLock()
   const allSelected = forUsers.length === 0 || forUsers.length === USERS.length
 
   function toggle(name: string) {
@@ -81,7 +83,7 @@ export function EditEventModal({ event, onClose }: Props) {
     position: 'fixed', inset: 0, zIndex: 200,
     background: 'rgba(15, 11, 8, 0.78)',
     backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
   }
   const sheet: CSSProperties = {
     width: '100%', maxWidth: 480,
@@ -89,8 +91,7 @@ export function EditEventModal({ event, onClose }: Props) {
     border: '1px solid var(--border)',
     borderRadius: 20,
     padding: 22,
-    maxHeight: '88vh',
-    overflowY: 'auto',
+    margin: '16px auto',
   }
   const label = (text: string, opt = false) => (
     <p className="font-ui mb-1.5" style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500, letterSpacing: 1, textTransform: 'uppercase' }}>

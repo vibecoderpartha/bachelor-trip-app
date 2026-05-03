@@ -1,4 +1,5 @@
 import { useMemo, useState, type CSSProperties } from 'react'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { supabase } from '../lib/supabase'
 import type { Expense, Settlement } from '../lib/splitting'
 import { computeBalances, settleUp } from '../lib/splitting'
@@ -15,6 +16,7 @@ interface Props {
 }
 
 export function SettleUpModal({ currentUser, expenses, settlements, onClose }: Props) {
+  useBodyScrollLock()
   const [recording, setRecording] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const balances = useMemo(() => computeBalances(expenses, settlements), [expenses, settlements])
@@ -36,7 +38,7 @@ export function SettleUpModal({ currentUser, expenses, settlements, onClose }: P
     position: 'fixed', inset: 0, zIndex: 200,
     background: 'rgba(15, 11, 8, 0.78)',
     backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
   }
   const sheet: CSSProperties = {
     width: '100%', maxWidth: 480,
@@ -44,8 +46,7 @@ export function SettleUpModal({ currentUser, expenses, settlements, onClose }: P
     border: '1px solid var(--border)',
     borderRadius: 20,
     padding: 22,
-    maxHeight: '88vh',
-    overflowY: 'auto',
+    margin: '16px auto',
   }
 
   return (

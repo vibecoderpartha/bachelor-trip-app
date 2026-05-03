@@ -1,4 +1,5 @@
 import { useState, useMemo, type CSSProperties } from 'react'
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock'
 import { supabase } from '../lib/supabase'
 import { USERS, USER_NAMES, type User } from '../constants/users'
 import { toIDR, toINR, formatINR } from '../lib/currency'
@@ -44,6 +45,7 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
   )
   const splitTotalIDR = useMemo(() => toIDR(splitTotal, currency), [splitTotal, currency])
   const splitDiff = useMemo(() => Math.abs(splitTotalIDR - totalIDR), [splitTotalIDR, totalIDR])
+  useBodyScrollLock()
   const splitOk = splitDiff < 2
 
   function toggle(n: string) {
@@ -103,7 +105,7 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
     position: 'fixed', inset: 0, zIndex: 200,
     background: 'rgba(15, 11, 8, 0.78)',
     backdropFilter: 'blur(14px)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: 16, overflowY: 'auto', overscrollBehavior: 'contain',
   }
   const sheet: CSSProperties = {
     width: '100%', maxWidth: 480,
@@ -111,8 +113,7 @@ export function EditExpenseModal({ expense, currentUser, onClose }: Props) {
     border: '1px solid var(--border)',
     borderRadius: 20,
     padding: 22,
-    maxHeight: '88vh',
-    overflowY: 'auto',
+    margin: '16px auto',
   }
 
   return (
