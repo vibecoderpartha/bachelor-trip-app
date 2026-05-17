@@ -63,18 +63,22 @@ export function useTodos(userName: string) {
     const trimmed = text.trim()
     if (!trimmed) return
     await supabase.from('todos').insert({ user_name: userName, text: trimmed })
+    await fetchTodos()
   }
 
   async function toggleTodo(id: string, completed: boolean) {
     await supabase.from('todos').update({ completed: !completed }).eq('id', id)
+    await fetchTodos()
   }
 
   async function deleteTodo(id: string) {
     await supabase.from('todos').delete().eq('id', id)
+    await fetchTodos()
   }
 
   async function clearCompleted() {
     await supabase.from('todos').delete().eq('user_name', userName).eq('completed', true)
+    await fetchTodos()
   }
 
   return { todos, loading, addTodo, toggleTodo, deleteTodo, clearCompleted }
