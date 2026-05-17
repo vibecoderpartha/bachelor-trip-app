@@ -1,4 +1,4 @@
-export type TabId = 'trip' | 'scan' | 'split' | 'fx' | 'ai'
+export type TabId = 'trip' | 'scan' | 'split' | 'fx' | 'ai' | 'todo'
 
 export interface TabAsset {
   image: string
@@ -37,5 +37,11 @@ export const TAB_ASSETS: Record<TabId, TabAsset> = {
     eyebrow: 'Concierge',
     tagline: 'Ask anything. The smooth one knows.',
     accent: '#FFB04E',
+  },
+  todo: {
+    image: 'https://tplbxaqjqbeokdxdkhbo.supabase.co/storage/v1/object/public/personas/vaibhav.png',
+    eyebrow: 'My List',
+    tagline: 'Pack it, sort it, don\'t forget it.',
+    accent: '#A78BFA',
   },
 }

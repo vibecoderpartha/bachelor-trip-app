@@ -5,6 +5,7 @@ import { TripTab } from './tabs/TripTab'
 import { ScanTab } from './tabs/ScanTab'
 import { SplitTab } from './tabs/SplitTab'
 import { FXTab } from './tabs/FXTab'
+import { TodoTab } from './tabs/TodoTab'
 import { useCurrentUser } from './hooks/useCurrentUser'
 import { Avatar } from './components/ui/Avatar'
 import { type User } from './constants/users'
@@ -15,6 +16,7 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'scan',  label: 'Scan' },
   { id: 'split', label: 'Split' },
   { id: 'fx',    label: 'FX' },
+  { id: 'todo',  label: 'Todo' },
 ]
 
 export function App() {
@@ -103,6 +105,7 @@ export function App() {
             {activeTab === 'scan'  && <ScanTab user={user} />}
             {activeTab === 'split' && <SplitTab user={user} />}
             {activeTab === 'fx'    && <FXTab user={user ?? undefined} />}
+            {activeTab === 'todo'  && <TodoTab user={user} />}
           </div>
         ) : (
           <div className="flex items-center justify-center py-20">
