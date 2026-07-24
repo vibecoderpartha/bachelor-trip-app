@@ -6,7 +6,7 @@
 | Document type | Permanent product and architecture scope register |
 | Scope | Work intentionally excluded from the current multi-user conversion |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | [ADR-0001](../architecture/decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md), and [ADR-0003](../architecture/decisions/ADR-0003-commercial-membership-deferred.md) are Accepted; later Planned topics are indexed in [Architecture Decisions](../architecture/decisions/README.md) |
+| Related ADRs | [ADR-0001](../architecture/decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](../architecture/decisions/ADR-0003-commercial-membership-deferred.md), [ADR-0004](../architecture/decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](../architecture/decisions/ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](../architecture/decisions/ADR-0006-group-configuration.md), and [ADR-0007](../architecture/decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) are Accepted; the later Planned topic is indexed in [Architecture Decisions](../architecture/decisions/README.md) |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -119,8 +119,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Revisit trigger:** Validated user demand or a product requirement for a
   provider beyond the conversion's approved core authentication flow.
 - **Possible future phase:** Post-conversion identity expansion (unscheduled).
-- **Related documents or ADRs:** Planned
-  `docs/architecture/auth-groups-and-invitations.md` (not yet created);
+- **Related documents or ADRs:** [Authentication, Group, and Invitation
+  Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0002: Supabase Auth Is the Authoritative Identity
   Provider](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md).
 - **Notes:** Deferral of providers does not defer authentication itself.
@@ -203,9 +203,11 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   validation shows manual sharing is insufficient.
 - **Possible future phase:** Post-conversion communications phase
   (unscheduled).
-- **Related documents or ADRs:** Planned
-  `docs/architecture/auth-groups-and-invitations.md` and single-use atomic
-  invitation ADR topic (neither exists yet).
+- **Related documents or ADRs:** [Authentication, Group, and Invitation
+  Flows](../architecture/auth-groups-and-invitations.md);
+  [ADR-0007: Invitations Are Single-Use and Accepted Atomically
+  Server-Side](../architecture/decisions/ADR-0007-single-use-atomic-invitation-acceptance.md)
+  (Accepted).
 - **Notes:** This entry does not permit weakening invitation token or acceptance
   security. Initial entry created 2026-07-24.
 
@@ -228,8 +230,10 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Possible future phase:** Post-conversion authorization expansion
   (unscheduled).
 - **Related documents or ADRs:** [Glossary definitions for Owner and Member
-  role](../architecture/glossary.md); planned security and flow documents (not
-  yet created).
+  role](../architecture/glossary.md);
+  [Authentication, Group, and Invitation
+  Flows](../architecture/auth-groups-and-invitations.md); planned security
+  document (not yet created).
 - **Notes:** UI labels must not imply unavailable roles. Initial entry created
   2026-07-24.
 
@@ -338,6 +342,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Possible future phase:** Post-conversion organization/enterprise phase
   (unscheduled).
 - **Related documents or ADRs:** DEF-004; DEF-007;
+  [Authentication, Group, and Invitation
+  Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0001: One Group Represents One Trip and Is the Tenant
   Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md).
 - **Notes:** A Group Owner is not an organization administrator. Initial entry

@@ -6,7 +6,7 @@
 | Document type | Governance and package index |
 | Scope | Multi-user, multi-group conversion documentation |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | [ADR-0001](decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](decisions/ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](decisions/ADR-0003-commercial-membership-deferred.md), [ADR-0004](decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](decisions/ADR-0005-normalized-finance-payers-and-shares.md), and [ADR-0006](decisions/ADR-0006-group-configuration.md) are Accepted; later Planned topics are indexed in [Architecture Decisions](decisions/README.md) |
+| Related ADRs | [ADR-0001](decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](decisions/ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](decisions/ADR-0003-commercial-membership-deferred.md), [ADR-0004](decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](decisions/ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](decisions/ADR-0006-group-configuration.md), and [ADR-0007](decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) are Accepted; the later Planned topic is indexed in [Architecture Decisions](decisions/README.md) |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -67,7 +67,7 @@ Planned entry is not a file and must not be cited as though it exists.
 | [`docs/architecture/decisions/README.md`](decisions/README.md) | Created in Phase 1 | ADR index, numbering, lifecycle, and template | Draft |
 | [`docs/architecture/multi-tenant-target-architecture.md`](multi-tenant-target-architecture.md) | Created in Phase 2 | Product, Tenant, and global identity boundaries | Accepted |
 | [`docs/architecture/domain-and-data-model.md`](domain-and-data-model.md) | Created in Phase 3 | Target domain identities, ownership, relationships, Group configuration, and finance invariants | Accepted |
-| `docs/architecture/auth-groups-and-invitations.md` | Planned | Authentication, group, membership, and invitation flows | Planned |
+| [`docs/architecture/auth-groups-and-invitations.md`](auth-groups-and-invitations.md) | Created in Phase 4 | Authentication, Group, membership, ownership, configuration, archival, and Invitation flows | Accepted |
 | `docs/architecture/security-model.md` | Planned | Authorization, RLS, service-role, storage, and realtime security | Planned |
 | `docs/architecture/v1-migration-plan.md` | Planned | Safe conversion from the frozen v1 state | Planned |
 | `docs/architecture/feature-parity-test-contract.md` | Planned | Verifiable preservation and approved exceptions | Planned |
@@ -78,10 +78,11 @@ Planned entry is not a file and must not be cited as though it exists.
 | [`ADR-0004: group_members.id Is the Stable Participant Identity`](decisions/ADR-0004-group-member-id-is-participant-identity.md) | Created in Phase 3 | Stable Group-scoped Participant identity | Accepted |
 | [`ADR-0005: Finance Payers and Shares Use Normalized Tables`](decisions/ADR-0005-normalized-finance-payers-and-shares.md) | Created in Phase 3 | Normalized payer/share relationships and finance reconciliation | Accepted |
 | [`ADR-0006: Timezone, Currency, Destination, and Dates Are Group Configuration`](decisions/ADR-0006-group-configuration.md) | Created in Phase 3 | Group-owned destination, dates, timezone, and accounting currency | Accepted |
-| Two later-phase ADR topics, using future next available sequential numbers | Planned | Phase 4 Invitation acceptance and Phase 5 RLS decisions listed in the ADR index | Planned |
+| [`ADR-0007: Invitations Are Single-Use and Accepted Atomically Server-Side`](decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) | Created in Phase 4 | Recipient-bound, single-use, atomic Invitation acceptance | Accepted |
+| One later-phase ADR topic, using the future next available sequential number | Planned | Phase 5 RLS decision listed in the ADR index | Planned |
 
-Three Phase 2 ADRs and three Phase 3 ADRs are Accepted. The two
-later-phase topics remain unnumbered and Planned.
+ADR-0001 through ADR-0007 are Accepted. The Phase 5 RLS topic remains
+unnumbered and Planned.
 
 ## Documentation phases
 
@@ -94,7 +95,7 @@ decision.
 | 1. Documentation governance and terminology | Establish package authority, vocabulary, deferred-scope control, and ADR governance. | This README; [glossary](glossary.md); [deferred-scope register](../product/deferred-scope-register.md); [ADR index](decisions/README.md) | The Phase 1 gate below passes and the v1 report is unchanged. |
 | 2. Product, tenant, and identity boundaries | Define what a Group and Trip mean, establish the Tenant boundary and Supabase Auth as the authoritative global identity source, separate global from group-owned concerns, and exclude commercial scope. | [Multi-Tenant Target Architecture](multi-tenant-target-architecture.md) (Accepted); [ADR-0001](decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](decisions/ADR-0002-supabase-auth-is-authoritative.md), and [ADR-0003](decisions/ADR-0003-commercial-membership-deferred.md) (Accepted) | Product, Tenant, and identity boundaries are unambiguous; the authoritative global identity source is Accepted before Phase 3 can be accepted; deferred items remain excluded; relevant ADRs are Accepted. |
 | 3. Domain and data model | Define stable identities, ownership, relationships, finance normalization, Group configuration, and data invariants without writing migrations. | [Domain and Data Model](domain-and-data-model.md) (Accepted); [ADR-0004](decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](decisions/ADR-0005-normalized-finance-payers-and-shares.md), and [ADR-0006](decisions/ADR-0006-group-configuration.md) (Accepted) | The Phase 2 authoritative-identity decision is an Accepted prerequisite; every group-owned record has an owner scope and stable identity model; Group configuration is defined; migration-relevant invariants are reviewable; relevant ADRs are Accepted. |
-| 4. Authentication, Group, and Invitation flows | Define authentication and session behaviour using the authoritative Supabase Auth identity established in Phase 2, plus Group creation/selection, membership, ownership, and Invitation state transitions. | `auth-groups-and-invitations.md`; ADR for single-use, atomic server-side Invitation acceptance. Prerequisites: the Accepted Phase 2 Supabase Auth ADR and the Accepted Phase 3 domain and identity model | All normal and failure flows have explicit authorization boundaries and no UI state is treated as authority; the Supabase Auth decision is treated as an established prerequisite rather than reauthored; the Invitation ADR is Accepted. |
+| 4. Authentication, Group, and Invitation flows | Define authentication and session behaviour using the authoritative Supabase Auth identity established in Phase 2, plus Group creation/selection, membership, ownership, and Invitation state transitions. | [Authentication, Group, and Invitation Flows](auth-groups-and-invitations.md) (Accepted); [ADR-0007](decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) (Accepted). Prerequisites: the Accepted Phase 2 Supabase Auth ADR and the Accepted Phase 3 domain and identity model | All normal and failure flows have explicit authorization boundaries and no UI state is treated as authority; the Supabase Auth decision is treated as an established prerequisite rather than reauthored; the Invitation ADR is Accepted. |
 | 5. Security architecture | Define database, API, Edge Function, storage, and realtime enforcement for tenant isolation. | `security-model.md`; ADR for RLS-enforced group access | Deny-by-default access rules, privileged-operation boundaries, and verification requirements are complete; the security ADR is Accepted. |
 | 6. Migration and feature parity | Define staged migration, compatibility, rollback, data validation, and a testable parity contract against v1. | `v1-migration-plan.md`; `feature-parity-test-contract.md` | Every preserved behaviour or intentional parity exception is accounted for; migration and rollback gates are measurable. |
 | 7. Implementation roadmap | Order implementation only after the architecture, security, migration, and parity package is internally consistent. | `implementation-roadmap.md`; completed package review | All required documents and ADRs are Accepted, conflicts are closed, deferred scope is checked, and final lock conditions pass. |
@@ -110,7 +111,7 @@ design:
 4. Accepted ADRs listed in the [ADR index](decisions/README.md)
 5. [Multi-Tenant Target Architecture](multi-tenant-target-architecture.md)
 6. [Domain and Data Model](domain-and-data-model.md)
-7. `auth-groups-and-invitations.md` once created
+7. [Authentication, Group, and Invitation Flows](auth-groups-and-invitations.md)
 8. `security-model.md` once created
 9. `v1-migration-plan.md` and `feature-parity-test-contract.md` once created
 10. `implementation-roadmap.md` once created
