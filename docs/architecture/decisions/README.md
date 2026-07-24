@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Draft |
+| Status | Accepted |
 | Document type | ADR index and governance |
 | Scope | Repository-wide architecture decision creation, numbering, lifecycle, and indexing |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../../v1-codebase-feature-and-flow-report.md) |

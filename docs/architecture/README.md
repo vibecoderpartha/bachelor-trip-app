@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Draft |
+| Status | Accepted |
 | Document type | Governance and package index |
 | Scope | Multi-user, multi-group conversion documentation |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../v1-codebase-feature-and-flow-report.md) |
@@ -61,17 +61,17 @@ Planned entry is not a file and must not be cited as though it exists.
 | Document | Inventory class | Package role | Status |
 |---|---|---|---|
 | [`docs/v1-codebase-feature-and-flow-report.md`](../v1-codebase-feature-and-flow-report.md) | Existing | Factual current-state baseline | Existing/Frozen |
-| [`docs/architecture/README.md`](README.md) | Created in Phase 1 | Architecture entry point and governance | Draft |
-| [`docs/architecture/glossary.md`](glossary.md) | Created in Phase 1 | Canonical project terminology | Draft |
-| [`docs/product/deferred-scope-register.md`](../product/deferred-scope-register.md) | Created in Phase 1 | Permanent deferred-work register | Draft |
-| [`docs/architecture/decisions/README.md`](decisions/README.md) | Created in Phase 1 | ADR index, numbering, lifecycle, and template | Draft |
+| [`docs/architecture/README.md`](README.md) | Created in Phase 1 | Architecture entry point and governance | Accepted |
+| [`docs/architecture/glossary.md`](glossary.md) | Created in Phase 1 | Canonical project terminology | Accepted |
+| [`docs/product/deferred-scope-register.md`](../product/deferred-scope-register.md) | Created in Phase 1 | Permanent deferred-work register | Accepted |
+| [`docs/architecture/decisions/README.md`](decisions/README.md) | Created in Phase 1 | ADR index, numbering, lifecycle, and template | Accepted |
 | [`docs/architecture/multi-tenant-target-architecture.md`](multi-tenant-target-architecture.md) | Created in Phase 2 | Product, Tenant, and global identity boundaries | Accepted |
 | [`docs/architecture/domain-and-data-model.md`](domain-and-data-model.md) | Created in Phase 3 | Target domain identities, ownership, relationships, Group configuration, and finance invariants | Accepted |
 | [`docs/architecture/auth-groups-and-invitations.md`](auth-groups-and-invitations.md) | Created in Phase 4 | Authentication, Group, membership, ownership, configuration, archival, and Invitation flows | Accepted |
 | [`docs/architecture/security-model.md`](security-model.md) | Created in Phase 5 | Authorization, RLS, trusted operations, service-role, Storage, realtime, audit, abuse resistance, and verification | Accepted |
 | [`docs/architecture/v1-migration-plan.md`](v1-migration-plan.md) | Created in Phase 6 | Safe conversion from the frozen v1 state | Accepted |
 | [`docs/architecture/feature-parity-test-contract.md`](feature-parity-test-contract.md) | Created in Phase 6 | Verifiable preservation and approved exceptions | Accepted |
-| `docs/architecture/implementation-roadmap.md` | Planned | Ordered implementation work after documentation lock | Planned |
+| [`docs/architecture/implementation-roadmap.md`](implementation-roadmap.md) | Created in Phase 7 | Ordered implementation sequencing after the Accepted Phase 2–6 package | Accepted |
 | [`ADR-0001: One Group Represents One Trip and Is the Tenant Boundary`](decisions/ADR-0001-group-is-trip-tenant.md) | Created in Phase 2 | Group/Trip workspace and Tenant boundary | Accepted |
 | [`ADR-0002: Supabase Auth Is the Authoritative Identity Provider`](decisions/ADR-0002-supabase-auth-is-authoritative.md) | Created in Phase 2 | Global authentication and session identity authority | Accepted |
 | [`ADR-0003: Commercial Membership Is Deferred`](decisions/ADR-0003-commercial-membership-deferred.md) | Created in Phase 2 | Separation of Group access from commercial scope | Accepted |
@@ -101,7 +101,7 @@ decision.
 | 4. Authentication, Group, and Invitation flows | Define authentication and session behaviour using the authoritative Supabase Auth identity established in Phase 2, plus Group creation/selection, membership, ownership, and Invitation state transitions. | [Authentication, Group, and Invitation Flows](auth-groups-and-invitations.md) (Accepted); [ADR-0007](decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) (Accepted). Prerequisites: the Accepted Phase 2 Supabase Auth ADR and the Accepted Phase 3 domain and identity model | All normal and failure flows have explicit authorization boundaries and no UI state is treated as authority; the Supabase Auth decision is treated as an established prerequisite rather than reauthored; the Invitation ADR is Accepted. |
 | 5. Security architecture | Define database, API, Edge Function, Storage, and realtime enforcement for Tenant isolation. | [Security Model](security-model.md) (Accepted); [ADR-0008](decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) (Accepted) | Deny-by-default access rules, direct and indirect ownership paths, complete operation permissions, privileged-operation boundaries, and verification requirements are complete; the security ADR is Accepted. |
 | 6. Migration and feature parity | Define staged migration, compatibility, rollback, data validation, and a testable parity contract against v1. | [V1 Migration Plan](v1-migration-plan.md) (Accepted); [Feature Parity Test Contract](feature-parity-test-contract.md) (Accepted). No Phase 6 ADR was required. | Complete: every preserved behaviour or intentional parity exception is accounted for; migration and rollback gates are measurable; both Phase 6 documents are Accepted. |
-| 7. Implementation roadmap | Order implementation only after the architecture, security, migration, and parity package is internally consistent. | `implementation-roadmap.md`; completed package review | All required documents and ADRs are Accepted, conflicts are closed, deferred scope is checked, and final lock conditions pass. |
+| 7. Implementation roadmap | Order implementation only after the architecture, security, migration, and parity package is internally consistent. | [Implementation Roadmap](implementation-roadmap.md) (Accepted). No Phase 7 ADR has been created. | Complete: final documentation lock is complete; application implementation has not started, and production migration and deployment remain separately authorized. |
 
 ## Reading order
 
@@ -118,11 +118,12 @@ design:
 8. [Security Model](security-model.md)
 9. [V1 Migration Plan](v1-migration-plan.md)
 10. [Feature Parity Test Contract](feature-parity-test-contract.md)
-11. `implementation-roadmap.md` once created
+11. [Implementation Roadmap](implementation-roadmap.md) (Accepted)
 12. [Deferred-scope register](../product/deferred-scope-register.md)
 
-The path explicitly qualified with “once created” in this list does not yet
-exist.
+Phase 7 roadmap authoring is Accepted and the final documentation lock is
+complete. Application implementation has not started; production migration and
+deployment remain separately authorized.
 The deferred-scope register is read last as a consolidated scope check, but
 every phase must also consult it while drafting.
 
@@ -130,21 +131,20 @@ every phase must also consult it while drafting.
 
 When documents conflict, use the following precedence:
 
-1. Accepted ADRs
-2. Accepted target architecture and security documents
-3. Domain/data-model and flow documents
-4. Feature-parity contract
-5. Migration plan
-6. Implementation roadmap
-7. Existing v1 report as a current-state reference
-8. Historical comments, old READMEs, and implementation notes
+1. The frozen v1 report for verified current behaviour only.
+2. Accepted ADRs for target architectural decisions.
+3. Accepted Phase 2–6 architecture documents for target requirements.
+4. Accepted migration and parity decisions for conversion and preservation.
+5. The deferred-scope register for excluded scope.
+6. The Phase 7 implementation roadmap for sequencing only.
+7. Implementation artifacts after Phase 7 acceptance.
 
-Precedence resolves document authority; it does not authorize silent
-interpretation. Codex and human contributors must report the conflicting
-statements, identify their statuses, and obtain or record an explicit
-resolution. If an Accepted higher-precedence source would erase a verified
-current behaviour, the difference must also be recorded as an intentional
-parity exception before implementation.
+The frozen report is not target authority, and target documents do not rewrite
+its verified current facts. Precedence does not authorize silent interpretation:
+contributors must report conflicting statements, identify statuses, and obtain
+or record an explicit resolution. If an Accepted target source changes a
+verified behaviour, the difference must be an intentional parity exception
+before implementation.
 
 ## Document metadata and status lifecycle
 
