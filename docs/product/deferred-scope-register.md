@@ -6,7 +6,7 @@
 | Document type | Permanent product and architecture scope register |
 | Scope | Work intentionally excluded from the current multi-user conversion |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | [ADR-0001](../architecture/decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](../architecture/decisions/ADR-0003-commercial-membership-deferred.md), [ADR-0004](../architecture/decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](../architecture/decisions/ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](../architecture/decisions/ADR-0006-group-configuration.md), and [ADR-0007](../architecture/decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) are Accepted; the later Planned topic is indexed in [Architecture Decisions](../architecture/decisions/README.md) |
+| Related ADRs | [ADR-0001](../architecture/decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](../architecture/decisions/ADR-0003-commercial-membership-deferred.md), [ADR-0004](../architecture/decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](../architecture/decisions/ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](../architecture/decisions/ADR-0006-group-configuration.md), [ADR-0007](../architecture/decisions/ADR-0007-single-use-atomic-invitation-acceptance.md), and [ADR-0008](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) are Accepted |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -122,7 +122,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [Authentication, Group, and Invitation
   Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0002: Supabase Auth Is the Authoritative Identity
-  Provider](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md).
+  Provider](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md);
+  [Security Model](../architecture/security-model.md).
 - **Notes:** Deferral of providers does not defer authentication itself.
   Initial entry created 2026-07-24.
 
@@ -207,6 +208,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0007: Invitations Are Single-Use and Accepted Atomically
   Server-Side](../architecture/decisions/ADR-0007-single-use-atomic-invitation-acceptance.md)
+  (Accepted); [Security Model](../architecture/security-model.md);
+  [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
+  Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
   (Accepted).
 - **Notes:** This entry does not permit weakening invitation token or acceptance
   security. Initial entry created 2026-07-24.
@@ -232,8 +236,11 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [Glossary definitions for Owner and Member
   role](../architecture/glossary.md);
   [Authentication, Group, and Invitation
-  Flows](../architecture/auth-groups-and-invitations.md); planned security
-  document (not yet created).
+  Flows](../architecture/auth-groups-and-invitations.md);
+  [Security Model](../architecture/security-model.md);
+  [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
+  Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
+  (Accepted).
 - **Notes:** UI labels must not imply unavailable roles. Initial entry created
   2026-07-24.
 
@@ -261,7 +268,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   (unscheduled).
 - **Related documents or ADRs:** [V1 report, Trip data loading and
   visibility](../v1-codebase-feature-and-flow-report.md#61-data-loading-and-visibility);
-  planned feature-parity contract and security model (neither exists yet).
+  [Security Model](../architecture/security-model.md); planned feature-parity
+  contract (not yet created).
 - **Notes:** Later parity documentation must decide how v1 assignment-based
   filtering is preserved without claiming private-event security. Initial entry
   created 2026-07-24.
@@ -345,7 +353,11 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   [Authentication, Group, and Invitation
   Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0001: One Group Represents One Trip and Is the Tenant
-  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md).
+  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md);
+  [Security Model](../architecture/security-model.md);
+  [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
+  Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
+  (Accepted).
 - **Notes:** A Group Owner is not an organization administrator. Initial entry
   created 2026-07-24.
 

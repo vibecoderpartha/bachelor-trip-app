@@ -6,7 +6,7 @@
 | Document type | ADR index and governance |
 | Scope | Repository-wide architecture decision creation, numbering, lifecycle, and indexing |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | [ADR-0001](ADR-0001-group-is-trip-tenant.md), [ADR-0002](ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](ADR-0003-commercial-membership-deferred.md), [ADR-0004](ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](ADR-0006-group-configuration.md), and [ADR-0007](ADR-0007-single-use-atomic-invitation-acceptance.md) are Accepted |
+| Related ADRs | [ADR-0001](ADR-0001-group-is-trip-tenant.md), [ADR-0002](ADR-0002-supabase-auth-is-authoritative.md), [ADR-0003](ADR-0003-commercial-membership-deferred.md), [ADR-0004](ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](ADR-0005-normalized-finance-payers-and-shares.md), [ADR-0006](ADR-0006-group-configuration.md), [ADR-0007](ADR-0007-single-use-atomic-invitation-acceptance.md), and [ADR-0008](ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) are Accepted |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -42,8 +42,10 @@ assigned `ADR-0001` through `ADR-0003`, and the Phase 3 repository-wide recheck
 confirmed `ADR-0004` as next available before assigning `ADR-0004` through
 `ADR-0006` in the required topic order. The Phase 4 repository-wide recheck
 confirmed `ADR-0007` as next available before assigning it to the Invitation
-acceptance decision. The next available number is currently expected to be
-`ADR-0008`, but it is not reserved. Before authoring another ADR, search the
+acceptance decision. The Phase 5 repository-wide recheck confirmed `ADR-0008`
+as next available before assigning it to the Group-scoped RLS and trusted
+operations decision. The next available number is currently expected to be
+`ADR-0009`, but it is not reserved. Before authoring another ADR, search the
 repository and history again.
 
 ## Numbering and filenames
@@ -61,10 +63,9 @@ repository and history again.
 - Concurrent authors must resolve numbering collisions before review. Numbering
   conveys sequence, not priority or status.
 
-The three Phase 2 topics, three Phase 3 topics, and one Phase 4 topic have
-assigned files and are Accepted. The Phase 5 topic remains unnumbered and
-Planned; this index does not reserve its number, and no placeholder ADR file
-should be created.
+The three Phase 2 topics, three Phase 3 topics, one Phase 4 topic, and one
+Phase 5 topic have assigned files and are Accepted. This index reserves no
+later number, and no placeholder ADR file should be created.
 
 ## ADR lifecycle
 
@@ -170,8 +171,8 @@ write “None identified” with a reason so review coverage remains visible.
 ## ADR index
 
 The first three entries are **Accepted** Phase 2 records. The next three are
-**Accepted** Phase 3 records. ADR-0007 is an **Accepted** Phase 4 record. The
-final Phase 5 topic is **Planned**, unnumbered, and does not yet have a file.
+**Accepted** Phase 3 records. ADR-0007 is an **Accepted** Phase 4 record.
+ADR-0008 is an **Accepted** Phase 5 record.
 
 | ADR or planned topic | Status | Purpose | Documentation phase |
 |---|---|---|---|
@@ -182,8 +183,8 @@ final Phase 5 topic is **Planned**, unnumbered, and does not yet have a file.
 | [ADR-0005: Finance Payers and Shares Use Normalized Tables](ADR-0005-normalized-finance-payers-and-shares.md) | Accepted | Replace name-keyed and JSON Participant references with stable, constrainable finance relationships that preserve payer/share semantics. | Phase 3 — Domain and data model |
 | [ADR-0006: Timezone, Currency, Destination, and Dates Are Group Configuration](ADR-0006-group-configuration.md) | Accepted | Remove Bali-, IST/WITA-, INR/IDR-, and fixed-date coupling while retaining configuration-driven parity behaviour for the migrated Bali Group. | Phase 3 — Domain and data model |
 | [ADR-0007: Invitations Are Single-Use and Accepted Atomically Server-Side](ADR-0007-single-use-atomic-invitation-acceptance.md) | Accepted | Prevent reuse and race conditions while ensuring a Group Member relationship is created only through an authorized, recipient-bound, all-or-nothing acceptance operation. | Phase 4 — Authentication, Group, and Invitation flows |
-| Group access is enforced through database RLS. | Planned | Lock the primary database Tenant-isolation boundary and require client queries and realtime behaviour to align with server enforcement. | Phase 5 — Security architecture |
+| [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted Operations](ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) | Accepted | Lock Group-scoped RLS as the ordinary database Tenant-isolation boundary and confine multi-record/elevated work to validated trusted operations aligned with Storage and realtime. | Phase 5 — Security architecture |
 
-The Planned Phase 5 topic receives a filename and number only when authored
-after a fresh repository-wide sequence check. The allocation remains three
-ADRs in Phase 2, three in Phase 3, one in Phase 4, and one in Phase 5.
+The allocation remains three ADRs in Phase 2, three in Phase 3, one in Phase 4,
+and one in Phase 5. `ADR-0009` is expected to be the next available number but
+is not reserved; a future ADR requires another repository-wide sequence check.
