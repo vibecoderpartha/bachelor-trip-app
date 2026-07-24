@@ -6,7 +6,7 @@
 | Document type | Permanent product and architecture scope register |
 | Scope | Work intentionally excluded from the current multi-user conversion |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | None accepted; planned topics are indexed in [Architecture Decisions](../architecture/decisions/README.md) |
+| Related ADRs | [ADR-0001](../architecture/decisions/ADR-0001-group-is-trip-tenant.md), [ADR-0002](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md), and [ADR-0003](../architecture/decisions/ADR-0003-commercial-membership-deferred.md) are Accepted; later Planned topics are indexed in [Architecture Decisions](../architecture/decisions/README.md) |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -120,8 +120,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   provider beyond the conversion's approved core authentication flow.
 - **Possible future phase:** Post-conversion identity expansion (unscheduled).
 - **Related documents or ADRs:** Planned
-  `docs/architecture/auth-groups-and-invitations.md` and authoritative-identity
-  ADR topic (neither exists yet).
+  `docs/architecture/auth-groups-and-invitations.md` (not yet created);
+  [ADR-0002: Supabase Auth Is the Authoritative Identity
+  Provider](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md).
 - **Notes:** Deferral of providers does not defer authentication itself.
   Initial entry created 2026-07-24.
 
@@ -147,8 +148,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Possible future phase:** Post-conversion multi-trip social-group phase
   (unscheduled).
 - **Related documents or ADRs:** [Glossary definitions for Group and
-  Trip](../architecture/glossary.md); planned Group-boundary ADR topic (not yet
-  authored).
+  Trip](../architecture/glossary.md);
+  [ADR-0001: One Group Represents One Trip and Is the Tenant
+  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md).
 - **Notes:** Do not prebuild an unused friend-group layer into the current
   conversion. Initial entry created 2026-07-24.
 
@@ -335,8 +337,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   managed organizations.
 - **Possible future phase:** Post-conversion organization/enterprise phase
   (unscheduled).
-- **Related documents or ADRs:** DEF-004; DEF-007; planned Group-boundary ADR
-  topic (not yet authored).
+- **Related documents or ADRs:** DEF-004; DEF-007;
+  [ADR-0001: One Group Represents One Trip and Is the Tenant
+  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md).
 - **Notes:** A Group Owner is not an organization administrator. Initial entry
   created 2026-07-24.
 

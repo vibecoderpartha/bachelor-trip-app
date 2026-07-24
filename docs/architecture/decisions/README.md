@@ -6,7 +6,7 @@
 | Document type | ADR index and governance |
 | Scope | Repository-wide architecture decision creation, numbering, lifecycle, and indexing |
 | Current-state baseline | [V1 Codebase Feature and Flow Report](../../v1-codebase-feature-and-flow-report.md) |
-| Related ADRs | [ADR-0001](ADR-0001-group-is-trip-tenant.md), [ADR-0002](ADR-0002-supabase-auth-is-authoritative.md), and [ADR-0003](ADR-0003-commercial-membership-deferred.md) are Proposed; none are Accepted |
+| Related ADRs | [ADR-0001](ADR-0001-group-is-trip-tenant.md), [ADR-0002](ADR-0002-supabase-auth-is-authoritative.md), and [ADR-0003](ADR-0003-commercial-membership-deferred.md) are Accepted |
 | Last reviewed | 2026-07-24 |
 
 ## Purpose
@@ -57,7 +57,7 @@ ADR, search the repository and history again.
 - Concurrent authors must resolve numbering collisions before review. Numbering
   conveys sequence, not priority or status.
 
-The three Phase 2 topics have assigned files and remain Proposed. The five
+The three Phase 2 topics have assigned files and are Accepted. The five
 later-phase topics remain unnumbered and Planned; this index does not reserve
 their numbers, and no placeholder ADR file should be created.
 
@@ -164,15 +164,14 @@ write “None identified” with a reason so review coverage remains visible.
 
 ## ADR index
 
-The first three entries are **Proposed** Phase 2 records. The remaining five
-entries are **Planned**, unnumbered, and do not yet have files. No ADR is
-Accepted.
+The first three entries are **Accepted** Phase 2 records. The remaining five
+entries are **Planned**, unnumbered, and do not yet have files.
 
 | ADR or planned topic | Status | Purpose | Documentation phase |
 |---|---|---|---|
-| [ADR-0001: One Group Represents One Trip and Is the Tenant Boundary](ADR-0001-group-is-trip-tenant.md) | Proposed | Lock the workspace/Tenant unit, prevent an unapproved Group-to-many-Trips hierarchy, and establish the ownership scope used by later models. | Phase 2 — Product, tenant, and identity boundaries |
-| [ADR-0002: Supabase Auth Is the Authoritative Identity Provider](ADR-0002-supabase-auth-is-authoritative.md) | Proposed | Separate authenticated global identity from Profile, Group Member, Legacy Participant, and display-name concepts. | Phase 2 — Product, tenant, and identity boundaries |
-| [ADR-0003: Commercial Membership Is Deferred](ADR-0003-commercial-membership-deferred.md) | Proposed | Permanently separate Group access and Participant identity from commercial paid status during the free conversion and testing period. | Phase 2 — Product, tenant, and identity boundaries |
+| [ADR-0001: One Group Represents One Trip and Is the Tenant Boundary](ADR-0001-group-is-trip-tenant.md) | Accepted | Lock the workspace/Tenant unit, prevent an unapproved Group-to-many-Trips hierarchy, and establish the ownership scope used by later models. | Phase 2 — Product, tenant, and identity boundaries |
+| [ADR-0002: Supabase Auth Is the Authoritative Identity Provider](ADR-0002-supabase-auth-is-authoritative.md) | Accepted | Separate authenticated global identity from Profile, Group Member, Legacy Participant, and display-name concepts. | Phase 2 — Product, tenant, and identity boundaries |
+| [ADR-0003: Commercial Membership Is Deferred](ADR-0003-commercial-membership-deferred.md) | Accepted | Permanently separate Group access and Participant identity from commercial paid status during the free conversion and testing period. | Phase 2 — Product, tenant, and identity boundaries |
 | `group_members.id` is the stable Participant identity inside a Group. | Planned | Prevent display names or global user presentation data from serving as identity in group-owned event, finance, settlement, Todo, and related records. | Phase 3 — Domain and data model |
 | Group access is enforced through database RLS. | Planned | Lock the primary database tenant-isolation boundary and require client queries and realtime behaviour to align with server enforcement. | Phase 5 — Security architecture |
 | Invitations are single-use and accepted atomically server-side. | Planned | Prevent reuse and race conditions while ensuring a Group Member relationship is created only through an authorized, all-or-nothing acceptance operation. | Phase 4 — Authentication, Group, and Invitation flows |
