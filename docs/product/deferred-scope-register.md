@@ -70,7 +70,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   (unscheduled).
 - **Related documents or ADRs:** [Architecture governance](../architecture/README.md);
   [ADR-0003: Commercial Membership Is
-  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md).
+  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** `group_members` must never be used as evidence of paid status.
   Initial entry created 2026-07-24.
 
@@ -96,7 +97,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [Glossary definitions for Group Member and
   Entitlement](../architecture/glossary.md);
   [ADR-0003: Commercial Membership Is
-  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md).
+  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** Group roles authorize group operations; they are not premium
   tiers. Initial entry created 2026-07-24.
 
@@ -123,7 +125,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   Flows](../architecture/auth-groups-and-invitations.md);
   [ADR-0002: Supabase Auth Is the Authoritative Identity
   Provider](../architecture/decisions/ADR-0002-supabase-auth-is-authoritative.md);
-  [Security Model](../architecture/security-model.md).
+  [Security Model](../architecture/security-model.md);
+  [V1 Migration Plan](../architecture/v1-migration-plan.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** Deferral of providers does not defer authentication itself.
   Initial entry created 2026-07-24.
 
@@ -151,7 +155,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [Glossary definitions for Group and
   Trip](../architecture/glossary.md);
   [ADR-0001: One Group Represents One Trip and Is the Tenant
-  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md).
+  Boundary](../architecture/decisions/ADR-0001-group-is-trip-tenant.md);
+  [V1 Migration Plan](../architecture/v1-migration-plan.md).
 - **Notes:** Do not prebuild an unused friend-group layer into the current
   conversion. Initial entry created 2026-07-24.
 
@@ -180,7 +185,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   (unscheduled).
 - **Related documents or ADRs:** [V1 report, Bali price
   guide](../v1-codebase-feature-and-flow-report.md#93-bali-price-guide);
-  DEF-012.
+  DEF-012;
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** Preservation for the migrated Bali Group is a parity concern, not
   authorization to generalize the content. Initial entry created 2026-07-24.
 
@@ -211,7 +217,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   (Accepted); [Security Model](../architecture/security-model.md);
   [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
   Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
-  (Accepted).
+  (Accepted); [V1 Migration Plan](../architecture/v1-migration-plan.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** This entry does not permit weakening invitation token or acceptance
   security. Initial entry created 2026-07-24.
 
@@ -240,7 +247,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   [Security Model](../architecture/security-model.md);
   [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
   Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
-  (Accepted).
+  (Accepted);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** UI labels must not imply unavailable roles. Initial entry created
   2026-07-24.
 
@@ -268,8 +276,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   (unscheduled).
 - **Related documents or ADRs:** [V1 report, Trip data loading and
   visibility](../v1-codebase-feature-and-flow-report.md#61-data-loading-and-visibility);
-  [Security Model](../architecture/security-model.md); planned feature-parity
-  contract (not yet created).
+  [Security Model](../architecture/security-model.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** Later parity documentation must decide how v1 assignment-based
   filtering is preserved without claiming private-event security. Initial entry
   created 2026-07-24.
@@ -297,7 +305,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [V1 report, settle-up
   flow](../v1-codebase-feature-and-flow-report.md#88-settle-up-flow); DEF-010;
   [ADR-0003: Commercial Membership Is
-  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md).
+  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md);
+  [V1 Migration Plan](../architecture/v1-migration-plan.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** “Record a settlement” remains ledger behaviour and must not be
   described as processing a payment. Initial entry created 2026-07-24.
 
@@ -324,7 +334,9 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [Glossary definition for Accounting
   currency](../architecture/glossary.md); DEF-009;
   [ADR-0003: Commercial Membership Is
-  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md).
+  Deferred](../architecture/decisions/ADR-0003-commercial-membership-deferred.md);
+  [V1 Migration Plan](../architecture/v1-migration-plan.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** Target finance language must distinguish calculated net positions
   from stored money. Initial entry created 2026-07-24.
 
@@ -357,7 +369,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
   [Security Model](../architecture/security-model.md);
   [ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted
   Operations](../architecture/decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md)
-  (Accepted).
+  (Accepted); [V1 Migration Plan](../architecture/v1-migration-plan.md);
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** A Group Owner is not an organization administrator. Initial entry
   created 2026-07-24.
 
@@ -386,7 +399,8 @@ trigger, Possible future phase, Related documents or ADRs, and Notes.
 - **Related documents or ADRs:** [V1 report, Bali price
   guide](../v1-codebase-feature-and-flow-report.md#93-bali-price-guide);
   [V1 report, dormant AI concierge](../v1-codebase-feature-and-flow-report.md#11-dormant-ai-concierge);
-  DEF-005.
+  DEF-005;
+  [Feature Parity Test Contract](../architecture/feature-parity-test-contract.md).
 - **Notes:** The dormant v1 AI concierge is not a parity feature merely because
   placeholder code exists. Initial entry created 2026-07-24.
 

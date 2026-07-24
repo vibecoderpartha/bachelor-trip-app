@@ -69,8 +69,8 @@ Planned entry is not a file and must not be cited as though it exists.
 | [`docs/architecture/domain-and-data-model.md`](domain-and-data-model.md) | Created in Phase 3 | Target domain identities, ownership, relationships, Group configuration, and finance invariants | Accepted |
 | [`docs/architecture/auth-groups-and-invitations.md`](auth-groups-and-invitations.md) | Created in Phase 4 | Authentication, Group, membership, ownership, configuration, archival, and Invitation flows | Accepted |
 | [`docs/architecture/security-model.md`](security-model.md) | Created in Phase 5 | Authorization, RLS, trusted operations, service-role, Storage, realtime, audit, abuse resistance, and verification | Accepted |
-| `docs/architecture/v1-migration-plan.md` | Planned | Safe conversion from the frozen v1 state | Planned |
-| `docs/architecture/feature-parity-test-contract.md` | Planned | Verifiable preservation and approved exceptions | Planned |
+| [`docs/architecture/v1-migration-plan.md`](v1-migration-plan.md) | Created in Phase 6 | Safe conversion from the frozen v1 state | Accepted |
+| [`docs/architecture/feature-parity-test-contract.md`](feature-parity-test-contract.md) | Created in Phase 6 | Verifiable preservation and approved exceptions | Accepted |
 | `docs/architecture/implementation-roadmap.md` | Planned | Ordered implementation work after documentation lock | Planned |
 | [`ADR-0001: One Group Represents One Trip and Is the Tenant Boundary`](decisions/ADR-0001-group-is-trip-tenant.md) | Created in Phase 2 | Group/Trip workspace and Tenant boundary | Accepted |
 | [`ADR-0002: Supabase Auth Is the Authoritative Identity Provider`](decisions/ADR-0002-supabase-auth-is-authoritative.md) | Created in Phase 2 | Global authentication and session identity authority | Accepted |
@@ -82,6 +82,10 @@ Planned entry is not a file and must not be cited as though it exists.
 | [`ADR-0008: Group-Scoped Authorization Is Enforced by RLS and Narrowly Trusted Operations`](decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) | Created in Phase 5 | Group-scoped RLS, direct/indirect ownership, and confined trusted operations | Accepted |
 
 ADR-0001 through ADR-0008 are Accepted.
+
+Phase 6 required no new ADR: its migration strategy and parity resolutions
+operate within decisions already delegated by the Accepted Phase 2–5 documents
+and ADR-0001 through ADR-0008. No Phase 6 ADR topic was added.
 
 ## Documentation phases
 
@@ -96,7 +100,7 @@ decision.
 | 3. Domain and data model | Define stable identities, ownership, relationships, finance normalization, Group configuration, and data invariants without writing migrations. | [Domain and Data Model](domain-and-data-model.md) (Accepted); [ADR-0004](decisions/ADR-0004-group-member-id-is-participant-identity.md), [ADR-0005](decisions/ADR-0005-normalized-finance-payers-and-shares.md), and [ADR-0006](decisions/ADR-0006-group-configuration.md) (Accepted) | The Phase 2 authoritative-identity decision is an Accepted prerequisite; every group-owned record has an owner scope and stable identity model; Group configuration is defined; migration-relevant invariants are reviewable; relevant ADRs are Accepted. |
 | 4. Authentication, Group, and Invitation flows | Define authentication and session behaviour using the authoritative Supabase Auth identity established in Phase 2, plus Group creation/selection, membership, ownership, and Invitation state transitions. | [Authentication, Group, and Invitation Flows](auth-groups-and-invitations.md) (Accepted); [ADR-0007](decisions/ADR-0007-single-use-atomic-invitation-acceptance.md) (Accepted). Prerequisites: the Accepted Phase 2 Supabase Auth ADR and the Accepted Phase 3 domain and identity model | All normal and failure flows have explicit authorization boundaries and no UI state is treated as authority; the Supabase Auth decision is treated as an established prerequisite rather than reauthored; the Invitation ADR is Accepted. |
 | 5. Security architecture | Define database, API, Edge Function, Storage, and realtime enforcement for Tenant isolation. | [Security Model](security-model.md) (Accepted); [ADR-0008](decisions/ADR-0008-group-scoped-authorization-with-rls-and-trusted-operations.md) (Accepted) | Deny-by-default access rules, direct and indirect ownership paths, complete operation permissions, privileged-operation boundaries, and verification requirements are complete; the security ADR is Accepted. |
-| 6. Migration and feature parity | Define staged migration, compatibility, rollback, data validation, and a testable parity contract against v1. | `v1-migration-plan.md`; `feature-parity-test-contract.md` | Every preserved behaviour or intentional parity exception is accounted for; migration and rollback gates are measurable. |
+| 6. Migration and feature parity | Define staged migration, compatibility, rollback, data validation, and a testable parity contract against v1. | [V1 Migration Plan](v1-migration-plan.md) (Accepted); [Feature Parity Test Contract](feature-parity-test-contract.md) (Accepted). No Phase 6 ADR was required. | Complete: every preserved behaviour or intentional parity exception is accounted for; migration and rollback gates are measurable; both Phase 6 documents are Accepted. |
 | 7. Implementation roadmap | Order implementation only after the architecture, security, migration, and parity package is internally consistent. | `implementation-roadmap.md`; completed package review | All required documents and ADRs are Accepted, conflicts are closed, deferred scope is checked, and final lock conditions pass. |
 
 ## Reading order
@@ -112,11 +116,13 @@ design:
 6. [Domain and Data Model](domain-and-data-model.md)
 7. [Authentication, Group, and Invitation Flows](auth-groups-and-invitations.md)
 8. [Security Model](security-model.md)
-9. `v1-migration-plan.md` and `feature-parity-test-contract.md` once created
-10. `implementation-roadmap.md` once created
-11. [Deferred-scope register](../product/deferred-scope-register.md)
+9. [V1 Migration Plan](v1-migration-plan.md)
+10. [Feature Parity Test Contract](feature-parity-test-contract.md)
+11. `implementation-roadmap.md` once created
+12. [Deferred-scope register](../product/deferred-scope-register.md)
 
-Paths explicitly qualified with “once created” in this list do not yet exist.
+The path explicitly qualified with “once created” in this list does not yet
+exist.
 The deferred-scope register is read last as a consolidated scope check, but
 every phase must also consult it while drafting.
 
