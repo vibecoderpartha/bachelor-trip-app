@@ -1,0 +1,1029 @@
+{
+ "package": "Trip multi-user pre-implementation UI/UX package",
+ "batch": "Cumulative — batches 1 to 8 of 8",
+ "note": "Required states from section 6 of the brief, mapped to the screens or component variants that represent them visually. No state is represented by prose alone. Tablet and desktop are represented in board 04 and 20 reference frames and in every screen's responsiveBehaviour; per-viewport image exports are not produced (user rule 4).",
+ "requiredStates": [
+  {
+   "state": "Default",
+   "representedBy": [
+    "SHL-01",
+    "GRP-01",
+    "GRP-07",
+    "INV-01",
+    "INV-02",
+    "MBR-01",
+    "MBR-03",
+    "MBR-05",
+    "CLM-01",
+    "AUTH-01",
+    "ONB-01",
+    "ONB-03",
+    "PERM-05",
+    "PERM-06",
+    "PERM-19",
+    "PERM-20",
+    "FIN-01",
+    "FIN-09",
+    "FIN-31",
+    "FIN-41",
+    "FIN-42",
+    "DOC-01",
+    "DOC-40",
+    "DOC-79",
+    "CFG-01",
+    "CFG-02",
+    "CFG-28",
+    "CFG-38",
+    "CFG-49",
+    "CFG-75"
+   ]
+  },
+  {
+   "state": "Loading",
+   "representedBy": [
+    "AUTH-11",
+    "ONB-05",
+    "ONB-08",
+    "GRP-03",
+    "GRP-09",
+    "GRP-14",
+    "INV-05",
+    "INV-07",
+    "MBR-08",
+    "CLM-05",
+    "CMP-10",
+    "PERM-01 (safe-inspection skeleton)",
+    "PERM-04 (inline skeleton)",
+    "FIN-05",
+    "FIN-21",
+    "FIN-26",
+    "FIN-34",
+    "FIN-45",
+    "DOC-03",
+    "DOC-19",
+    "DOC-21",
+    "DOC-35",
+    "DOC-49",
+    "DOC-52",
+    "DOC-58",
+    "DOC-67",
+    "CFG-04",
+    "CFG-11",
+    "CFG-34",
+    "CFG-58",
+    "CFG-66",
+    "CFG-72"
+   ]
+  },
+  {
+   "state": "Empty",
+   "representedBy": [
+    "ONB-02",
+    "CLM-02",
+    "CMP-11",
+    "GRP-01 (itinerary empty)",
+    "PERM-14 (authorised list with private files omitted)",
+    "FIN-06",
+    "FIN-38",
+    "DOC-02"
+   ]
+  },
+  {
+   "state": "Validation error",
+   "representedBy": [
+    "ONB-04",
+    "AUTH-06",
+    "INV-15",
+    "CMP-09",
+    "FIN-15",
+    "FIN-16",
+    "FIN-17",
+    "FIN-18",
+    "FIN-19",
+    "FIN-20",
+    "CFG-08",
+    "CFG-09",
+    "CFG-10",
+    "CFG-16",
+    "CFG-22",
+    "CFG-31",
+    "CFG-60"
+   ]
+  },
+  {
+   "state": "Server error",
+   "representedBy": [
+    "AUTH-09",
+    "ONB-07",
+    "GRP-04",
+    "GRP-11",
+    "GRP-16",
+    "GRP-18",
+    "INV-17",
+    "MBR-10",
+    "CLM-12",
+    "PERM-15 (storage row)",
+    "FIN-23",
+    "FIN-36",
+    "FIN-46",
+    "CFG-13",
+    "CFG-20",
+    "CFG-26",
+    "CFG-36",
+    "CFG-42",
+    "CFG-53",
+    "CFG-61",
+    "CFG-73",
+    "CFG-80"
+   ]
+  },
+  {
+   "state": "Permission denied",
+   "representedBy": [
+    "GRP-05",
+    "MBR-02",
+    "MBR-14",
+    "CLM-10",
+    "CMP-13",
+    "PERM-01",
+    "PERM-02",
+    "PERM-03",
+    "PERM-04",
+    "PERM-06",
+    "PERM-07",
+    "PERM-08",
+    "PERM-09",
+    "PERM-10",
+    "PERM-11",
+    "PERM-12",
+    "PERM-13",
+    "PERM-14",
+    "PERM-15",
+    "PERM-16",
+    "PERM-17",
+    "PERM-18",
+    "FIN-24",
+    "FIN-40",
+    "FIN-47",
+    "DOC-38",
+    "DOC-55",
+    "DOC-56",
+    "DOC-70",
+    "DOC-78"
+   ]
+  },
+  {
+   "state": "Offline",
+   "representedBy": [
+    "AUTH-10",
+    "CMP-12",
+    "PERM-03 (banner above unchanged state)",
+    "PERM-15 (storage row)",
+    "FIN-23",
+    "FIN-36",
+    "FIN-46",
+    "DOC-71",
+    "DOC-73",
+    "DOC-74"
+   ]
+  },
+  {
+   "state": "Reconnecting",
+   "representedBy": [
+    "CMP-12",
+    "PERM-15",
+    "FIN-23"
+   ],
+   "note": "Full realtime treatment is board 17, batch 8."
+  },
+  {
+   "state": "Destructive confirmation",
+   "representedBy": [
+    "GRP-08",
+    "GRP-13",
+    "MBR-07",
+    "MBR-11",
+    "CLM-04",
+    "INV-06",
+    "CMP-06",
+    "PERM-09",
+    "FIN-33"
+   ]
+  },
+  {
+   "state": "Destructive action in progress",
+   "representedBy": [
+    "GRP-09",
+    "GRP-14",
+    "MBR-08",
+    "CLM-05",
+    "INV-07",
+    "FIN-34"
+   ]
+  },
+  {
+   "state": "Success",
+   "representedBy": [
+    "AUTH-04",
+    "ONB-06",
+    "GRP-10",
+    "GRP-15",
+    "GRP-18",
+    "INV-08",
+    "INV-13",
+    "INV-18",
+    "MBR-09",
+    "MBR-12",
+    "CLM-06",
+    "FIN-22",
+    "FIN-27",
+    "FIN-35",
+    "FIN-37",
+    "DOC-20",
+    "DOC-36",
+    "DOC-53",
+    "DOC-59",
+    "DOC-68",
+    "DOC-81"
+   ]
+  },
+  {
+   "state": "Disabled",
+   "representedBy": [
+    "AUTH-06",
+    "CLM-01",
+    "GRP-09",
+    "GRP-14",
+    "MBR-08",
+    "CMP-01",
+    "CMP-07"
+   ]
+  },
+  {
+   "state": "Long-content stress",
+   "representedBy": [
+    "GRP-02",
+    "MBR-01",
+    "CLM-03"
+   ],
+   "note": "Long Group names ellipsize in the header and switcher; the member list scrolls inside the 480px column."
+  },
+  {
+   "state": "Blocked by protection",
+   "representedBy": [
+    "GRP-12",
+    "MBR-13",
+    "CLM-09",
+    "INV-16"
+   ]
+  },
+  {
+   "state": "Read-only",
+   "representedBy": [
+    "GRP-06",
+    "CMP-13",
+    "DOC-62",
+    "DOC-79"
+   ],
+   "note": "A Group state, never a role (O-01)."
+  },
+  {
+   "state": "Idempotent retry",
+   "representedBy": [
+    "INV-18",
+    "GRP-16",
+    "MBR-10",
+    "CLM-12"
+   ]
+  },
+  {
+   "state": "Mobile layout",
+   "representedBy": [
+    "Every screen in screens/mobile — 393x852 primary viewport",
+    "PERM-01 … PERM-20",
+    "FIN-01 … FIN-47"
+   ]
+  },
+  {
+   "state": "Tablet layout",
+   "representedBy": [
+    "Board 04 tablet reference frame",
+    "Board 20",
+    "PERM-01 … PERM-20 (centred 480 column)",
+    "FIN-01 … FIN-47 (centred 480 column)"
+   ],
+   "note": "768x1024 keeps the centred 480px column."
+  },
+  {
+   "state": "Desktop layout",
+   "representedBy": [
+    "Board 04 desktop reference frame",
+    "Board 20",
+    "PERM-01 … PERM-20 (centred 480 column)",
+    "FIN-01 … FIN-47 (centred 480 column)"
+   ],
+   "note": "1440x900 keeps the centred 480px column."
+  }
+ ],
+ "observedStatesInManifest": [
+  {
+   "state": "Action in progress",
+   "screens": [
+    "ONB-05"
+   ]
+  },
+  {
+   "state": "Blocked",
+   "screens": [
+    "GRP-12",
+    "INV-16",
+    "MBR-13",
+    "CLM-09"
+   ]
+  },
+  {
+   "state": "Blocking dialog over the app",
+   "screens": [
+    "AUTH-08"
+   ]
+  },
+  {
+   "state": "Confirmation",
+   "screens": [
+    "GRP-13",
+    "GRP-17",
+    "INV-06",
+    "MBR-06",
+    "CLM-04"
+   ]
+  },
+  {
+   "state": "Conflict",
+   "screens": [
+    "CLM-07",
+    "CLM-08"
+   ]
+  },
+  {
+   "state": "Consumed",
+   "screens": [
+    "INV-09"
+   ]
+  },
+  {
+   "state": "Dead end",
+   "screens": [
+    "AUTH-07"
+   ]
+  },
+  {
+   "state": "Default",
+   "screens": [
+    "SHL-01",
+    "SHL-02",
+    "AUTH-01",
+    "ONB-01",
+    "ONB-03",
+    "GRP-01",
+    "GRP-07",
+    "INV-01",
+    "INV-02",
+    "INV-03",
+    "MBR-01",
+    "MBR-04",
+    "MBR-05"
+   ]
+  },
+  {
+   "state": "Default + empty + unclaimed rows",
+   "screens": [
+    "ONB-09"
+   ]
+  },
+  {
+   "state": "Default / copied",
+   "screens": [
+    "MBR-03"
+   ]
+  },
+  {
+   "state": "Default / disabled primary",
+   "screens": [
+    "CLM-01"
+   ]
+  },
+  {
+   "state": "Default, field focused",
+   "screens": [
+    "AUTH-02"
+   ]
+  },
+  {
+   "state": "Destructive confirmation",
+   "screens": [
+    "GRP-08",
+    "MBR-07",
+    "MBR-11"
+   ]
+  },
+  {
+   "state": "Destructive in progress",
+   "screens": [
+    "GRP-09"
+   ]
+  },
+  {
+   "state": "Empty",
+   "screens": [
+    "CLM-02"
+   ]
+  },
+  {
+   "state": "Empty + disabled nav",
+   "screens": [
+    "ONB-02"
+   ]
+  },
+  {
+   "state": "Expired",
+   "screens": [
+    "INV-10"
+   ]
+  },
+  {
+   "state": "First run, success",
+   "screens": [
+    "ONB-10"
+   ]
+  },
+  {
+   "state": "Idempotent success",
+   "screens": [
+    "INV-18"
+   ]
+  },
+  {
+   "state": "In progress",
+   "screens": [
+    "GRP-14",
+    "INV-07",
+    "MBR-08",
+    "CLM-05"
+   ]
+  },
+  {
+   "state": "Inactive membership",
+   "screens": [
+    "INV-14"
+   ]
+  },
+  {
+   "state": "Inactive participant",
+   "screens": [
+    "MBR-15"
+   ]
+  },
+  {
+   "state": "Loading",
+   "screens": [
+    "AUTH-11",
+    "GRP-03",
+    "INV-05"
+   ]
+  },
+  {
+   "state": "Loading, not optimistic",
+   "screens": [
+    "ONB-08"
+   ]
+  },
+  {
+   "state": "No management permission",
+   "screens": [
+    "MBR-02"
+   ]
+  },
+  {
+   "state": "No-op",
+   "screens": [
+    "INV-13"
+   ]
+  },
+  {
+   "state": "Offline + disabled",
+   "screens": [
+    "AUTH-10"
+   ]
+  },
+  {
+   "state": "Open / selected",
+   "screens": [
+    "GRP-02"
+   ]
+  },
+  {
+   "state": "Pending review",
+   "screens": [
+    "CLM-11"
+   ]
+  },
+  {
+   "state": "Pending verification",
+   "screens": [
+    "INV-04"
+   ]
+  },
+  {
+   "state": "Pending, resend disabled",
+   "screens": [
+    "AUTH-03"
+   ]
+  },
+  {
+   "state": "Permission denied",
+   "screens": [
+    "GRP-05",
+    "MBR-14",
+    "CLM-10"
+   ]
+  },
+  {
+   "state": "Read-only",
+   "screens": [
+    "GRP-06"
+   ]
+  },
+  {
+   "state": "Recovery guidance",
+   "screens": [
+    "CLM-13"
+   ]
+  },
+  {
+   "state": "Revoked",
+   "screens": [
+    "INV-11"
+   ]
+  },
+  {
+   "state": "Selected",
+   "screens": [
+    "CLM-03"
+   ]
+  },
+  {
+   "state": "Sent",
+   "screens": [
+    "AUTH-05"
+   ]
+  },
+  {
+   "state": "Server error",
+   "screens": [
+    "AUTH-09",
+    "ONB-07",
+    "GRP-04",
+    "GRP-11",
+    "GRP-16",
+    "INV-17",
+    "MBR-10",
+    "CLM-12"
+   ]
+  },
+  {
+   "state": "Success",
+   "screens": [
+    "AUTH-04",
+    "ONB-06",
+    "GRP-10",
+    "GRP-15",
+    "INV-08",
+    "MBR-09",
+    "MBR-12",
+    "CLM-06"
+   ]
+  },
+  {
+   "state": "Success + server error",
+   "screens": [
+    "GRP-18"
+   ]
+  },
+  {
+   "state": "Validation error",
+   "screens": [
+    "INV-15"
+   ]
+  },
+  {
+   "state": "Validation error + disabled + timed",
+   "screens": [
+    "AUTH-06"
+   ]
+  },
+  {
+   "state": "Validation error x2",
+   "screens": [
+    "ONB-04"
+   ]
+  },
+  {
+   "state": "Wrong account",
+   "screens": [
+    "INV-12"
+   ]
+  }
+ ],
+ "batch3Additions": [
+  {
+   "state": "Known-denied at render time",
+   "representedBy": [
+    "PERM-05",
+    "PERM-06",
+    "PERM-07",
+    "PERM-08",
+    "PERM-10",
+    "PERM-11",
+    "PERM-12",
+    "PERM-14",
+    "CMP-16",
+    "CMP-18"
+   ]
+  },
+  {
+   "state": "Stale or changed during action",
+   "representedBy": [
+    "PERM-13",
+    "PERM-17",
+    "PERM-18",
+    "CMP-20"
+   ]
+  },
+  {
+   "state": "Omitted-private",
+   "representedBy": [
+    "PERM-10",
+    "PERM-14",
+    "CMP-21"
+   ]
+  },
+  {
+   "state": "Frozen ledger",
+   "representedBy": [
+    "PERM-12"
+   ]
+  },
+  {
+   "state": "No recovery available",
+   "representedBy": [
+    "PERM-03",
+    "PERM-04",
+    "PERM-16",
+    "PERM-20",
+    "CMP-22"
+   ]
+  },
+  {
+   "state": "Read-only (not a role)",
+   "representedBy": [
+    "PERM-05",
+    "PERM-10",
+    "PERM-11",
+    "PERM-12",
+    "CMP-15",
+    "GRP-06"
+   ]
+  }
+ ],
+ "batch4Additions": [
+  {
+   "state": "Positive balance",
+   "representedBy": [
+    "FIN-01",
+    "FIN-02",
+    "CMP-26"
+   ]
+  },
+  {
+   "state": "Negative balance",
+   "representedBy": [
+    "FIN-03",
+    "CMP-26"
+   ]
+  },
+  {
+   "state": "All settled",
+   "representedBy": [
+    "FIN-04",
+    "FIN-38"
+   ]
+  },
+  {
+   "state": "Exact totals matching",
+   "representedBy": [
+    "FIN-10",
+    "FIN-12",
+    "FIN-13",
+    "FIN-14",
+    "CMP-25"
+   ]
+  },
+  {
+   "state": "Exact totals mismatched",
+   "representedBy": [
+    "FIN-15",
+    "FIN-16",
+    "FIN-20",
+    "CMP-25"
+   ]
+  },
+  {
+   "state": "Recording (server-confirmed)",
+   "representedBy": [
+    "FIN-21",
+    "FIN-26",
+    "FIN-34"
+   ]
+  },
+  {
+   "state": "Idempotent result",
+   "representedBy": [
+    "FIN-37",
+    "CMP-32"
+   ]
+  },
+  {
+   "state": "Stale finance data",
+   "representedBy": [
+    "FIN-28",
+    "CMP-33"
+   ]
+  },
+  {
+   "state": "Accounting value unavailable",
+   "representedBy": [
+    "FIN-44",
+    "CMP-33"
+   ]
+  },
+  {
+   "state": "Inactive or unclaimed on the ledger",
+   "representedBy": [
+    "FIN-07",
+    "FIN-08",
+    "FIN-39",
+    "CMP-30"
+   ]
+  },
+  {
+   "state": "Group finance context switch",
+   "representedBy": [
+    "FIN-45",
+    "FIN-46",
+    "FIN-47"
+   ]
+  }
+ ],
+ "batch5Additions": {
+  "note": "Thirteen document states kept distinct rather than collapsed into one Scanning… spinner. Each names what exists and what does not.",
+  "documentStateSeparation": [
+   {
+    "state": "1 · Local file selected",
+    "screens": [
+     "DOC-04",
+     "DOC-05"
+    ],
+    "existsAfter": "nothing stored, no Event"
+   },
+   {
+    "state": "2 · Uploading",
+    "screens": [
+     "DOC-19"
+    ],
+    "existsAfter": "nothing stored yet, no history row, no Event"
+   },
+   {
+    "state": "3 · Private object accepted",
+    "screens": [
+     "DOC-20"
+    ],
+    "existsAfter": "private document, no Event"
+   },
+   {
+    "state": "4 · Parsing",
+    "screens": [
+     "DOC-21",
+     "DOC-22"
+    ],
+    "existsAfter": "private document, no Event"
+   },
+   {
+    "state": "5 · Parse warning",
+    "screens": [
+     "DOC-27"
+    ],
+    "existsAfter": "private document, reviewable values, no Event"
+   },
+   {
+    "state": "6 · Parse failure",
+    "screens": [
+     "DOC-24",
+     "DOC-25",
+     "DOC-28"
+    ],
+    "existsAfter": "private document, no values, no Event"
+   },
+   {
+    "state": "7 · Reviewed values",
+    "screens": [
+     "DOC-26",
+     "DOC-30",
+     "DOC-31",
+     "DOC-32",
+     "DOC-33"
+    ],
+    "existsAfter": "private document, unsaved values, no Event"
+   },
+   {
+    "state": "8 · Event creation",
+    "screens": [
+     "DOC-35"
+    ],
+    "existsAfter": "private document, Event pending server confirmation"
+   },
+   {
+    "state": "9 · Event and document associated",
+    "screens": [
+     "DOC-36",
+     "DOC-42"
+    ],
+    "existsAfter": "private document, Event, provenance, presentation"
+   },
+   {
+    "state": "10 · Document history",
+    "screens": [
+     "DOC-40",
+     "DOC-43",
+     "DOC-44",
+     "DOC-45",
+     "DOC-46",
+     "DOC-47",
+     "DOC-48"
+    ],
+    "existsAfter": "authorised documents only, reader-scoped count"
+   },
+   {
+    "state": "11 · Viewer and download",
+    "screens": [
+     "DOC-49",
+     "DOC-50",
+     "DOC-51",
+     "DOC-52",
+     "DOC-53",
+     "DOC-54"
+    ],
+    "existsAfter": "authorised short-lived read; no permanent URL"
+   },
+   {
+    "state": "12 · Removal",
+    "screens": [
+     "DOC-57",
+     "DOC-58",
+     "DOC-59",
+     "DOC-60",
+     "DOC-61",
+     "DOC-62"
+    ],
+    "existsAfter": "document removed, Event retained (C-14 correction)"
+   },
+   {
+    "state": "13 · Reconciliation",
+    "screens": [
+     "DOC-61",
+     "DOC-63",
+     "DOC-64",
+     "DOC-65",
+     "DOC-66",
+     "DOC-67",
+     "DOC-68",
+     "DOC-69",
+     "DOC-70",
+     "DOC-82"
+    ],
+    "existsAfter": "held and unusable until consistency is proved"
+   }
+  ],
+  "audienceVersusPresentation": {
+   "documentAccess": [
+    "DOC-11",
+    "DOC-12",
+    "DOC-13",
+    "DOC-16",
+    "DOC-55",
+    "DOC-56"
+   ],
+   "eventPresentation": [
+    "DOC-13",
+    "DOC-16",
+    "DOC-34",
+    "DOC-36"
+   ],
+   "rule": "Document access is confidentiality. Event presentation is placement. The phrase private Event appears nowhere in the product."
+  },
+  "financeCorrection": {
+   "note": "O-09 and O-10 applied. Non-equal shares are retained history only; the authoring surface is one payer, multiple payers and equal splitting.",
+   "screens": [
+    "FIN-11",
+    "FIN-13",
+    "FIN-16"
+   ],
+   "fixtures": [
+    "EQ-01",
+    "SET-01",
+    "USD-01"
+   ]
+  }
+ },
+ "batch6Additions": {
+  "board": "17 — Group configuration and accounting currency",
+  "screens": "CFG-01 … CFG-80",
+  "components": "CMP-48 … CMP-62",
+  "newStateFamilies": [
+   {
+    "state": "Locked by accounting history",
+    "representedBy": [
+     "CFG-43",
+     "CFG-44",
+     "CFG-45"
+    ],
+    "note": "Not a disabled control. The current currency, the fact that created the lock and the reason, with no conversion action anywhere."
+   },
+   {
+    "state": "Stale configuration",
+    "representedBy": [
+     "CFG-14",
+     "CFG-27",
+     "CFG-37",
+     "CFG-62"
+    ],
+    "note": "No auto-merge, no silent overwrite. Reload current configuration, copy unsaved text, cancel."
+   },
+   {
+    "state": "Confirmed effect",
+    "representedBy": [
+     "CFG-68",
+     "CFG-69",
+     "CFG-70",
+     "CFG-71",
+     "CFG-72"
+    ],
+    "note": "What visibly changes after server confirmation, and the evidence that accounting history did not."
+   },
+   {
+    "state": "Held for review",
+    "representedBy": [
+     "CFG-78",
+     "CFG-79",
+     "CFG-80"
+    ],
+    "note": "Contradictory migrated source evidence. No value guessed, no silent default selected."
+   },
+   {
+    "state": "Owner versus Member rendering",
+    "representedBy": [
+     "CFG-02",
+     "CFG-03",
+     "CFG-63"
+    ],
+    "note": "Identical values and geometry; mutation affordances absent for a Member. A Member is never called a Viewer."
+   }
+  ],
+  "documentCorrection": "Per-document audience states removed from the batch 5 entries. Document access states are: available under current same-Group authorisation, and unavailable (DOC-55) covering non-member, removed or inactive Member, archived-state denial, cross-Group substitution, missing or reconciled-away object and stale authorisation. Event presentation states remain as presentation parity only."
+ },
+ "batch7Additions": {
+  "board": "18 — realtime, notifications and connection states",
+  "screens": "RT-01 … RT-55",
+  "components": "CMP-63 … CMP-72",
+  "hierarchy": [
+   "Level 1 silent update",
+   "Level 2 temporary contextual feedback",
+   "Level 3 persistent inline notice",
+   "Level 4 conflict requiring action"
+  ],
+  "note": "No notification centre, bell, inbox, unread count or activity feed. Realtime is presentation only; authority comes from a confirmed authorised read."
+ },
+ "batch8Additions": {
+  "board": "20 — migration, recovery and implementation-readiness",
+  "screens": "MIG-01 … MIG-90",
+  "components": "CMP-73 … CMP-86",
+  "truthStates": [
+   "Nothing changed",
+   "Target change committed",
+   "Rollback completed",
+   "Recovery still running",
+   "Outcome unknown",
+   "Review required"
+  ],
+  "note": "Partial security activation and unproven cross-Group isolation block release. No internal identifier appears in any user-facing string."
+ }
+}

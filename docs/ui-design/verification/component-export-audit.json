@@ -1,0 +1,16 @@
+{
+ "generated": "2026-07-29",
+ "components": 86,
+ "componentFiles": 86,
+ "checks": {
+  "uniqueComponentIds": true,
+  "duplicateIds": [],
+  "everyComponentHasExport": true,
+  "missingExports": [],
+  "noObsoleteExport": true,
+  "orphanExports": [],
+  "metadataDoesNotWrap": "CMP-48…CMP-86 meta lines carry white-space:nowrap; verified in the live DOM",
+  "opaqueBase": "#0F0B08 on every component sheet"
+ },
+ "result": "PASS"
+}
