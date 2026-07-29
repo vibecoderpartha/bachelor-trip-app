@@ -140,4 +140,14 @@ Tone is informal, trip-specific and teasing: “Drop a ticket. We’ll read it.�
 
 ## 21. Baseline completion status
 
-**Ready for UI Baseline Acceptance Review.** All P0 capture states have deterministic-fixture or live-observed evidence and are indexed in [`screenshot-index.md`](screenshot-index.md). The package is not Accepted or Locked, and it is not a locked design system. No application, architecture, data-model, migration, or multi-user implementation work is represented here.
+All P0 capture states have deterministic-fixture or live-observed evidence and are indexed in [`screenshot-index.md`](screenshot-index.md). Formal acceptance and lock details are recorded in [`acceptance-record.md`](acceptance-record.md).
+
+- Current UI Baseline: Accepted
+- Current UI Baseline Lock: Complete
+- P0 blocking gaps: 0
+- Full UI/UX Design Package: Not yet imported
+- Full UI/UX Design Acceptance: Not complete
+- Full UI/UX Design Lock: Not complete
+- Application implementation: Not started
+
+Acceptance locks this factual current-application baseline as a preservation input. It does not make the baseline a complete target design system, accept or lock the full UI/UX design package, authorize new multi-user screens, or authorize application, architecture, data-model, migration, or implementation work.
