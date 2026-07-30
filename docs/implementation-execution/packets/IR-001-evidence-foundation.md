@@ -1,11 +1,15 @@
 # IR-001 — Evidence foundation
 ## 1. Status and ownership
 
-- Status: Draft
+- Status: Authorised
 - Wave: W1
 - Primary implementation owner: Not assigned unless documented
 - Review owners: architecture, security, database/migration, design, and product reviewers as applicable
-- Implementation authorised: No
+- Implementation authorised: Yes
+- Started: No
+- Implemented: No
+- Verified: No
+- Authorisation record: `../authorisations/IR-001-authorisation.md`
 
 ## 2. Objective
 
@@ -15,7 +19,7 @@ Establish reproducible local setup, isolated fixtures, contract/type checks, aud
 
 docs/architecture/implementation-roadmap.md §§7, 8, and 15; docs/architecture/security-model.md; docs/architecture/feature-parity-test-contract.md.
 
-The accepted documents govern; this Draft packet does not restate or amend their decisions.
+The accepted documents govern; this authorised packet does not restate or amend their decisions.
 
 ## 4. Entry gate
 
@@ -63,7 +67,7 @@ No database schema change belongs to this packet. It defines the fixture and evi
 
 ## 11. RLS and authorization work
 
-No policy is written by this Draft. The implementation plan must define same-Group success; unrelated-Group, inactive Member, removed Member, archive-state, and direct-object substitution denial; Owner/Member boundaries; service-role confinement; and frontend non-authority. Any cross-Group success or permissive fallback blocks the packet.
+No policy is authorised by IR-001. The implementation plan must define same-Group success; unrelated-Group, inactive Member, removed Member, archive-state, and direct-object substitution denial; Owner/Member boundaries; service-role confinement; and frontend non-authority. Any cross-Group success or permissive fallback blocks the packet.
 
 ## 12. Trusted operations
 
@@ -135,7 +139,7 @@ Stop rather than improvise for an architecture or locked-design contradiction, m
 
 ## 27. Completion evidence
 
-Before this packet can be Verified, retain reviewed implementation diff/test artifacts, negative security evidence, relevant fixture results, R-02 implementation evidence, rollback/recovery evidence, updated traceability, and an approved packet exit record. Draft status cannot satisfy this gate.
+Before this packet can be Verified, retain reviewed implementation diff/test artifacts, negative security evidence, relevant fixture results, R-02 implementation evidence, rollback/recovery evidence, updated traceability, and an approved packet exit record. Authorised status cannot satisfy this gate.
 
 ## 28. Open questions
 
@@ -145,4 +149,4 @@ deliverables (GATE-007–010), not its entry prerequisite.
 
 ## 29. Packet exit gate
 
-Dependent work may begin only when this packet has its required evidence, rollback conditions, reviewer decision, and an explicit exit record. This Draft packet neither marks the packet complete nor authorises implementation.
+Dependent work may begin only when this packet has its required evidence, rollback conditions, reviewer decision, and an explicit exit record. This authorisation neither marks the packet complete nor authorises dependent implementation.

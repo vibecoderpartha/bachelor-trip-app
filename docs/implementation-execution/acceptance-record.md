@@ -7,9 +7,9 @@
 - Implementation Planning Freeze: Complete
 - Implementation readiness review: Approved
 - Application implementation: Not started
-- Implementation authorised: No
-- IR-001 authorised: No
-- W1 status: Not started
+- Implementation authorised at package acceptance: No (historical)
+- IR-001 authorised at package acceptance: No (historical)
+- W1 status at package acceptance: Not started (historical)
 - Acceptance date: 2026-07-30
 - Reviewer:
   Pranjal Kumar Maurya — product owner
@@ -91,9 +91,9 @@ for controlled IR authorisation.
 - GATE-001: Satisfied
 - GATE-002: Satisfied by this acceptance record
 - GATE-003: Satisfied by this lock record
-- GATE-004: Not satisfied
-- IR-001 remains unauthorised
-- W1 remains Not started
+- GATE-004: Not satisfied at package acceptance (historical)
+- IR-001 remained unauthorised at package acceptance (historical)
+- W1 remained Not started at package acceptance (historical)
 
 ## 5. R-02
 
@@ -137,6 +137,6 @@ This acceptance does not:
 
 ## 8. Next authorised activity
 
-Conduct the explicit bounded IR-001 authorisation review. No implementation work
-may begin until IR-001 is separately authorised against this locked execution
-package and a clean repository starting commit.
+At package acceptance, the next required activity was the explicit bounded
+IR-001 authorisation review. Current authorisation status is recorded in
+`authorisations/IR-001-authorisation.md`.

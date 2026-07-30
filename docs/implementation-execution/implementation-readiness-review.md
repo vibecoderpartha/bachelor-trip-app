@@ -7,8 +7,11 @@
 - Execution package locked: Yes
 - Implementation planning freeze: Complete
 - Implementation readiness review: Approved
-- Implementation authorised: No
-- IR-001 authorised: No
+- Implementation authorisation scope: IR-001 only
+- IR-001 authorised: Yes
+- IR-001 started: No
+- IR-002 authorised: No
+- W1: Ready to start through IR-001 only
 
 ## Package review result
 
@@ -27,20 +30,22 @@ bring the locked package to 51 Markdown documents.
 ## Gate-ledger result
 
 - Package-level blockers: 0.
-- GATE-001, GATE-002, GATE-003, and the repository-visible
-  codebase/tool/environment inventory GATE-006: Satisfied.
-- GATE-004 remains the sole IR-001 authorisation blocker; GATE-005 remains
-  unsatisfied because W1 still requires that explicit authorisation.
+- IR-001 entry blockers: 0.
+- GATE-001 through GATE-006: Satisfied.
+- GATE-004: Satisfied.
+- GATE-005: Satisfied for IR-001 entry.
+- GATE-007 through GATE-010 remain required before W1 exit.
 - OE-001 capability selection and fixtures are IR-001 deliverables required
   before W1 exit, not prerequisites to authorise IR-001.
 - External target/source evidence first blocks W5; representative rehearsal
   evidence first blocks W6; production/cutover evidence first blocks W7.
 
-## IR-001 blocker
+## IR-001 entry review
 
-GATE-004 only: explicit bounded IR-001 authorisation. OE-001 capability work is
-an IR-001 deliverable required before W1 exit, and OE-002 test-environment
-evidence first affects W1 exit; neither blocks the authorisation review.
+IR-001 entry blockers: 0. GATE-004 is satisfied by the bounded IR-001
+authorisation record, and GATE-005 is satisfied for IR-001 entry. OE-001
+capability work is an IR-001 deliverable required before W1 exit, and OE-002
+test-environment evidence first affects W1 exit; neither blocks IR-001 entry.
 
 ## Later-Wave blockers
 
@@ -56,8 +61,10 @@ evidence first affects W1 exit; neither blocks the authorisation review.
 
 ## Recommendation
 
-Ready for explicit IR-001 authorisation review.
+Ready to begin bounded IR-001 implementation from the clean authorisation
+commit.
 
-The implementation package is accepted and locked, but implementation is not
-ready to start until GATE-004 is separately satisfied. R-02 remains open for
-running implementation evidence.
+The implementation package is accepted and locked. IR-001 only is authorised;
+no later IR is authorised. R-02 remains implementation verification for the
+relevant running flows, and GATE-007 through GATE-010 remain required before
+W1 exit.

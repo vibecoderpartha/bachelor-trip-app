@@ -1,17 +1,18 @@
 # Implementation Gate Ledger
 
 The ledger records the earliest consuming gate for every unresolved prerequisite.
-`Satisfied` means the evidence exists for this documentation review only; it
-does not mean a packet, Wave, package, or implementation has been accepted,
-locked, authorised, implemented, or verified.
+`Satisfied` means the named gate's required evidence exists. It does not by
+itself change packet, Wave, package, implementation, or verification status
+unless that gate's recorded resolution explicitly authorises a named bounded
+action.
 
 | Gate ID | Requirement | Source | Owning IR/Wave | Required before | Evidence | Owner | Status | Blocking scope | Resolution |
 |---|---|---|---|---|---|---|---|---|---|
 | GATE-001 | Formal review complete and no package-level architecture/design/path contradiction. | This review; accepted inputs. | IR-022 / package | Package acceptance review. | `execution-package-review.md`, corrected registers, review matrix. | Architecture/design/repository reviewers. | Satisfied | None; enables review only. | Retain review record. |
-| GATE-002 | Execution package accepted. | Governance; roadmap §21. | IR-022 / package | Package lock and IR-001 authorisation. | `docs/implementation-execution/acceptance-record.md`. | Product/release authority. | Satisfied | No remaining gate block; GATE-004 still blocks IR-001 authorisation. | Execution package formally accepted on 2026-07-30. |
-| GATE-003 | Execution package locked. | Governance; roadmap §21. | IR-022 / package | IR-001 authorisation. | `docs/implementation-execution/lock-record.md`. | Product/release authority. | Satisfied | No remaining gate block; GATE-004 still blocks IR-001 start. | Accepted execution package formally locked on 2026-07-30. |
-| GATE-004 | Explicit IR-001 authorisation. | Governance; user instruction. | IR-001 / W1 | IR-001 implementation work. | Named bounded authorisation. | Product/release authority. | Required before IR authorisation | Blocks IR-001 start only. | Do not infer from package review. |
-| GATE-005 | W1 may enter after GATE-002–004; no external source inventory is required merely to begin IR-001. | Roadmap IR-001; OE-001 review. | W1 | W1 execution. | Accepted/locked package and IR-001 authorisation. | W1 reviewers. | Required before Wave entry | Blocks W1 entry only. | Record entry decision. |
+| GATE-002 | Execution package accepted. | Governance; roadmap §21. | IR-022 / package | Package lock and IR-001 authorisation. | `docs/implementation-execution/acceptance-record.md`. | Product/release authority. | Satisfied | None for IR-001 start. | Execution package formally accepted on 2026-07-30. |
+| GATE-003 | Execution package locked. | Governance; roadmap §21. | IR-022 / package | IR-001 authorisation. | `docs/implementation-execution/lock-record.md`. | Product/release authority. | Satisfied | None for IR-001 start. | Accepted execution package formally locked on 2026-07-30. |
+| GATE-004 | Explicit IR-001 authorisation. | Governance; user instruction. | IR-001 / W1 | IR-001 implementation work. | `docs/implementation-execution/authorisations/IR-001-authorisation.md` | Product/release authority. | Satisfied | None for IR-001 start | IR-001 explicitly authorised on 2026-07-30 for Evidence Foundation scope only. |
+| GATE-005 | W1 may enter after GATE-002–004; no external source inventory is required merely to begin IR-001. | Roadmap IR-001; OE-001 review. | W1 | W1 execution. | Accepted/locked execution package and IR-001 authorisation record. | W1 reviewers. | Satisfied | None for IR-001 start | W1 entry is permitted through IR-001 only. IR-002 remains unauthorised and dependent on IR-001 completion evidence. |
 | GATE-006 | Repository-visible build/tool/environment inventory is complete. | Codebase inspection; package/config files. | IR-001 / W1 | IR-001 capability selection. | Current scripts, files, variable references, and absence record. | IR-001 reviewer. | Satisfied | No block. | Reinspect if baseline changes. |
 | GATE-007 | Select and review test/evidence/CI capability; selection is an IR-001 deliverable. | Roadmap §8/§15; OE-001. | IR-001 / W1 | W1 exit. | Decision covering unit, browser, database/RLS, failure injection, evidence retention, CI impact/removal. | Architecture/security/product reviewers. | Required before Wave exit | Blocks W1 exit and W2 entry. | Produce IR-001 capability decision; do not assume a tool. |
 | GATE-008 | Isolated test database/RLS and browser capability exists. | Security model; test plan; OE-001. | IR-001 / W1 | W1 exit. | Safe reset/cleanup, two accounts, audit-safe output, browser execution record. | Security/database reviewers. | Required before Wave exit | Blocks W1 exit and security implementation evidence. | Establish only an isolated environment. |

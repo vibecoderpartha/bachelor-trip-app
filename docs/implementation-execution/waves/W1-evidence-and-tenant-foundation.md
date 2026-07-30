@@ -2,8 +2,12 @@
 
 ## Status and authorisation
 
-- Status: Draft
-- Implementation authorised: No
+- Status: Ready to start through IR-001 only
+- Implementation authorised: IR-001 only
+- IR-001: Authorised, Not started
+- IR-002: Not authorised
+- W1 In progress: No
+- W1 exit achieved: No
 - Wave complete: No
 
 ## Wave objective
@@ -17,23 +21,30 @@ No feature UI, target authority, migration execution, or production data action 
 
 ## Accepted entry conditions
 
-GATE-002 through GATE-005: the package is accepted and locked, IR-001 is
-explicitly authorised, and the repository-visible environment-boundary
-inventory is complete. A selected test runner, browser harness, RLS harness,
-CI platform, test project, deployed-state inventory, or source snapshot is not
-required to begin IR-001.
+GATE-002 through GATE-005 are satisfied for bounded IR-001 entry: the package
+is accepted and locked, IR-001 is explicitly authorised, and the
+repository-visible environment-boundary inventory is complete. A selected test
+runner, browser harness, RLS harness, CI platform, test project, deployed-state
+inventory, or source snapshot is not required to begin IR-001.
 
 ## Internal execution order
 
-IR-001 establishes reproducible evidence capability before IR-002 defines executable Tenant data work. IR-022 governance evidence may be maintained in parallel but does not substitute for either packet.
+Bounded IR-001 implementation may begin. IR-001 establishes reproducible
+evidence capability before IR-002 defines executable Tenant data work. IR-002
+remains blocked by the IR-001 dependency and separate authorisation. IR-022
+governance evidence may be maintained in parallel but does not substitute for
+either packet.
 
 ## Parallel work boundaries
 
-Only static traceability and governance recording may run beside IR-001. IR-002 is serial after IR-001 because schema and parent-path evidence must be testable.
+Only static traceability and governance recording may run beside IR-001. IR-002
+is serial after IR-001 because schema and parent-path evidence must be testable.
+GATE-007 through GATE-010 remain W1-exit requirements, and W2 remains blocked
+until W1 exit is explicitly achieved.
 
 ## Shared schema changes
 
-IR-002 may only plan the Group-as-Tenant, Profile, stable Participant/group_members, configuration, audit, archive, foreign-key, index, and generated-type units. No SQL, generated type, or schema change is created in this Wave Draft.
+IR-002 may only plan the Group-as-Tenant, Profile, stable Participant/group_members, configuration, audit, archive, foreign-key, index, and generated-type units. No SQL, generated type, or schema change is created under this Wave authorisation.
 
 ## Shared frontend changes
 
@@ -77,6 +88,7 @@ Stop for missing isolated fixture capability, ambiguous parent ownership, or a p
 
 ## Implementation-authorisation status
 
-No
+IR-001 only. W1 is not In progress, IR-002 is not authorised, and W1 exit is
+not achieved.
 
 W1 contains no feature UI implementation.

@@ -7,8 +7,11 @@
 - Package lock complete: Yes
 - Implementation Planning Freeze: Complete
 - Implementation readiness review: Approved
-- Implementation authorised: No
-- IR-001 authorised: No
+- Implementation authorisation scope: IR-001 only
+- IR-001 authorised: Yes
+- IR-001 status: Not started
+- IR-002 through IR-022 authorised: No
+- W1 status: Ready to start through IR-001 only
 - Application implementation: Not started
 
 ## Purpose
@@ -51,6 +54,5 @@ and `lock-record.md`; neither record authorises implementation.
 
 ## Current next activity
 
-Conduct the explicit bounded IR-001 authorisation review. No implementation work
-may begin until IR-001 is separately authorised against this locked execution
-package and a clean repository starting commit.
+Begin bounded IR-001 Evidence Foundation implementation in a new implementation
+session from the clean IR-001 authorisation commit.

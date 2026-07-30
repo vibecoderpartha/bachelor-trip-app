@@ -3,11 +3,14 @@
 ## Package status
 
 - Package-level blockers: None
+- IR-001 entry blockers: None
 - Execution package acceptance: Complete
 - Execution package lock: Complete
-- IR-001 authorisation: Pending GATE-004
-- Implementation status: Not started
+- IR-001 authorisation: Complete
+- IR-001 status: Authorised, Not started
+- W1 exit requirements: GATE-007 through GATE-010 remain open
 - R-02: Specified; implementation verification required
+- later-Wave prerequisites: unchanged
 
 The repository-visible parts of OE-001 and OE-002 are resolved by this review.
 The remaining work is classified by the first exact consuming gate. None is a

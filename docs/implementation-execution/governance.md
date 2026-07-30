@@ -38,10 +38,14 @@ Implementation packet changes require product/reviewer approval; design divergen
 
 - Execution package acceptance: Complete
 - Execution package lock: Complete
-- Planning freeze: Active
-- Explicit packet authorisation: Still required
-- GATE-004: Separate and unsatisfied
+- Planning freeze: Complete
+- IR-001 has explicit bounded authorisation.
+- Implementation authority is limited to IR-001.
+- Packet scope cannot expand silently; use change control.
+- IR-002 and later packets require separate authorisation.
+- GATE-004: Satisfied for IR-001 only.
 - W7 separate production authorisation: Mandatory
 
 Package acceptance and lock establish trusted planning authority. They do not
-authorise implementation work, IR-001, a Wave start, deployment, or cutover.
+authorise unbounded implementation work, IR-002 or later work, deployment, or
+cutover. W7 still requires separate production authorisation.

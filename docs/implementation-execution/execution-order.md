@@ -1,6 +1,8 @@
 # Execution Order
 
-All Waves and packets remain Draft. The accepted roadmap order is authoritative.
+IR-001 is Authorised and Not started. IR-002 through IR-022 and W2 through W7
+remain Draft and unauthorised; W1 is Ready to start through IR-001 only. The
+accepted roadmap order is authoritative.
 
 ## W1 — Evidence and tenant foundation
 

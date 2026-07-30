@@ -1,13 +1,13 @@
 # Implementation Execution Package Review
 
-## Status
+## Historical review status
 
 - Review status: Complete
-- Execution package: Draft
-- Execution package accepted: No
-- Execution package lock complete: No
-- Implementation authorised: No
-- IR-001 authorised: No
+- Execution package at review: Draft (historical)
+- Execution package accepted at review: No (historical)
+- Execution package lock complete at review: No (historical)
+- Implementation authorised at review: No (historical)
+- IR-001 authorised at review: No (historical)
 
 ## Reviewed scope
 
@@ -145,8 +145,8 @@ Ready for execution-package acceptance review
 - Execution package lock: Complete
 - Acceptance record: `docs/implementation-execution/acceptance-record.md`
 - Lock record: `docs/implementation-execution/lock-record.md`
-- Implementation authorised: No
-- IR-001 authorised: No
+- Implementation authorised at review: No (historical)
+- IR-001 authorised at review: No (historical)
 
 The historical review matrix remains unchanged: 0 Pass, 22 Pass with
 correction, and 0 Blocked. Its corrections were incorporated before acceptance.

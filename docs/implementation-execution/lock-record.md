@@ -5,9 +5,9 @@
 - Package lock: Complete
 - Planning freeze: Complete
 - Locked package status: Accepted
-- Application implementation: Not started
-- Implementation authorised: No
-- IR-001 authorised: No
+- Application implementation at package lock: Not started (historical)
+- Implementation authorised at package lock: No (historical)
+- IR-001 authorised at package lock: No (historical)
 - Lock date: 2026-07-30
 
 ## Locked package
@@ -109,6 +109,7 @@
 - unreviewed trusted operation; or
 - change to W7 authorisation boundaries.
 
-## Next gate
+## Next gate at package lock
 
-GATE-004 — Explicit IR-001 authorisation.
+GATE-004 — Explicit IR-001 authorisation (historical; now satisfied by
+`authorisations/IR-001-authorisation.md`).
