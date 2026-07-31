@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url'
 
 import {
   assertPathSafeEvidenceText,
+  assertBrowserFailureSummary,
   assertRetainedBrowserArtifactNames,
 } from './browser-artifact-safety.mjs'
 import {
@@ -69,7 +70,9 @@ function collectAllowListedBrowserFiles() {
 
   assertRetainedBrowserArtifactNames(entries.map((entry) => entry.name))
   const failureSummaryPath = `${retainedBrowserArtifactDirectory}/controlled-failure.json`
-  assertPathSafeEvidenceText(readFileSync(failureSummaryPath, 'utf8'), { repositoryRoot })
+  const failureSummaryText = readFileSync(failureSummaryPath, 'utf8')
+  assertPathSafeEvidenceText(failureSummaryText, { repositoryRoot })
+  assertBrowserFailureSummary(JSON.parse(failureSummaryText))
 
   return entries
     .map((entry) => `${retainedBrowserArtifactDirectory}/${entry.name}`)

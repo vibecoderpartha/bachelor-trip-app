@@ -14,7 +14,11 @@ import { fileURLToPath } from 'node:url'
 
 import {
   assertPathSafeEvidenceText,
+  assertBrowserFailureSummary,
   assertRetainedBrowserArtifactNames,
+  APPROVED_BROWSER_SCREENSHOT_PLACEHOLDERS,
+  BROWSER_PRIVACY_TRANSFORMATION_STRATEGY,
+  BROWSER_SCREENSHOT_CLASSIFICATION,
   sanitizeEvidenceText,
   selectRawScreenshotForSafeRetention,
 } from '../evidence/browser-artifact-safety.mjs'
@@ -29,6 +33,10 @@ const rawResultDirectory = fileURLToPath(
 const retainedDirectory = fileURLToPath(
   new URL('../../artifacts/ir-001/browser/retained', import.meta.url),
 )
+const stagingDirectory = fileURLToPath(
+  new URL('../../artifacts/ir-001/browser/staging', import.meta.url),
+)
+const stagingScreenshotPath = `${stagingDirectory}/controlled-failure-source.png`
 
 function assertExactArtifactDirectory(directory) {
   const resolvedDirectory = resolve(directory)
@@ -82,6 +90,8 @@ function repositoryRelativeArtifactPath(path) {
 
 removeArtifactDirectory(rawResultDirectory)
 removeArtifactDirectory(retainedDirectory)
+removeArtifactDirectory(stagingDirectory)
+mkdirSync(stagingDirectory, { recursive: true })
 
 const result = spawnSync(
   'npx',
@@ -93,6 +103,7 @@ const result = spawnSync(
       ...process.env,
       PLAYWRIGHT_BROWSERS_PATH: '0',
       IR001_BROWSER_FAILURE_INJECTION: 'enabled',
+      IR001_BROWSER_SAFE_SCREENSHOT_PATH: stagingScreenshotPath,
     },
   },
 )
@@ -101,24 +112,14 @@ if (result.error || result.status !== 1) {
   throw new Error('controlled browser failure did not return the expected exit code')
 }
 
-const resultMetadataPath = `${rawResultDirectory}/.last-run.json`
-if (!existsSync(resultMetadataPath)) {
-  throw new Error('controlled browser failure did not retain result metadata')
-}
-
-const resultMetadata = JSON.parse(readFileSync(resultMetadataPath, 'utf8'))
-const rawFiles = collectFiles(rawResultDirectory)
-const rawErrorContextPaths = rawFiles.filter((path) => path.endsWith('/error-context.md'))
-if (
-  resultMetadata.status !== 'failed' ||
-  rawErrorContextPaths.length < 1
-) {
-  throw new Error('controlled browser failure did not retain the expected artifact')
+const stagingFiles = collectFiles(stagingDirectory)
+if (stagingFiles.some((path) => path !== stagingScreenshotPath)) {
+  throw new Error('controlled browser failure retained an unexpected staging artifact')
 }
 
 mkdirSync(retainedDirectory, { recursive: true })
 copyFileSync(
-  selectRawScreenshotForSafeRetention(rawFiles),
+  selectRawScreenshotForSafeRetention(stagingFiles),
   `${retainedDirectory}/controlled-failure.png`,
 )
 
@@ -133,7 +134,7 @@ const retainedArtifacts = [
   },
 ]
 const failureSummary = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   capability: 'ir-001-browser-failure-injection',
   result: 'expected-child-failure-observed',
   command: 'npx --no-install playwright test tests/browser/failure-injection.spec.ts',
@@ -142,8 +143,13 @@ const failureSummary = {
   failureClass: 'controlled-missing-test-id',
   browser: 'chromium',
   project: 'IR-001',
-  correctionBoundary: 'F-IR001-VER-001',
-  rawPlaywrightOutput: 'excluded after safe artifact extraction',
+  correctionBoundary: 'F-IR001-VER-007-008',
+  privacyTransformApplied: true,
+  privacyTransformationStrategy: BROWSER_PRIVACY_TRANSFORMATION_STRATEGY,
+  approvedPlaceholderSet: APPROVED_BROWSER_SCREENSHOT_PLACEHOLDERS,
+  screenshotClassification: BROWSER_SCREENSHOT_CLASSIFICATION,
+  artifactAllowList: 'passed',
+  rawDiagnosticExclusion: 'confirmed',
   retainedArtifacts,
 }
 const serializedFailureSummary = sanitizeEvidenceText(
@@ -151,6 +157,7 @@ const serializedFailureSummary = sanitizeEvidenceText(
   { repositoryRoot },
 )
 assertPathSafeEvidenceText(serializedFailureSummary, { repositoryRoot })
+assertBrowserFailureSummary(JSON.parse(serializedFailureSummary))
 writeFileSync(
   `${retainedDirectory}/controlled-failure.json`,
   serializedFailureSummary,
@@ -159,6 +166,7 @@ writeFileSync(
 assertRetainedBrowserArtifactNames(readdirSync(retainedDirectory).sort())
 
 removeArtifactDirectory(rawResultDirectory)
+removeArtifactDirectory(stagingDirectory)
 
 console.log(
   JSON.stringify({
