@@ -54,15 +54,31 @@ test('database cleanup polling waits for exact project resources to disappear', 
     { containers: [dbContainer], networks: [LOCAL_PROJECT_NETWORK], volumes: [] },
     { containers: [], networks: [], volumes: [LOCAL_PROJECT_VOLUME] },
     { containers: [], networks: [], volumes: [] },
+    { containers: [], networks: [], volumes: [] },
   ]
   const waits = []
   const result = waitForExactProjectDockerCleanup(
     () => snapshots.shift(),
-    { attempts: 3, intervalMilliseconds: 25, wait: (milliseconds) => waits.push(milliseconds) },
+    { attempts: 4, intervalMilliseconds: 25, wait: (milliseconds) => waits.push(milliseconds) },
   )
 
-  assert.deepEqual(result, { result: 'absent', attempts: 3, waitedMilliseconds: 50 })
-  assert.deepEqual(waits, [25, 25])
+  assert.deepEqual(result, { result: 'absent', attempts: 4, waitedMilliseconds: 75 })
+  assert.deepEqual(waits, [25, 25, 25])
+})
+
+test('database cleanup polling rejects a transient absent snapshot before the stack settles', () => {
+  const snapshots = [
+    { containers: [], networks: [], volumes: [] },
+    { containers: [dbContainer], networks: [], volumes: [] },
+    { containers: [], networks: [], volumes: [] },
+    { containers: [], networks: [], volumes: [] },
+  ]
+  const result = waitForExactProjectDockerCleanup(
+    () => snapshots.shift(),
+    { attempts: 4, intervalMilliseconds: 1, wait: () => {} },
+  )
+
+  assert.deepEqual(result, { result: 'absent', attempts: 4, waitedMilliseconds: 3 })
 })
 
 test('database cleanup polling fails after the bounded timeout without resource names', () => {

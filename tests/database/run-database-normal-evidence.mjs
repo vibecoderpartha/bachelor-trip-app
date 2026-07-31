@@ -13,13 +13,16 @@ import { fileURLToPath } from 'node:url'
 
 import {
   DATABASE_ARTIFACT_NAMES,
+  HOSTED_NORMAL_FAILURE_ARTIFACT_NAME,
   artifactPhaseFromName,
   assertDatabaseEvidenceRecord,
   assertDatabaseSequenceState,
   assertRawNormalProbeResult,
+  assertHostedNormalFailureDiagnostic,
   createDatabaseEvidenceRecord,
   createDatabaseEvidenceSequenceId,
   createDatabaseSequenceState,
+  createHostedNormalFailureDiagnostic,
   databaseArtifactName,
 } from '../evidence/database-evidence-contract.mjs'
 
@@ -59,6 +62,23 @@ function listedArtifactNames() {
     throw new Error('refusing a database artifact outside the allow-list')
   }
   return names
+}
+
+function hostedNormalFailureDiagnosticPath() {
+  return `${databaseArtifactDirectory}/${HOSTED_NORMAL_FAILURE_ARTIFACT_NAME}`
+}
+
+function removeHostedNormalFailureDiagnostic() {
+  const path = hostedNormalFailureDiagnosticPath()
+  if (!existsSync(path)) {
+    return
+  }
+  const stats = lstatSync(path)
+  if (!stats.isFile() || stats.isSymbolicLink()) {
+    throw new Error('refusing an unexpected hosted normal failure diagnostic')
+  }
+  assertHostedNormalFailureDiagnostic(JSON.parse(readFileSync(path, 'utf8')))
+  unlinkSync(path)
 }
 
 function artifactPath(phase) {
@@ -170,17 +190,18 @@ function selectNormalEvidencePhase() {
   throw new Error('refusing an incomplete or stale database evidence sequence')
 }
 
-function runNormalCapability() {
+function runNormalCapability(phase) {
   const result = spawnSync(process.execPath, ['tests/database/run-rls-probe.mjs'], {
     cwd: repositoryRoot,
     encoding: 'utf8',
     env: process.env,
   })
   if (result.error || result.status !== 0) {
+    let rawResult = null
     let childResult = 'missing-safe-result'
     if (existsSync(rawResultPath)) {
       try {
-        const rawResult = JSON.parse(readFileSync(rawResultPath, 'utf8'))
+        rawResult = JSON.parse(readFileSync(rawResultPath, 'utf8'))
         if (rawResult.capability === 'ir-001-local-rls-probe') {
           const category = [
             rawResult.cleanupFailureReason,
@@ -195,42 +216,60 @@ function runNormalCapability() {
         childResult = 'malformed-safe-result'
       }
     }
+    const diagnostic = createHostedNormalFailureDiagnostic(rawResult, {
+      childExitCode: result.status ?? 1,
+    })
+    if (
+      phase === 'initial' &&
+      process.env.IR001_RETAIN_HOSTED_NORMAL_FAILURE === 'true'
+    ) {
+      assertDatabaseArtifactDirectory()
+      writeJson(hostedNormalFailureDiagnosticPath(), diagnostic)
+    }
     console.error(
       JSON.stringify({
         capability: 'ir-001-local-rls-probe',
         result: 'failed-safely',
         childExitCode: result.status ?? null,
         childResult,
+        primaryFailureStep: diagnostic.primaryFailureStep,
+        primaryFailureCategory: diagnostic.primaryFailureCategory,
       }),
     )
-    throw new Error('normal database capability did not return the expected exit code')
+    return false
   }
   if (!existsSync(rawResultPath)) {
     throw new Error('normal database capability did not retain a result record')
   }
   const rawResult = JSON.parse(readFileSync(rawResultPath, 'utf8'))
   assertRawNormalProbeResult(rawResult)
+  return true
 }
 
+assertDatabaseArtifactDirectory()
+removeHostedNormalFailureDiagnostic()
 const selection = selectNormalEvidencePhase()
 const outputPath = artifactPath(selection.phase)
 removeVerifiedFile(outputPath, 'database evidence artifact')
 removeRawResult()
-runNormalCapability()
-writeJson(outputPath, createDatabaseEvidenceRecord(selection.phase, selection.sequenceId))
-writeJson(
-  sequenceStatePath,
-  createDatabaseSequenceState(
-    selection.sequenceId,
-    selection.phase === 'initial' ? 'initial-normal-complete' : 'recovery-normal-complete',
-  ),
-)
+if (runNormalCapability(selection.phase)) {
+  writeJson(outputPath, createDatabaseEvidenceRecord(selection.phase, selection.sequenceId))
+  writeJson(
+    sequenceStatePath,
+    createDatabaseSequenceState(
+      selection.sequenceId,
+      selection.phase === 'initial' ? 'initial-normal-complete' : 'recovery-normal-complete',
+    ),
+  )
 
-console.log(
-  JSON.stringify({
-    capability: 'ir-001-local-rls-probe',
-    result: 'passed',
-    evidencePhase: selection.phase === 'initial' ? 'initial-normal' : 'recovery-normal',
-    cleanup: 'confirmed',
-  }),
-)
+  console.log(
+    JSON.stringify({
+      capability: 'ir-001-local-rls-probe',
+      result: 'passed',
+      evidencePhase: selection.phase === 'initial' ? 'initial-normal' : 'recovery-normal',
+      cleanup: 'confirmed',
+    }),
+  )
+} else {
+  process.exitCode = 1
+}

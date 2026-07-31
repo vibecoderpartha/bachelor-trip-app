@@ -28,6 +28,59 @@ const GENERATED_BRANCH_STATE_DIRECTORY = fileURLToPath(
 const GENERATED_CLI_TEMP_DIRECTORY = fileURLToPath(
   new URL('./local-stack/supabase/.temp', import.meta.url),
 )
+const ASSERTION_CASE_IDS = new Set([
+  'probe-schema-must-not-preexist',
+  'same-scope-account-a',
+  'same-scope-account-b',
+  'cross-scope-account-a',
+  'cross-scope-account-b',
+  'inactive-relationship',
+  'removed-relationship',
+])
+
+function commandVersionCategory(command, args, prefix) {
+  const result = spawnSync(command, args, { cwd: REPOSITORY_ROOT, encoding: 'utf8' })
+  if (result.error || result.status !== 0) {
+    return { available: false, version: 'unavailable' }
+  }
+  const match = `${result.stdout}\n${result.stderr}`.match(/\d+(?:\.\d+){0,2}/)
+  return {
+    available: true,
+    version: match ? `${prefix}-${match[0].replaceAll('.', '-')}` : `${prefix}-available`,
+  }
+}
+
+function inspectRequiredTools() {
+  const docker = commandVersionCategory('docker', ['version', '--format', '{{.Server.Version}}'], 'docker')
+  const supabaseCli = commandVersionCategory('npx', ['--no-install', 'supabase', '--version'], 'supabase-cli')
+  const psql = commandVersionCategory('psql', ['--version'], 'postgresql-client')
+  return {
+    availability: {
+      docker: docker.available,
+      psql: psql.available,
+      supabaseCli: supabaseCli.available,
+    },
+    versions: {
+      docker: docker.version,
+      psql: psql.version,
+      supabaseCli: supabaseCli.version,
+    },
+  }
+}
+
+const requiredTools = inspectRequiredTools()
+const RUNNER_CATEGORY = process.env.GITHUB_ACTIONS === 'true'
+  ? 'github-actions-ubuntu-22'
+  : 'local-isolated'
+const TESTED_COMMIT_SHA = /^[a-f0-9]{40}$/i.test(process.env.IR001_TESTED_COMMIT_SHA ?? '')
+  ? process.env.IR001_TESTED_COMMIT_SHA
+  : 'unavailable'
+const STARTUP_READINESS_ATTEMPTS = 31
+const STARTUP_READINESS_INTERVAL_MILLISECONDS = 1_000
+
+function sleep(milliseconds) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds)
+}
 
 function runCommand(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -37,6 +90,16 @@ function runCommand(command, args, options = {}) {
   })
 
   if (result.error || result.status !== 0) {
+    if (result.error?.code === 'ENOENT') {
+      const category = command === 'psql'
+        ? 'host-postgresql-client-unavailable'
+        : command === 'docker'
+          ? 'docker-client-unavailable'
+          : command === 'npx'
+            ? 'node-package-executor-unavailable'
+            : 'command-unavailable'
+      throw new Error(`${command}:${category}`)
+    }
     const diagnostic = `${result.stdout}\n${result.stderr}`
     const safeReason = [
       ['docker-unavailable', /docker daemon|connect to the docker|docker api/i],
@@ -251,6 +314,23 @@ function runPsql(databaseUrl, queryOrFile, isFile = false) {
   return runCommand('psql', args, { env: options.env }).trim()
 }
 
+function waitForReadyLocalDatabase() {
+  let lastReason = 'redacted-command-failure'
+  for (let attempt = 1; attempt <= STARTUP_READINESS_ATTEMPTS; attempt += 1) {
+    try {
+      const url = readLocalDatabaseUrl()
+      runPsql(url, 'SELECT 1;')
+      return url
+    } catch (error) {
+      lastReason = safeErrorCategory(error)
+      if (attempt < STARTUP_READINESS_ATTEMPTS) {
+        sleep(STARTUP_READINESS_INTERVAL_MILLISECONDS)
+      }
+    }
+  }
+  throw new Error(`local-database-readiness-timeout:${lastReason}`)
+}
+
 function sqlLiteral(value) {
   return `'${value.replaceAll("'", "''")}'`
 }
@@ -279,6 +359,10 @@ function writeSafeResult(result) {
     SAFE_RESULT_PATH,
     `${JSON.stringify({
       ...result,
+      runner: RUNNER_CATEGORY,
+      testedCommitSha: TESTED_COMMIT_SHA,
+      toolAvailability: requiredTools.availability,
+      toolVersions: requiredTools.versions,
       runMode:
         FAILURE_INJECTION === 'none'
           ? 'normal'
@@ -309,13 +393,17 @@ function safeErrorCategory(error) {
     return 'controlled-failure-injected'
   }
 
-  const [, category] = error.message.split(':', 2)
-  if (category) {
-    return category
-  }
-
   if (error.message.startsWith('local probe assertion failed: ')) {
     return 'assertion-failed'
+  }
+
+  if (/^(host-postgresql-client-unavailable|docker-client-unavailable|node-package-executor-unavailable)$/.test(error.message)) {
+    return error.message
+  }
+
+  const [, category] = error.message.split(':', 2)
+  if (category && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(category)) {
+    return category
   }
 
   if (
@@ -333,8 +421,17 @@ function safeErrorDetail(error) {
     return null
   }
 
+  if (error.message.startsWith('controlled failure injected: ')) {
+    return 'after-probe-setup'
+  }
+  if (error.message.startsWith('local probe assertion failed: ')) {
+    const caseId = error.message.slice('local probe assertion failed: '.length)
+    return ASSERTION_CASE_IDS.has(caseId) ? caseId : 'assertion-case-redacted'
+  }
   const [, , detail] = error.message.split(':', 3)
-  return detail ?? null
+  return detail && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(detail)
+    ? detail
+    : null
 }
 
 let localStartAttempted = false
@@ -347,6 +444,16 @@ let primaryFailureContainerStates = []
 let databaseUrl
 
 try {
+  primaryFailureStep = 'tool-preflight'
+  if (!requiredTools.availability.docker) {
+    throw new Error('docker-client-unavailable')
+  }
+  if (!requiredTools.availability.supabaseCli) {
+    throw new Error('node-package-executor-unavailable')
+  }
+  if (!requiredTools.availability.psql) {
+    throw new Error('host-postgresql-client-unavailable')
+  }
   primaryFailureStep = 'resource-preflight'
   assertNoProjectDockerResources()
   primaryFailureStep = 'stack-start'
@@ -360,8 +467,8 @@ try {
   ])
   assertProjectContainersExist()
 
-  primaryFailureStep = 'endpoint-boundary'
-  databaseUrl = readLocalDatabaseUrl()
+  primaryFailureStep = 'endpoint-readiness'
+  databaseUrl = waitForReadyLocalDatabase()
   primaryFailureStep = 'probe-schema-preflight'
   const probeSchemaExists = runPsql(
     databaseUrl,

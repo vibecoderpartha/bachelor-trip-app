@@ -57,10 +57,25 @@ jobs:
       - run: npm run test:types
       - run: npm test
       - run: npm run build
-      - run: npm run test:db
-      - run: npm run test:db:failure
-      - run: npm run test:db
-      - run: IR001_EVIDENCE_JOB=database npm run test:evidence:manifest
+      - name: Run initial normal database evidence
+        id: database_initial_normal
+        continue-on-error: true
+        env:
+          IR001_RETAIN_HOSTED_NORMAL_FAILURE: 'true'
+          IR001_TESTED_COMMIT_SHA: ${{ github.sha }}
+        run: npm run test:db
+      - name: Run controlled database failure evidence
+        if: steps.database_initial_normal.outcome == 'success'
+        run: npm run test:db:failure
+      - name: Run recovery normal database evidence
+        if: steps.database_initial_normal.outcome == 'success'
+        run: npm run test:db
+      - name: Write database evidence manifest
+        if: steps.database_initial_normal.outcome == 'success'
+        run: IR001_EVIDENCE_JOB=database npm run test:evidence:manifest
+      - name: Fail after retaining first-normal diagnostic
+        if: steps.database_initial_normal.outcome == 'failure'
+        run: exit 1
       - name: Assert exact local database cleanup
         if: always()
         run: npm run test:db:cleanup
@@ -73,6 +88,7 @@ jobs:
             artifacts/ir-001/database/normal-result.json
             artifacts/ir-001/database/controlled-failure-result.json
             artifacts/ir-001/database/recovery-result.json
+            artifacts/ir-001/database/hosted-normal-failure.json
             artifacts/ir-001/evidence-manifest.json
           retention-days: 14
           if-no-files-found: warn

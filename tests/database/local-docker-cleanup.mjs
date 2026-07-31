@@ -56,6 +56,7 @@ export function waitForExactProjectDockerCleanup(
   {
     attempts = 11,
     intervalMilliseconds = 1_000,
+    requiredConsecutiveAbsent = 2,
     wait = sleep,
   } = {},
 ) {
@@ -68,16 +69,25 @@ export function waitForExactProjectDockerCleanup(
   if (!Number.isInteger(intervalMilliseconds) || intervalMilliseconds < 0) {
     throw new Error('refusing an invalid local Docker cleanup interval')
   }
+  if (!Number.isInteger(requiredConsecutiveAbsent) || requiredConsecutiveAbsent < 1) {
+    throw new Error('refusing an invalid local Docker cleanup stability requirement')
+  }
 
   let remainingTypes = []
+  let consecutiveAbsent = 0
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     remainingTypes = remainingProjectDockerResourceTypes(readSnapshot())
     if (remainingTypes.length === 0) {
-      return {
-        result: 'absent',
-        attempts: attempt,
-        waitedMilliseconds: (attempt - 1) * intervalMilliseconds,
+      consecutiveAbsent += 1
+      if (consecutiveAbsent >= requiredConsecutiveAbsent) {
+        return {
+          result: 'absent',
+          attempts: attempt,
+          waitedMilliseconds: (attempt - 1) * intervalMilliseconds,
+        }
       }
+    } else {
+      consecutiveAbsent = 0
     }
     if (attempt < attempts) {
       wait(intervalMilliseconds)

@@ -4,6 +4,8 @@ import test from 'node:test'
 import {
   assertDatabaseArtifactNames,
   assertDatabaseEvidenceTextSafe,
+  assertHostedNormalFailureDiagnostic,
+  createHostedNormalFailureDiagnostic,
   createDatabaseEvidenceRecord,
   createDatabaseSequenceState,
   validateCompleteDatabaseEvidence,
@@ -101,4 +103,48 @@ test('database retention allow-list rejects unexpected artifact files', () => {
     ]),
     /allow-list/,
   )
+})
+
+test('hosted first-normal failure diagnostics retain only safe tool and failure categories', () => {
+  const diagnostic = createHostedNormalFailureDiagnostic({
+    capability: 'ir-001-local-rls-probe',
+    state: 'cleanup-passed',
+    primaryFailureStep: 'tool-preflight',
+    primaryFailureReason: 'host-postgresql-client-unavailable',
+    primaryFailureDetail: null,
+    primaryFailureContainerStates: ['diagnostic-unavailable'],
+    runner: 'github-actions-ubuntu-22',
+    testedCommitSha: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    toolAvailability: { docker: true, psql: false, supabaseCli: true },
+    toolVersions: {
+      docker: 'docker-29-6-2',
+      psql: 'unavailable',
+      supabaseCli: 'supabase-cli-2-105-0',
+    },
+  })
+
+  assert.equal(diagnostic.runPhase, 'initial-normal')
+  assert.equal(diagnostic.cleanup, 'confirmed')
+  assert.doesNotThrow(() => assertHostedNormalFailureDiagnostic(diagnostic))
+  assert.throws(
+    () => assertHostedNormalFailureDiagnostic({
+      ...diagnostic,
+      primaryFailureDetailCategory: '/home/example-user/project/result.json',
+    }),
+    /unsafe/,
+  )
+  assert.throws(
+    () => assertDatabaseArtifactNames([
+      'normal-result.json',
+      'controlled-failure-result.json',
+      'recovery-result.json',
+      'hosted-normal-failure.json',
+    ]),
+    /allow-list/,
+  )
+  const pathRedacted = createHostedNormalFailureDiagnostic({
+    ...diagnostic,
+    primaryFailureReason: '/home/example-user/private-failure',
+  })
+  assert.equal(pathRedacted.primaryFailureCategory, 'safe-result-unavailable')
 })

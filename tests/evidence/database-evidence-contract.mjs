@@ -11,6 +11,7 @@ export const DATABASE_ARTIFACT_NAMES = Object.freeze([
   'controlled-failure-result.json',
   'recovery-result.json',
 ])
+export const HOSTED_NORMAL_FAILURE_ARTIFACT_NAME = 'hosted-normal-failure.json'
 
 const PHASES = Object.freeze({
   initial: {
@@ -104,6 +105,27 @@ const UNSAFE_SECRET_PATTERNS = Object.freeze([
   /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+\b/,
   /(?:password|token|secret|api[_-]?key|service[_-]?role)\s*[=:]/i,
 ])
+const HOSTED_NORMAL_FAILURE_RECORD_KEYS = Object.freeze([
+  'schemaVersion',
+  'capability',
+  'result',
+  'runPhase',
+  'childExitCode',
+  'primaryFailureStep',
+  'primaryFailureCategory',
+  'primaryFailureDetailCategory',
+  'serviceContainerStates',
+  'cleanup',
+  'runner',
+  'toolAvailability',
+  'toolVersions',
+  'testedCommitSha',
+])
+const TOOL_KEYS = Object.freeze(['docker', 'psql', 'supabaseCli'])
+const RUNNER_CATEGORIES = Object.freeze([
+  'github-actions-ubuntu-22',
+  'local-isolated',
+])
 
 function assertExactKeys(value, keys, label) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -123,6 +145,35 @@ function assertExactKeys(value, keys, label) {
 function assertEqual(value, expected, label) {
   if (value !== expected) {
     throw new Error(`refusing an unexpected database evidence ${label}`)
+  }
+}
+
+function assertSafeCategory(value, label, { allowNull = false } = {}) {
+  if (allowNull && value === null) {
+    return
+  }
+  if (
+    typeof value !== 'string' ||
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value) ||
+    value.length > 80
+  ) {
+    throw new Error(`refusing an unsafe ${label} category`)
+  }
+}
+
+function assertToolAvailability(value) {
+  assertExactKeys(value, TOOL_KEYS, 'database failure tool availability')
+  for (const tool of TOOL_KEYS) {
+    if (typeof value[tool] !== 'boolean') {
+      throw new Error('refusing an invalid database failure tool availability')
+    }
+  }
+}
+
+function assertToolVersions(value) {
+  assertExactKeys(value, TOOL_KEYS, 'database failure tool versions')
+  for (const tool of TOOL_KEYS) {
+    assertSafeCategory(value[tool], `database failure ${tool} version`)
   }
 }
 
@@ -225,6 +276,115 @@ export function assertDatabaseArtifactNames(names, { complete = true } = {}) {
   ) {
     throw new Error('refusing database artifacts outside the retained allow-list')
   }
+}
+
+export function assertHostedNormalFailureDiagnostic(record) {
+  assertExactKeys(record, HOSTED_NORMAL_FAILURE_RECORD_KEYS, 'hosted normal failure diagnostic')
+  assertEqual(record.schemaVersion, DATABASE_EVIDENCE_SCHEMA_VERSION, 'hosted failure schema version')
+  assertEqual(record.capability, DATABASE_CAPABILITY, 'hosted failure capability')
+  assertEqual(record.result, 'failed-safely', 'hosted failure result')
+  assertEqual(record.runPhase, 'initial-normal', 'hosted failure run phase')
+  assertEqual(record.childExitCode, 1, 'hosted failure child exit code')
+  assertSafeCategory(record.primaryFailureStep, 'hosted failure step')
+  assertSafeCategory(record.primaryFailureCategory, 'hosted failure')
+  assertSafeCategory(record.primaryFailureDetailCategory, 'hosted failure detail', {
+    allowNull: true,
+  })
+  if (
+    !Array.isArray(record.serviceContainerStates) ||
+    record.serviceContainerStates.some((state) => {
+      try {
+        assertSafeCategory(state, 'hosted failure service state')
+        return false
+      } catch {
+        return true
+      }
+    })
+  ) {
+    throw new Error('refusing unsafe hosted failure service state categories')
+  }
+  if (!['confirmed', 'not-confirmed'].includes(record.cleanup)) {
+    throw new Error('refusing an invalid hosted failure cleanup status')
+  }
+  if (!RUNNER_CATEGORIES.includes(record.runner)) {
+    throw new Error('refusing an invalid hosted failure runner category')
+  }
+  assertToolAvailability(record.toolAvailability)
+  assertToolVersions(record.toolVersions)
+  if (record.testedCommitSha !== 'unavailable' && !/^[a-f0-9]{40}$/i.test(record.testedCommitSha)) {
+    throw new Error('refusing an invalid hosted failure tested commit')
+  }
+  assertDatabaseEvidenceTextSafe(JSON.stringify(record))
+  return record
+}
+
+function safeCategoryOr(value, fallback) {
+  try {
+    assertSafeCategory(value, 'hosted failure')
+    return value
+  } catch {
+    return fallback
+  }
+}
+
+function safeServiceContainerStates(value) {
+  if (!Array.isArray(value)) {
+    return ['diagnostic-unavailable']
+  }
+  const states = value
+    .map((entry) => {
+      if (typeof entry !== 'string') {
+        return null
+      }
+      const [service, state, health] = entry.split(':', 3)
+      const serviceCategory = safeCategoryOr(service, null)
+      const stateCategory = safeCategoryOr(state, null)
+      const healthCategory = safeCategoryOr(health, null)
+      return serviceCategory && stateCategory && healthCategory
+        ? `${serviceCategory}-${stateCategory}-${healthCategory}`
+        : null
+    })
+    .filter(Boolean)
+    .sort()
+  return states.length > 0 ? states : ['diagnostic-unavailable']
+}
+
+export function createHostedNormalFailureDiagnostic(rawResult, { childExitCode = 1 } = {}) {
+  const toolAvailability = rawResult?.toolAvailability ?? {}
+  const toolVersions = rawResult?.toolVersions ?? {}
+  const record = {
+    schemaVersion: DATABASE_EVIDENCE_SCHEMA_VERSION,
+    capability: DATABASE_CAPABILITY,
+    result: 'failed-safely',
+    runPhase: 'initial-normal',
+    childExitCode: childExitCode === 1 ? 1 : 1,
+    primaryFailureStep: safeCategoryOr(rawResult?.primaryFailureStep, 'safe-result-unavailable'),
+    primaryFailureCategory: safeCategoryOr(rawResult?.primaryFailureReason, 'safe-result-unavailable'),
+    primaryFailureDetailCategory:
+      rawResult?.primaryFailureDetail === null || rawResult?.primaryFailureDetail === undefined
+        ? null
+        : safeCategoryOr(rawResult.primaryFailureDetail, 'detail-redacted'),
+    serviceContainerStates: safeServiceContainerStates(rawResult?.primaryFailureContainerStates),
+    cleanup: rawResult?.state === 'cleanup-passed' ? 'confirmed' : 'not-confirmed',
+    runner: RUNNER_CATEGORIES.includes(rawResult?.runner)
+      ? rawResult.runner
+      : 'local-isolated',
+    toolAvailability: {
+      docker: toolAvailability.docker === true,
+      psql: toolAvailability.psql === true,
+      supabaseCli: toolAvailability.supabaseCli === true,
+    },
+    toolVersions: {
+      docker: safeCategoryOr(toolVersions.docker, 'unavailable'),
+      psql: safeCategoryOr(toolVersions.psql, 'unavailable'),
+      supabaseCli: safeCategoryOr(toolVersions.supabaseCli, 'unavailable'),
+    },
+    testedCommitSha:
+      typeof rawResult?.testedCommitSha === 'string' && /^[a-f0-9]{40}$/i.test(rawResult.testedCommitSha)
+        ? rawResult.testedCommitSha
+        : 'unavailable',
+  }
+  return assertHostedNormalFailureDiagnostic(record)
 }
 
 export function assertDatabaseEvidenceRecord(record, expectedPhase) {
