@@ -9,9 +9,24 @@ import {
 } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
+import {
+  assertPathSafeEvidenceText,
+  assertRetainedBrowserArtifactNames,
+} from './browser-artifact-safety.mjs'
+import {
+  DATABASE_ARTIFACT_NAMES,
+  artifactPhaseFromName,
+  assertDatabaseArtifactNames,
+  assertDatabaseEvidenceRecord,
+  assertDatabaseEvidenceTextSafe,
+  validateCompleteDatabaseEvidence,
+} from './database-evidence-contract.mjs'
+
 const repositoryRoot = fileURLToPath(new URL('../..', import.meta.url))
 const artifactRoot = `${repositoryRoot}/artifacts/ir-001`
-const databaseResultPath = '/tmp/bachelor-trip-app-ir001-rls-result.json'
+const retainedBrowserArtifactDirectory = `${artifactRoot}/browser/retained`
+const databaseArtifactDirectory = `${artifactRoot}/database`
+const databaseSequenceStatePath = '/tmp/bachelor-trip-app-ir001-database-evidence-sequence.json'
 const job = process.env.IR001_EVIDENCE_JOB ?? 'local'
 
 if (!['browser', 'database', 'local'].includes(job)) {
@@ -34,8 +49,30 @@ function collectFiles(directory) {
   return readdirSync(directory, { withFileTypes: true })
     .flatMap((entry) => {
       const path = `${directory}/${entry.name}`
+      if (entry.isSymbolicLink()) {
+        throw new Error('refusing a symbolic link in generated evidence')
+      }
       return entry.isDirectory() ? collectFiles(path) : [path]
     })
+    .sort()
+}
+
+function collectAllowListedBrowserFiles() {
+  if (!existsSync(retainedBrowserArtifactDirectory)) {
+    throw new Error('browser retained evidence is missing')
+  }
+
+  const entries = readdirSync(retainedBrowserArtifactDirectory, { withFileTypes: true })
+  if (entries.some((entry) => !entry.isFile() || entry.isSymbolicLink())) {
+    throw new Error('refusing a non-file browser retained artifact')
+  }
+
+  assertRetainedBrowserArtifactNames(entries.map((entry) => entry.name))
+  const failureSummaryPath = `${retainedBrowserArtifactDirectory}/controlled-failure.json`
+  assertPathSafeEvidenceText(readFileSync(failureSummaryPath, 'utf8'), { repositoryRoot })
+
+  return entries
+    .map((entry) => `${retainedBrowserArtifactDirectory}/${entry.name}`)
     .sort()
 }
 
@@ -47,53 +84,61 @@ function toRepositoryRelativePath(path) {
   return path.slice(repositoryRoot.length + 1)
 }
 
-function assertSafeDatabaseResult(result) {
-  if (
-    result.capability !== 'ir-001-local-rls-probe' ||
-    result.state !== 'cleanup-passed' ||
-    result.runMode !== 'injected-after-probe-setup' ||
-    result.primaryFailure !== true ||
-    result.primaryFailureReason !== 'controlled-failure-injected'
-  ) {
-    throw new Error('refusing an unexpected database evidence result')
+function collectAllowListedDatabaseFiles() {
+  if (!existsSync(databaseArtifactDirectory)) {
+    throw new Error('database evidence directory is missing')
   }
-}
-
-mkdirSync(artifactRoot, { recursive: true })
-
-if (job === 'database') {
-  if (!existsSync(databaseResultPath)) {
-    throw new Error('database evidence result is missing')
+  if (!existsSync(databaseSequenceStatePath)) {
+    throw new Error('database evidence sequence state is missing')
   }
 
-  const databaseResult = JSON.parse(readFileSync(databaseResultPath, 'utf8'))
-  assertSafeDatabaseResult(databaseResult)
-  const databaseArtifactDirectory = artifactPath('database')
-  mkdirSync(databaseArtifactDirectory, { recursive: true })
-  writeFileSync(
-    `${databaseArtifactDirectory}/rls-result.json`,
-    `${JSON.stringify({
-      capability: databaseResult.capability,
-      state: databaseResult.state,
-      primaryFailure: databaseResult.primaryFailure,
-      primaryFailureStep: databaseResult.primaryFailureStep,
-      primaryFailureReason: databaseResult.primaryFailureReason,
-      runMode: databaseResult.runMode,
-    })}\n`,
-    'utf8',
-  )
+  const entries = readdirSync(databaseArtifactDirectory, { withFileTypes: true })
+  if (entries.some((entry) => !entry.isFile() || entry.isSymbolicLink())) {
+    throw new Error('refusing a non-file database retained artifact')
+  }
+  assertDatabaseArtifactNames(entries.map((entry) => entry.name))
+
+  const records = entries.map((entry) => {
+    const phase = artifactPhaseFromName(entry.name)
+    if (!phase) {
+      throw new Error('refusing an unrecognised database evidence artifact')
+    }
+    const record = JSON.parse(readFileSync(`${databaseArtifactDirectory}/${entry.name}`, 'utf8'))
+    assertDatabaseEvidenceRecord(record, phase)
+    assertDatabaseEvidenceTextSafe(JSON.stringify(record), { repositoryRoot })
+    return record
+  })
+  const sequenceState = JSON.parse(readFileSync(databaseSequenceStatePath, 'utf8'))
+  validateCompleteDatabaseEvidence(records, sequenceState)
+
+  return DATABASE_ARTIFACT_NAMES.map((name) => `${databaseArtifactDirectory}/${name}`)
 }
 
-const jobArtifactRoot =
-  job === 'local' ? artifactRoot : artifactPath(job)
+const jobArtifactRoot = job === 'local' ? artifactRoot : artifactPath(job)
+const jobFiles = job === 'browser'
+  ? collectAllowListedBrowserFiles()
+  : job === 'database'
+    ? collectAllowListedDatabaseFiles()
+    : collectFiles(jobArtifactRoot).filter((path) => !path.endsWith('/evidence-manifest.json'))
 
-const includedFiles = collectFiles(jobArtifactRoot)
-  .filter((path) => !path.endsWith('/evidence-manifest.json'))
-  .map((path) => ({
-    path: toRepositoryRelativePath(path),
-    bytes: statSync(path).size,
-    sha256: sha256(path),
-  }))
+const includedFiles = jobFiles
+  .map((path) => {
+    const artifact = {
+      path: toRepositoryRelativePath(path),
+      bytes: statSync(path).size,
+      sha256: sha256(path),
+    }
+    if (job === 'database') {
+      const record = JSON.parse(readFileSync(path, 'utf8'))
+      return {
+        ...artifact,
+        capability: record.capability,
+        evidencePhase: record.evidencePhase,
+        safeResultClassification: record.observedTestOutcome,
+      }
+    }
+    return artifact
+  })
 
 const manifest = {
   schemaVersion: 1,
@@ -115,9 +160,13 @@ const manifest = {
   artifacts: includedFiles,
 }
 
+mkdirSync(artifactRoot, { recursive: true })
+const serializedManifest = `${JSON.stringify(manifest, null, 2)}\n`
+assertPathSafeEvidenceText(serializedManifest, { repositoryRoot })
+assertDatabaseEvidenceTextSafe(serializedManifest, { repositoryRoot })
 writeFileSync(
   artifactPath('evidence-manifest.json'),
-  `${JSON.stringify(manifest, null, 2)}\n`,
+  serializedManifest,
   'utf8',
 )
 

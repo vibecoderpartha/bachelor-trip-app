@@ -37,7 +37,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ir-001-browser-evidence
-          path: artifacts/ir-001
+          path: |
+            artifacts/ir-001/browser/retained
+            artifacts/ir-001/evidence-manifest.json
           retention-days: 14
           if-no-files-found: warn
 
@@ -57,6 +59,7 @@ jobs:
       - run: npm run build
       - run: npm run test:db
       - run: npm run test:db:failure
+      - run: npm run test:db
       - run: IR001_EVIDENCE_JOB=database npm run test:evidence:manifest
       - name: Assert exact local database cleanup
         if: always()
@@ -70,6 +73,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ir-001-database-evidence
-          path: artifacts/ir-001
+          path: |
+            artifacts/ir-001/database/normal-result.json
+            artifacts/ir-001/database/controlled-failure-result.json
+            artifacts/ir-001/database/recovery-result.json
+            artifacts/ir-001/evidence-manifest.json
           retention-days: 14
           if-no-files-found: warn

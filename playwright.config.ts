@@ -4,7 +4,7 @@ const localBaseUrl = 'http://127.0.0.1:4173'
 
 export default defineConfig({
   testDir: './tests/browser',
-  outputDir: 'artifacts/ir-001/browser/test-results',
+  outputDir: 'artifacts/ir-001/browser/raw-test-results',
   fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,

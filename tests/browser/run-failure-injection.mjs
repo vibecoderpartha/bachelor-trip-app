@@ -1,26 +1,86 @@
 import { spawnSync } from 'node:child_process'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import {
+  copyFileSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
+import { relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import {
+  assertPathSafeEvidenceText,
+  assertRetainedBrowserArtifactNames,
+  sanitizeEvidenceText,
+} from '../evidence/browser-artifact-safety.mjs'
+
 const repositoryRoot = fileURLToPath(new URL('../..', import.meta.url))
-const resultDirectory = fileURLToPath(
-  new URL('../../artifacts/ir-001/browser/test-results', import.meta.url),
+const browserArtifactRoot = fileURLToPath(
+  new URL('../../artifacts/ir-001/browser', import.meta.url),
+)
+const rawResultDirectory = fileURLToPath(
+  new URL('../../artifacts/ir-001/browser/raw-test-results', import.meta.url),
+)
+const retainedDirectory = fileURLToPath(
+  new URL('../../artifacts/ir-001/browser/retained', import.meta.url),
 )
 
-function findScreenshots(directory) {
+function assertExactArtifactDirectory(directory) {
+  const resolvedDirectory = resolve(directory)
+  const resolvedArtifactRoot = resolve(browserArtifactRoot)
+  if (!resolvedDirectory.startsWith(`${resolvedArtifactRoot}/`)) {
+    throw new Error('refusing an artifact path outside the IR-001 browser boundary')
+  }
+}
+
+function removeArtifactDirectory(directory) {
+  assertExactArtifactDirectory(directory)
+  if (!existsSync(directory)) {
+    return
+  }
+
+  const stats = lstatSync(directory)
+  if (!stats.isDirectory() || stats.isSymbolicLink()) {
+    throw new Error('refusing to remove an unexpected browser artifact path')
+  }
+
+  rmSync(directory, { recursive: true, force: false })
+}
+
+function collectFiles(directory) {
+  assertExactArtifactDirectory(directory)
   if (!existsSync(directory)) {
     return []
   }
 
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = `${directory}/${entry.name}`
+    if (entry.isSymbolicLink()) {
+      throw new Error('refusing a symbolic link in Playwright raw output')
+    }
     if (entry.isDirectory()) {
-      return findScreenshots(entryPath)
+      return collectFiles(entryPath)
     }
 
-    return entry.name.endsWith('.png') ? [entryPath] : []
+    return entry.isFile() ? [entryPath] : []
   })
 }
+
+function repositoryRelativeArtifactPath(path) {
+  const relativePath = relative(repositoryRoot, path).replaceAll('\\', '/')
+  if (relativePath.startsWith('../') || relativePath === '..') {
+    throw new Error('refusing an artifact outside the repository boundary')
+  }
+
+  return relativePath
+}
+
+removeArtifactDirectory(rawResultDirectory)
+removeArtifactDirectory(retainedDirectory)
 
 const result = spawnSync(
   'npx',
@@ -40,22 +100,69 @@ if (result.error || result.status !== 1) {
   throw new Error('controlled browser failure did not return the expected exit code')
 }
 
-const resultMetadataPath = `${resultDirectory}/.last-run.json`
+const resultMetadataPath = `${rawResultDirectory}/.last-run.json`
 if (!existsSync(resultMetadataPath)) {
   throw new Error('controlled browser failure did not retain result metadata')
 }
 
 const resultMetadata = JSON.parse(readFileSync(resultMetadataPath, 'utf8'))
-const screenshotCount = findScreenshots(resultDirectory).length
-if (resultMetadata.status !== 'failed' || screenshotCount < 1) {
+const rawFiles = collectFiles(rawResultDirectory)
+const rawErrorContextPaths = rawFiles.filter((path) => path.endsWith('/error-context.md'))
+const rawScreenshotPaths = rawFiles.filter((path) => path.endsWith('.png'))
+if (
+  resultMetadata.status !== 'failed' ||
+  rawErrorContextPaths.length !== 1 ||
+  rawScreenshotPaths.length !== 1
+) {
   throw new Error('controlled browser failure did not retain the expected artifact')
 }
+
+mkdirSync(retainedDirectory, { recursive: true })
+copyFileSync(rawScreenshotPaths[0], `${retainedDirectory}/controlled-failure.png`)
+
+const retainedArtifacts = [
+  {
+    id: 'controlled-failure-summary',
+    path: repositoryRelativeArtifactPath(`${retainedDirectory}/controlled-failure.json`),
+  },
+  {
+    id: 'controlled-failure-screenshot',
+    path: repositoryRelativeArtifactPath(`${retainedDirectory}/controlled-failure.png`),
+  },
+]
+const failureSummary = {
+  schemaVersion: 1,
+  capability: 'ir-001-browser-failure-injection',
+  result: 'expected-child-failure-observed',
+  command: 'npx --no-install playwright test tests/browser/failure-injection.spec.ts',
+  expectedChildExitCode: 1,
+  actualChildExitCode: result.status,
+  failureClass: 'controlled-missing-test-id',
+  browser: 'chromium',
+  project: 'IR-001',
+  correctionBoundary: 'F-IR001-VER-001',
+  rawPlaywrightOutput: 'excluded after safe artifact extraction',
+  retainedArtifacts,
+}
+const serializedFailureSummary = sanitizeEvidenceText(
+  `${JSON.stringify(failureSummary, null, 2)}\n`,
+  { repositoryRoot },
+)
+assertPathSafeEvidenceText(serializedFailureSummary, { repositoryRoot })
+writeFileSync(
+  `${retainedDirectory}/controlled-failure.json`,
+  serializedFailureSummary,
+  'utf8',
+)
+assertRetainedBrowserArtifactNames(readdirSync(retainedDirectory).sort())
+
+removeArtifactDirectory(rawResultDirectory)
 
 console.log(
   JSON.stringify({
     capability: 'ir-001-browser-failure-injection',
     result: 'passed',
     expectedChildExitCode: 1,
-    retainedScreenshots: screenshotCount,
+    retainedArtifacts: retainedArtifacts.length,
   }),
 )
