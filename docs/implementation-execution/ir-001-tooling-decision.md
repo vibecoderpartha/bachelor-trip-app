@@ -117,3 +117,50 @@ configuration and test, tooling decision record, status progression, and the
 two root development dependencies. The rollback affects no application runtime
 source, database, Supabase project, Docker resource, browser binary, schema,
 policy, or deployed environment.
+
+## Phase IR-001B — deterministic fixture foundation
+
+### Fixture contract
+
+`tests/fixtures/two-account-two-group.ts` is an in-memory, test-only fixture.
+It contains no Supabase connection, database operation, application import,
+production UUID, email address, token, secret, personal data, or copied
+production value.
+
+| Fixture element | Stable value / rule |
+|---|---|
+| Deterministic clock | `2030-01-02T03:04:05.000Z` returned by `createDeterministicClock()` |
+| Account A / Account B | `fixture-account-a` and `fixture-account-b` |
+| Group A / Group B | `fixture-group-a` and `fixture-group-b` |
+| Active ownership relationships | Account A → Group A and Account B → Group B only; each synthetic relationship has a distinct stable ID |
+| Same-Group expectations | Account A → Group A and Account B → Group B are marked `allow` |
+| Cross-Group expectations | Account A → Group B and Account B → Group A are marked `deny` |
+| Lifecycle expectations for later policy work | Account A → Group A with `inactive` or `removed` state is marked `deny` |
+| Reset / cleanup | `resetTwoAccountTwoGroupFixture()` returns a fresh deterministic fixture; cleanup reports an idempotent, zero-resource, in-memory scope |
+
+The expectation matrix describes the accepted future test shape only. It does
+not implement, simulate as authoritative, or claim evidence for a production
+RLS policy. Database and RLS enforcement remain deferred to the isolated
+capability phase.
+
+### Phase IR-001B execution evidence — 2026-07-31
+
+| Capability or check | Command / method | Environment and result | Evidence disposition |
+|---|---|---|---|
+| Deterministic clock | `npm test` | Local Node runner; exit code 0. The clock probe passed using the fixed instant. | `tests/unit/deterministic-clock.test.ts`. |
+| Two-account/two-Group baseline | `npm test` | Local Node runner; exit code 0. The fixture probe confirmed two unique account IDs, two unique Group IDs, non-overlapping active memberships, expected same-Group allows, cross-Group denials, and inactive/removed denials. | `tests/unit/two-account-two-group-fixture.test.ts`. |
+| Repeatable reset/cleanup | `npm test` | Local Node runner; exit code 0. Reset returned an equal fresh fixture and cleanup reported the idempotent in-memory boundary. | Fixture module and lifecycle probe above. |
+| Application and test type-checks | `npm run typecheck` and `npm run test:types` | Local repository; both exit code 0. | Existing and test-only TypeScript configuration. |
+| Build | `npm run build` | Local repository; exit code 0. | Existing build command remained strict. |
+| Hygiene and scope | `git diff --check` and `git status --short` | Local repository; exit code 0. Only `package.json` and test-only paths changed in this phase. | Final staged diff and changed-content secret scan remain required before commit. |
+
+No browser binary, Docker image, local Supabase stack, database/schema/policy,
+external endpoint, credential, reset, or cleanup action was run in Phase
+IR-001B.
+
+### Phase IR-001B rollback boundary
+
+Revert the bounded fixture commit to remove the in-memory fixture, its tests,
+and the unit-test script expansion. This affects no application runtime source,
+database, Supabase project, Docker resource, browser binary, schema, policy,
+or deployed environment.

@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run test:unit",
     "test:types": "tsc --project tsconfig.tests.json --noEmit",
-    "test:unit": "node --test tests/unit/deterministic-clock.test.ts"
+    "test:unit": "node --test tests/unit/deterministic-clock.test.ts tests/unit/two-account-two-group-fixture.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
