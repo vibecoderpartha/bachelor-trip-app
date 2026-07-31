@@ -6,6 +6,7 @@ import {
   assertRetainedBrowserArtifactNames,
   findUnsafePathClasses,
   sanitizeEvidenceText,
+  selectRawScreenshotForSafeRetention,
 } from '../evidence/browser-artifact-safety.mjs'
 
 const repositoryRoot = '/workspace/trip'
@@ -63,5 +64,20 @@ test('browser retention allow-list rejects raw Playwright diagnostics', () => {
       'error-context.md',
     ]),
     /allow-list/,
+  )
+})
+
+test('browser failure retention selects a deterministic screenshot across CI retries', () => {
+  assert.equal(
+    selectRawScreenshotForSafeRetention([
+      '/temporary/raw/failure-retry-0/screenshot.png',
+      '/temporary/raw/failure-retry-1/screenshot.png',
+      '/temporary/raw/failure-retry-0/error-context.md',
+    ]),
+    '/temporary/raw/failure-retry-1/screenshot.png',
+  )
+  assert.throws(
+    () => selectRawScreenshotForSafeRetention(['/temporary/raw/error-context.md']),
+    /screenshot artifact/,
   )
 })

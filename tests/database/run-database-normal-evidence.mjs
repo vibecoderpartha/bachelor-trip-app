@@ -177,6 +177,32 @@ function runNormalCapability() {
     env: process.env,
   })
   if (result.error || result.status !== 0) {
+    let childResult = 'missing-safe-result'
+    if (existsSync(rawResultPath)) {
+      try {
+        const rawResult = JSON.parse(readFileSync(rawResultPath, 'utf8'))
+        if (rawResult.capability === 'ir-001-local-rls-probe') {
+          const category = [
+            rawResult.cleanupFailureReason,
+            rawResult.primaryFailureReason,
+            rawResult.state,
+          ].find((value) => typeof value === 'string' && /^[a-z0-9-]{1,80}$/.test(value))
+          childResult = category ?? 'safe-result-without-category'
+        } else {
+          childResult = 'unexpected-safe-result'
+        }
+      } catch {
+        childResult = 'malformed-safe-result'
+      }
+    }
+    console.error(
+      JSON.stringify({
+        capability: 'ir-001-local-rls-probe',
+        result: 'failed-safely',
+        childExitCode: result.status ?? null,
+        childResult,
+      }),
+    )
     throw new Error('normal database capability did not return the expected exit code')
   }
   if (!existsSync(rawResultPath)) {

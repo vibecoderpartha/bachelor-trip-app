@@ -16,6 +16,7 @@ import {
   assertPathSafeEvidenceText,
   assertRetainedBrowserArtifactNames,
   sanitizeEvidenceText,
+  selectRawScreenshotForSafeRetention,
 } from '../evidence/browser-artifact-safety.mjs'
 
 const repositoryRoot = fileURLToPath(new URL('../..', import.meta.url))
@@ -108,17 +109,18 @@ if (!existsSync(resultMetadataPath)) {
 const resultMetadata = JSON.parse(readFileSync(resultMetadataPath, 'utf8'))
 const rawFiles = collectFiles(rawResultDirectory)
 const rawErrorContextPaths = rawFiles.filter((path) => path.endsWith('/error-context.md'))
-const rawScreenshotPaths = rawFiles.filter((path) => path.endsWith('.png'))
 if (
   resultMetadata.status !== 'failed' ||
-  rawErrorContextPaths.length !== 1 ||
-  rawScreenshotPaths.length !== 1
+  rawErrorContextPaths.length < 1
 ) {
   throw new Error('controlled browser failure did not retain the expected artifact')
 }
 
 mkdirSync(retainedDirectory, { recursive: true })
-copyFileSync(rawScreenshotPaths[0], `${retainedDirectory}/controlled-failure.png`)
+copyFileSync(
+  selectRawScreenshotForSafeRetention(rawFiles),
+  `${retainedDirectory}/controlled-failure.png`,
+)
 
 const retainedArtifacts = [
   {

@@ -91,3 +91,16 @@ export function assertRetainedBrowserArtifactNames(names) {
     throw new Error('refusing browser artifacts outside the retained allow-list')
   }
 }
+
+export function selectRawScreenshotForSafeRetention(paths) {
+  if (!Array.isArray(paths) || paths.some((path) => typeof path !== 'string')) {
+    throw new Error('raw Playwright screenshot paths must be strings')
+  }
+
+  const screenshots = paths.filter((path) => path.endsWith('.png')).sort()
+  if (screenshots.length === 0) {
+    throw new Error('controlled browser failure did not retain a screenshot artifact')
+  }
+
+  return screenshots.at(-1)
+}
