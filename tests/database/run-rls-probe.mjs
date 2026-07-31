@@ -8,8 +8,15 @@ import {
 } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
+import {
+  LOCAL_PROJECT_ID,
+  LOCAL_PROJECT_NETWORK,
+  LOCAL_PROJECT_VOLUME,
+  remainingProjectDockerResourceTypes,
+  waitForExactProjectDockerCleanup,
+} from './local-docker-cleanup.mjs'
+
 const REPOSITORY_ROOT = fileURLToPath(new URL('../..', import.meta.url))
-const LOCAL_PROJECT_ID = 'bachelor-trip-app-ir001'
 const LOCAL_DATABASE_PORT = '56322'
 const STACK_WORKDIR = 'tests/database/local-stack'
 const SETUP_SQL = 'tests/database/rls-probe-setup.sql'
@@ -66,28 +73,47 @@ function projectContainerNames() {
     '--all',
     '--format',
     '{{.Names}}',
-    '--filter',
-    `name=${LOCAL_PROJECT_ID}`,
-  ]).trim()
+  ])
+    .trim()
+    .split('\n')
+    .filter(Boolean)
+    .filter((name) => /^supabase_[a-z0-9_]+_bachelor-trip-app-ir001$/i.test(name))
 }
 
 function projectDockerResourceNames(resourceType) {
+  const expectedName = resourceType === 'network'
+    ? LOCAL_PROJECT_NETWORK
+    : resourceType === 'volume'
+      ? LOCAL_PROJECT_VOLUME
+      : null
+  if (!expectedName) {
+    throw new Error('refusing an unrecognised local Docker resource type')
+  }
+
   return runCommand('docker', [
     resourceType,
     'ls',
     '--format',
     '{{.Name}}',
-    '--filter',
-    `name=${LOCAL_PROJECT_ID}`,
-  ]).trim()
+  ])
+    .trim()
+    .split('\n')
+    .filter(Boolean)
+    .filter((name) => name === expectedName)
+}
+
+function projectDockerResourceSnapshot() {
+  return {
+    containers: projectContainerNames(),
+    networks: projectDockerResourceNames('network'),
+    volumes: projectDockerResourceNames('volume'),
+  }
 }
 
 function assertNoProjectDockerResources() {
-  const remainingResources = [
-    projectContainerNames(),
-    projectDockerResourceNames('volume'),
-    projectDockerResourceNames('network'),
-  ].filter(Boolean)
+  const remainingResources = remainingProjectDockerResourceTypes(
+    projectDockerResourceSnapshot(),
+  )
 
   if (remainingResources.length > 0) {
     throw new Error('refusing to use or leave an existing local project Docker resource')
@@ -95,7 +121,7 @@ function assertNoProjectDockerResources() {
 }
 
 function assertProjectContainersExist() {
-  if (!projectContainerNames()) {
+  if (projectContainerNames().length === 0) {
     throw new Error('local project containers were not found after start')
   }
 }
@@ -463,7 +489,7 @@ try {
       LOCAL_PROJECT_ID,
       '--no-backup',
     ])
-    assertNoProjectDockerResources()
+    waitForExactProjectDockerCleanup(projectDockerResourceSnapshot)
   }
 
   if (localStartAttempted) {

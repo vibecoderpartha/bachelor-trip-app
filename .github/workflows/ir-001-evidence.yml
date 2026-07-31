@@ -63,11 +63,7 @@ jobs:
       - run: IR001_EVIDENCE_JOB=database npm run test:evidence:manifest
       - name: Assert exact local database cleanup
         if: always()
-        shell: bash
-        run: |
-          test -z "$(docker ps --all --format '{{.Names}}' --filter name=bachelor-trip-app-ir001)"
-          test -z "$(docker volume ls --format '{{.Name}}' --filter name=bachelor-trip-app-ir001)"
-          test -z "$(docker network ls --format '{{.Name}}' --filter name=bachelor-trip-app-ir001)"
+        run: npm run test:db:cleanup
       - name: Retain database evidence
         if: always()
         uses: actions/upload-artifact@v4
