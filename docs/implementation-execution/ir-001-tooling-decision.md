@@ -4,7 +4,7 @@
 
 - IR item: IR-001 — Evidence Foundation
 - Packet status: In progress
-- Current phase: IR-001D — Browser evidence capability
+- Current phase: IR-001E — Failure injection and evidence retention
 - Started: 2026-07-31
 - Implementation authority: `authorisations/IR-001-authorisation.md`
 - Scope confirmation: Evidence capability only. No application feature, target
@@ -289,7 +289,7 @@ isolated local or CI browser testing.
 | Managed browser install | `npm run test:browser:install` | Local isolated dependency area; exit code 0. Installed Chromium `136.0.7103.25` (Playwright build `1169`), its matching headless shell, and Playwright-managed supporting FFMPEG build `1011` under ignored `node_modules/playwright-core/.local-browsers`. Playwright reported an Ubuntu 20.04 fallback build because the host OS is not in its supported list. | No package manifest or lockfile changed. The browser and support binaries are removable local tooling content, not an application runtime or source dependency. |
 | Browser baseline boot | `npm run test:browser` | Local Vite preview on `127.0.0.1:4173`; exit code 0. One Chromium test passed, confirming the existing document title, app root, and persona-picker boot at the deterministic mobile viewport. | `playwright.config.ts` and `tests/browser/current-ui-boot.spec.ts`; no UI screenshot is retained on a passing run. |
 | External-request protection | Playwright route installed before `page.goto` | The test continues only the exact local preview host and aborts every other browser request. The Vite build received only the documented synthetic loopback Supabase inputs. | Harness source; no external Supabase project, credential, browser API key, or hosted asset was contacted. |
-| Artifact and logging convention | List reporter; failure-only screenshot configuration | The passing run produced only ignored Playwright result metadata at `artifacts/ir-001/browser/test-results/.last-run.json`; it produced no screenshot, video, trace, or committed artifact. Host `NO_COLOR`/`FORCE_COLOR` warnings appeared during the Vite/Playwright run but did not affect the test result and contained no application data or credentials. | A failing rerun retains only ignored screenshots under `artifacts/ir-001/browser/test-results`. |
+| Artifact and logging convention | List reporter; failure-only screenshot configuration | The passing run produced only ignored Playwright result metadata at `artifacts/ir-001/browser/test-results/.last-run.json`; it produced no screenshot, video, trace, or committed artifact. Host `NO_COLOR`/`FORCE_COLOR` warnings appeared during the Vite/Playwright run but did not affect the test result and contained no application data or credentials. | A failing rerun retains an ignored screenshot plus Playwright's generated error context and result metadata under `artifacts/ir-001/browser/test-results`. |
 
 This establishes browser evidence capability only. It does not approve or
 verify the current UI, an application feature, a production browser flow, or
@@ -302,3 +302,54 @@ test TypeScript inclusion, artifact ignore rule, and this evidence record.
 Remove the ignored local Playwright browser directory if desired. The rollback
 does not touch application source, design assets, browser profiles, database
 data, external services, deployments, or a Supabase project.
+
+## Phase IR-001E — failure injection and evidence retention boundary
+
+Failure injection is restricted to two explicit non-secret control values. A
+database failure is injected only after `ir001_probe` is created, and a browser
+failure is injected only after the local baseline boot. The drivers deliberately
+expect those child commands to exit `1`; they themselves pass only when the
+safe cleanup or retained-artifact contract is satisfied.
+
+| Control | Bound and reproducible behaviour |
+|---|---|
+| Database injection | `IR001_RLS_PROBE_INJECT_FAILURE=after-probe-setup` is set only by `tests/database/run-rls-failure-injection.mjs`. The probe rejects every other value, writes a value-free result state, drops only `ir001_probe`, and stops only the exact local Docker project. |
+| Browser injection | `IR001_BROWSER_FAILURE_INJECTION=enabled` is set only by `tests/browser/run-failure-injection.mjs`. The test aborts all non-loopback requests, deliberately expects a nonexistent test identifier, and requires Playwright's ignored failure screenshot and result metadata. |
+| Result retention | Database state is retained only in the exact session-local `/tmp/bachelor-trip-app-ir001-rls-result.json` path. The browser failure screenshot, Playwright error context, and `.last-run.json` remain ignored beneath `artifacts/ir-001/`. Neither path is a source, design, product, or production artifact. |
+| Secret-safe operation evidence | Drivers capture child stdout/stderr rather than replay it. They emit only capability names, expected child exit codes, safe state categories, and artifact counts. No child connection output, environment value, request header, browser storage, credential, or screenshot content is logged. |
+| Rollback and cleanup | Revert the bounded drivers, tests, harness injection branch, scripts, and evidence record. The next normal Playwright run clears prior result output; the database driver removes only a verified prior record at its exact `/tmp` path before execution. |
+
+### Phase IR-001E proposed path classification
+
+| Path | Classification | Purpose |
+|---|---|---|
+| `tests/database/run-rls-probe.mjs` | Existing file modified | Accept and label the one controlled database failure without weakening cleanup. |
+| `tests/database/run-rls-failure-injection.mjs` | New proposed path verified by the established database-test convention | Verify the expected failing child exit, safe result state, and cleanup contract. |
+| `tests/browser/failure-injection.spec.ts`, `tests/browser/run-failure-injection.mjs` | New proposed paths verified by the established browser-test convention | Verify the expected failing browser child exit and ignored screenshot retention. |
+| `package.json`, tooling record | Existing files modified | Expose controlled evidence commands and record their boundaries/results. |
+| `src/`, `supabase/`, design files, `artifacts/ir-001/` | Read-only/excluded inputs or generated evidence | No product or design implementation; ignored artifacts are never staged. |
+
+### Phase IR-001E execution evidence — 2026-07-31
+
+| Capability or check | Command / method | Environment and result | Evidence disposition |
+|---|---|---|
+| Normal database control | `npm run test:db` in an interactive local terminal session | Exit code 0. The normal mode repeated all six isolated RLS cases and wrote `result: passed` with `runMode: normal`; post-run inspection found no exact project container, network, volume, or generated CLI state. | Safe session record at `/tmp/bachelor-trip-app-ir001-rls-result.json`; no connection value is retained. |
+| Database controlled failure | `npm run test:db:failure` in an interactive local terminal session | Driver exit code 0. Its child exited 1 only after `ir001_probe` setup; the driver verified `controlled-failure-injected`, `cleanup-passed`, the expected run mode, and no exact Docker or generated-workdir resource. | Driver emits only its capability name, expected child exit code, and cleanup confirmation. |
+| Browser controlled failure | `npm run test:browser:failure` | Driver exit code 0. Its Playwright child exited 1 only for the nonexistent synthetic test identifier; the driver verified one retained PNG screenshot and failed-run metadata. | Ignored `artifacts/ir-001/browser/test-results/` contains one PNG, Playwright's `error-context.md`, and `.last-run.json`; none is staged. |
+| Generated-artifact secret scan | Narrow credential/private-key pattern scan over `artifacts/ir-001/` | Exit code 0 after expected no-match handling. No candidate literal was found. This is a generated-artifact safeguard, not a claim about unrelated files or image pixels. | Only file paths would be emitted on a match; no artifact content was logged. |
+| Execution-wrapper correction | Non-interactive command execution ended near the wrapper time limit while the normal probe reported `cleanup-started`. | The incomplete run was not accepted as evidence. Its exact local resources were stopped from the isolated workdir and its verified generated CLI state was removed; the normal and injected database commands were rerun in an interactive session and completed. | Recorded so no interrupted command is represented as a pass. No unverified environment or broad cleanup was used. |
+
+The fixed two-account/two-Group identifiers, fixed clock, exact package pins,
+loopback ports, explicit test commands, failure control values, result-state
+shape, and artifact paths form the IR-001 reproducibility metadata. The
+controlled-failure drivers are evidence tools only; they do not self-verify
+IR-001 or any gate.
+
+### Phase IR-001E rollback boundary
+
+Revert the bounded database harness injection branch, two failure drivers, one
+failure-only browser spec, package scripts, and this evidence record. Remove
+ignored `artifacts/ir-001/` output and the exact session-local result record if
+desired. This affects no application feature, UI/design asset, target schema,
+target RLS policy, external project, credential, deployment, or production
+data.

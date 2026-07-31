@@ -14,6 +14,7 @@ const LOCAL_DATABASE_PORT = '56322'
 const STACK_WORKDIR = 'tests/database/local-stack'
 const SETUP_SQL = 'tests/database/rls-probe-setup.sql'
 const SAFE_RESULT_PATH = '/tmp/bachelor-trip-app-ir001-rls-result.json'
+const FAILURE_INJECTION = process.env.IR001_RLS_PROBE_INJECT_FAILURE ?? 'none'
 const GENERATED_BRANCH_STATE_DIRECTORY = fileURLToPath(
   new URL('./local-stack/supabase/.branches', import.meta.url),
 )
@@ -248,12 +249,38 @@ function assertEqual(actual, expected, caseId) {
 }
 
 function writeSafeResult(result) {
-  writeFileSync(SAFE_RESULT_PATH, `${JSON.stringify(result)}\n`, 'utf8')
+  writeFileSync(
+    SAFE_RESULT_PATH,
+    `${JSON.stringify({
+      ...result,
+      runMode:
+        FAILURE_INJECTION === 'none'
+          ? 'normal'
+          : `injected-${FAILURE_INJECTION}`,
+    })}\n`,
+    'utf8',
+  )
+}
+
+function injectControlledFailure(step) {
+  if (FAILURE_INJECTION === 'none') {
+    return
+  }
+
+  if (FAILURE_INJECTION !== step) {
+    throw new Error('refusing an unrecognised controlled failure injection')
+  }
+
+  throw new Error(`controlled failure injected: ${step}`)
 }
 
 function safeErrorCategory(error) {
   if (!(error instanceof Error)) {
     return 'redacted-unexpected-failure'
+  }
+
+  if (error.message.startsWith('controlled failure injected: ')) {
+    return 'controlled-failure-injected'
   }
 
   const [, category] = error.message.split(':', 2)
@@ -291,6 +318,7 @@ let cleanupFailure
 let primaryFailureStep = 'preflight'
 let cleanupFailureStep = 'not-started'
 let primaryFailureContainerStates = []
+let databaseUrl
 
 try {
   primaryFailureStep = 'resource-preflight'
@@ -307,7 +335,7 @@ try {
   assertProjectContainersExist()
 
   primaryFailureStep = 'endpoint-boundary'
-  const databaseUrl = readLocalDatabaseUrl()
+  databaseUrl = readLocalDatabaseUrl()
   primaryFailureStep = 'probe-schema-preflight'
   const probeSchemaExists = runPsql(
     databaseUrl,
@@ -318,6 +346,9 @@ try {
   primaryFailureStep = 'probe-schema-setup'
   runPsql(databaseUrl, SETUP_SQL, true)
   probeSchemaCreated = true
+
+  primaryFailureStep = 'failure-injection-after-probe-setup'
+  injectControlledFailure('after-probe-setup')
 
   primaryFailureStep = 'same-scope-account-a'
   assertEqual(
@@ -413,7 +444,10 @@ try {
   })
   if (probeSchemaCreated) {
     cleanupFailureStep = 'probe-schema-drop'
-    const databaseUrl = readLocalDatabaseUrl()
+    if (!databaseUrl) {
+      throw new Error('local database endpoint was unavailable for probe cleanup')
+    }
+
     runPsql(databaseUrl, 'DROP SCHEMA ir001_probe CASCADE;')
   }
 
@@ -465,8 +499,8 @@ if (primaryFailure || cleanupFailure) {
       result: 'failed-safely',
       primaryFailure: Boolean(primaryFailure),
       primaryFailureStep: primaryFailure ? primaryFailureStep : null,
-      primaryFailureReason:
-        primaryFailure instanceof Error ? primaryFailure.message : null,
+      primaryFailureReason: primaryFailure ? safeErrorCategory(primaryFailure) : null,
+      primaryFailureDetail: primaryFailure ? safeErrorDetail(primaryFailure) : null,
       cleanupFailure: Boolean(cleanupFailure),
       cleanupFailureStep: cleanupFailure ? cleanupFailureStep : 'complete',
     }),
