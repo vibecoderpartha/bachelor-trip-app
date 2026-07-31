@@ -11,6 +11,7 @@ memory/
 test_reports/
 /frontend
 -e 
+artifacts/ir-001/
 # Environment and credential files
 .env
 .env.*

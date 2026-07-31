@@ -4,7 +4,7 @@
 
 - IR item: IR-001 — Evidence Foundation
 - Packet status: In progress
-- Current phase: IR-001C — Local database and RLS capability
+- Current phase: IR-001D — Browser evidence capability
 - Started: 2026-07-31
 - Implementation authority: `authorisations/IR-001-authorisation.md`
 - Scope confirmation: Evidence capability only. No application feature, target
@@ -248,3 +248,57 @@ script, and this evidence record. The harness's successful cleanup has already
 removed its test schema, containers, network, and volumes. No application
 runtime source, root Supabase configuration, migration, seed, target schema,
 policy, Storage, Realtime, or deployed resource is affected.
+
+## Phase IR-001D — browser evidence capability boundary
+
+The browser harness is a baseline-boot capability only. It does not add a
+screen, interaction, application selector, feature behaviour, or design asset.
+Its assertion uses the existing document title and existing `app-root` and
+`persona-picker` test identifiers as evidence that the locked current UI boots.
+
+| Boundary | Approved local-only control |
+|---|---|
+| Browser runtime | The approved `@playwright/test@1.52.0` package runs its matching Chromium binary in isolated local or CI execution only. The browser binary is installed with `PLAYWRIGHT_BROWSERS_PATH=0`, which confines it to ignored `node_modules` content rather than a user-profile browser. |
+| Application server | Playwright starts the existing Vite preview on `http://127.0.0.1:4173` only. It uses a production build of the existing application without modifying application source. |
+| Environment boundary | The web server receives only synthetic non-secret values: `VITE_SUPABASE_URL=http://127.0.0.1:56321` and `VITE_SUPABASE_ANON_KEY=ir001-local-browser-anon-key`. It does not inherit an application Supabase URL or key for the browser build. |
+| Network boundary | Before navigation, the test continues only requests to the exact local Vite host and aborts every other browser request. Existing external asset URLs and any hosted Supabase endpoint cannot receive a browser request. |
+| Credentials and logging | The synthetic values are not credentials and are documented here only as fixed test inputs. Test output never logs browser storage, request headers, environment values, URLs containing credentials, or database output. |
+| Artifact convention | Console output uses Playwright's list reporter. Screenshots are retained only on failure at `artifacts/ir-001/browser/test-results`; videos and traces are disabled to avoid recording browser request details. Generated artifacts are ignored by `.gitignore` and are never design assets. |
+| Cleanup and rollback | The Playwright-managed preview server exits with the test run. Revert the bounded browser config/test/script/ignore-record commit and remove ignored `artifacts/ir-001/` output and the Playwright-managed local browser binary if no longer needed. No application, database, hosted service, or design file is changed. |
+
+### Phase IR-001D proposed path classification
+
+| Path | Classification | Purpose |
+|---|---|---|
+| `playwright.config.ts` | New proposed path verified by this boundary | Local Vite boot, synthetic test environment, browser routing, deterministic viewport, and failure-only artifact policy. |
+| `tests/browser/` | New proposed path verified by the established `tests/` convention | Test-only browser baseline-boot probe. |
+| `.gitignore`, `package.json`, `tsconfig.tests.json` | Existing files modified | Ignore generated artifacts, expose pinned Playwright commands, and type-check the browser configuration. |
+| `artifacts/ir-001/` | Generated evidence | Ignored failure-only browser output; never committed as an application or design asset. |
+| `src/`, `index.html`, `supabase/`, design files | Read-only/excluded inputs | Existing UI is observed only; no application, root Supabase, or design modification is permitted. |
+
+The Chromium download is approved but has not run at the time this boundary was
+recorded. It must use the exact `test:browser:install` command, report the
+installed package/browser version without credentials, and remain limited to
+isolated local or CI browser testing.
+
+### Phase IR-001D execution evidence — 2026-07-31
+
+| Capability or check | Command / method | Environment and result | Evidence disposition |
+|---|---|---|---|
+| Playwright package identity | `npx --no-install playwright --version` | Local repository; exit code 0. Reported the approved `1.52.0` package version. | Confirms the command resolves to the exact pinned development dependency. |
+| Managed browser install | `npm run test:browser:install` | Local isolated dependency area; exit code 0. Installed Chromium `136.0.7103.25` (Playwright build `1169`), its matching headless shell, and Playwright-managed supporting FFMPEG build `1011` under ignored `node_modules/playwright-core/.local-browsers`. Playwright reported an Ubuntu 20.04 fallback build because the host OS is not in its supported list. | No package manifest or lockfile changed. The browser and support binaries are removable local tooling content, not an application runtime or source dependency. |
+| Browser baseline boot | `npm run test:browser` | Local Vite preview on `127.0.0.1:4173`; exit code 0. One Chromium test passed, confirming the existing document title, app root, and persona-picker boot at the deterministic mobile viewport. | `playwright.config.ts` and `tests/browser/current-ui-boot.spec.ts`; no UI screenshot is retained on a passing run. |
+| External-request protection | Playwright route installed before `page.goto` | The test continues only the exact local preview host and aborts every other browser request. The Vite build received only the documented synthetic loopback Supabase inputs. | Harness source; no external Supabase project, credential, browser API key, or hosted asset was contacted. |
+| Artifact and logging convention | List reporter; failure-only screenshot configuration | The passing run produced only ignored Playwright result metadata at `artifacts/ir-001/browser/test-results/.last-run.json`; it produced no screenshot, video, trace, or committed artifact. Host `NO_COLOR`/`FORCE_COLOR` warnings appeared during the Vite/Playwright run but did not affect the test result and contained no application data or credentials. | A failing rerun retains only ignored screenshots under `artifacts/ir-001/browser/test-results`. |
+
+This establishes browser evidence capability only. It does not approve or
+verify the current UI, an application feature, a production browser flow, or
+any later IR item or gate.
+
+### Phase IR-001D rollback boundary
+
+Revert the bounded browser configuration, baseline-boot test, package scripts,
+test TypeScript inclusion, artifact ignore rule, and this evidence record.
+Remove the ignored local Playwright browser directory if desired. The rollback
+does not touch application source, design assets, browser profiles, database
+data, external services, deployments, or a Supabase project.
