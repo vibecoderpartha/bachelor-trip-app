@@ -350,22 +350,35 @@ function readAllowedResources(databaseUrl, claims) {
     "  SELECT coalesce(string_agg(resource_id, ',' ORDER BY resource_id), '') AS resource_ids",
     '  FROM ir001_probe.resources',
     ')',
-    "SELECT concat(CASE WHEN authenticated_role THEN 'role-authenticated' ELSE 'role-mismatch' END,",
-    "  '|', CASE WHEN expected_claims THEN 'claims-matched' ELSE 'claims-mismatch' END,",
-    "  '|', resource_ids)",
+    "SELECT json_build_object('role',",
+    "  CASE WHEN authenticated_role THEN 'role-authenticated' ELSE 'role-mismatch' END,",
+    "  'claims', CASE WHEN expected_claims THEN 'claims-matched' ELSE 'claims-mismatch' END,",
+    "  'resources', resource_ids)::text",
     'FROM probe_context CROSS JOIN probe_resources;',
     'ROLLBACK;',
   ].join('\n')
 
-  const fields = runPsql(databaseUrl, query).split('|')
-  if (fields.length !== 3) {
+  try {
+    const record = JSON.parse(runPsql(databaseUrl, query))
+    if (
+      !record ||
+      typeof record !== 'object' ||
+      Array.isArray(record) ||
+      Object.keys(record).sort().join(',') !== 'claims,resources,role' ||
+      typeof record.role !== 'string' ||
+      typeof record.claims !== 'string' ||
+      typeof record.resources !== 'string'
+    ) {
+      throw new Error('invalid probe context record')
+    }
+    return record
+  } catch {
     return {
       role: 'context-unavailable',
       claims: 'context-unavailable',
       resources: '',
     }
   }
-  return { role: fields[0], claims: fields[1], resources: fields[2] }
 }
 
 function assertEqual(actual, expected, caseId) {
