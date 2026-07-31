@@ -142,3 +142,21 @@ or cutover.
 
 Until those reviewers decide, IR-001 remains In progress; W1 exit and IR-002
 remain blocked.
+
+## Combined evidence correction addendum — 2026-07-31
+
+The prior completion review recorded two evidence-integrity findings. Bounded
+correction commit `43d839b4e546188b1e60e56ff0515ff8826b6cfa` excludes raw
+Playwright error context from retained/uploaded browser evidence and replaces
+the mutable database manifest input with three explicit sanitised phase
+records (initial normal, controlled failure, and recovery normal) bound to one
+safe evidence sequence. The corrected manifest accepts only those allow-listed
+repository-relative records and rejects incomplete, mixed, stale, unsafe, or
+wrong-mode evidence.
+
+This addendum is not a verification claim. Restart the full IR-001 completion
+and verification review from mandatory preflight at the clean correction head;
+do not resume the stopped review. IR-001 remains In progress, GATE-007 through
+GATE-010 remain unchanged, W1 exit remains blocked, and IR-002 remains
+unauthorised. See
+`ir-001-correction-F-IR001-VER-001-002.md` for the correction evidence.

@@ -34,3 +34,12 @@ manifest acceptance, dependency/audit comparison, starting-commit reconciliation
 hosted CI, gate satisfaction, status promotion, or a verification commit after
 this defect was established. Those items remain unverified rather than failed
 by inference.
+
+## Correction status — 2026-07-31
+
+- F-IR001-VER-001 correction implemented, pending full re-review.
+- F-IR001-VER-002 identified and corrected, pending full re-review.
+- The combined correction implementation is
+  `43d839b4e546188b1e60e56ff0515ff8826b6cfa`.
+- No gate or status promotion occurred. IR-001 remains In progress and IR-002
+  remains unauthorised.
