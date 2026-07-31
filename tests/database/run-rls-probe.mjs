@@ -359,7 +359,11 @@ function readAllowedResources(databaseUrl, claims) {
   ].join('\n')
 
   try {
-    const record = JSON.parse(runPsql(databaseUrl, query))
+    const jsonRecord = runPsql(databaseUrl, query)
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line.startsWith('{') && line.endsWith('}'))
+    const record = JSON.parse(jsonRecord ?? '')
     if (
       !record ||
       typeof record !== 'object' ||
