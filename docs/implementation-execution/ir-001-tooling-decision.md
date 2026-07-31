@@ -4,7 +4,7 @@
 
 - IR item: IR-001 — Evidence Foundation
 - Packet status: In progress
-- Current phase: IR-001E — Failure injection and evidence retention
+- Current phase: IR-001F — CI and integrated verification
 - Started: 2026-07-31
 - Implementation authority: `authorisations/IR-001-authorisation.md`
 - Scope confirmation: Evidence capability only. No application feature, target
@@ -353,3 +353,50 @@ ignored `artifacts/ir-001/` output and the exact session-local result record if
 desired. This affects no application feature, UI/design asset, target schema,
 target RLS policy, external project, credential, deployment, or production
 data.
+
+## Phase IR-001F — CI and integrated verification boundary
+
+The repository had no CI workflow at IR-001 entry. The accepted packet names
+`.github/workflows/` as a proposed path for a CI gate, so IR-001 selects a
+GitHub Actions workflow as an executable evidence plan only. It neither runs a
+deployment nor establishes repository-side branch protection, reviewer access,
+or a passing gate claim.
+
+| Control | CI evidence design |
+|---|---|
+| Platform and trigger | GitHub Actions, triggered manually and for pull requests targeting `v2`. It has read-only `contents` permission and no deployment, environment, cloud, Supabase, or secret configuration. |
+| Runner isolation | Separate `ubuntu-22.04` browser and database jobs each run `npm ci`. The database job uses only runner-local Docker and the existing exact local project identifier; it never runs `login`, `link`, remote database, or deployment commands. |
+| Evidence commands | Both jobs run application type/build/unit controls. The browser job installs the approved local Playwright Chromium, runs normal boot plus controlled browser failure. The database job runs normal local RLS plus controlled database failure, then asserts no exact container/network/volume remains. |
+| Evidence checksum convention | `tests/evidence/write-evidence-manifest.mjs` creates an ignored, deterministic-shape manifest with only capability/fixture IDs, environment category, expected/actual result, consuming gates, reviewer status, failure disposition, repository-relative artifact paths, byte counts, and SHA-256 checksums. It copies only the harness's validated safe database result representation. |
+| Retention and access boundary | GitHub upload artifacts retain generated evidence for 14 days. Workflow access remains governed by repository Actions settings, which are not repository-visible and therefore remain for external review. Browser/error artifacts remain ignored; the workflow never uploads `.env`, `node_modules`, or source credentials. |
+| Supply-chain and rollback boundary | The workflow uses GitHub-maintained `actions/checkout`, `actions/setup-node`, and `actions/upload-artifact` major version 4 actions. Revert the bounded workflow/script/script entry/documentation commit to disable CI; remove ignored generated evidence locally. No npm dependency, lockfile, application, schema, environment, or deployment change is introduced. |
+
+### Phase IR-001F proposed path classification
+
+| Path | Classification | Purpose |
+|---|---|---|
+| `.github/workflows/ir-001-evidence.yml` | New proposed path verified by the IR-001 packet | Non-deploy CI evidence plan with isolated browser/database jobs, artifact upload, and exact cleanup assertion. |
+| `tests/evidence/write-evidence-manifest.mjs` | New proposed path verified by the established test/evidence convention | Build value-free, checksummed generated evidence manifests. |
+| `package.json`, tooling record | Existing files modified | Expose manifest command and record CI/review controls. |
+| `artifacts/ir-001/` | Generated evidence | Ignored local/CI result, screenshot/context, safe database-result, and checksum manifest output. |
+
+GATE-007 through GATE-010 remain open. This workflow has not run in a
+repository-hosted CI service, its artifacts have not been reviewed, and it does
+not self-authorise an IR-001 status change or any later IR.
+
+### Phase IR-001F execution evidence — 2026-07-31
+
+| Capability or check | Command / method | Environment and result | Evidence disposition |
+|---|---|---|---|
+| Manifest writer syntax | `node --check tests/evidence/write-evidence-manifest.mjs` | Local repository; exit code 0. | Test-only manifest writer is syntactically valid. |
+| Workflow syntax | Ruby standard-library YAML parse of `.github/workflows/ir-001-evidence.yml` | Local repository; exit code 0. This proves YAML parseability only, not GitHub Actions semantic or hosted-run validation. | Workflow remains pending a repository-hosted CI run and review. |
+| Browser checksum manifest | `IR001_EVIDENCE_JOB=browser npm run test:evidence:manifest` | Local isolated run; exit code 0. Retained three browser evidence files with SHA-256 and byte-count records: expected-failure metadata, error context, and screenshot. | Ignored `artifacts/ir-001/evidence-manifest.json`; `reviewerStatus: unreviewed`. |
+| Database checksum manifest | `IR001_EVIDENCE_JOB=database npm run test:evidence:manifest` | Local isolated run; exit code 0. Retained one allow-listed, safe database result representation with SHA-256 and byte-count record. | Ignored `artifacts/ir-001/database/rls-result.json` and manifest; no connection material is copied. |
+| CI workflow review boundary | Source inspection of the new workflow | The workflow uses read-only contents permission, runner-local Docker only, explicit no-resource assertion, and 14-day artifact retention. Repository Actions access settings, hosted runner execution, branch protection, artifact access review, and reviewer decision are not observable locally. | These external controls and a first hosted run remain open evidence, not a CI or gate pass claim. |
+
+### Phase IR-001F rollback boundary
+
+Revert the bounded workflow, manifest writer, package script, and this evidence
+record to disable the CI evidence plan. Remove ignored local artifacts as
+needed. The workflow contains no deployment command, production credential,
+hosted Supabase reference, schema operation, or feature implementation.

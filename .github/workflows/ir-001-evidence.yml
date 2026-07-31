@@ -1,0 +1,75 @@
+name: IR-001 evidence capability
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - v2
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ir-001-evidence-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-evidence:
+    name: Browser evidence
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:types
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:browser:install
+      - run: npm run test:browser
+      - run: npm run test:browser:failure
+      - run: IR001_EVIDENCE_JOB=browser npm run test:evidence:manifest
+      - name: Retain browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ir-001-browser-evidence
+          path: artifacts/ir-001
+          retention-days: 14
+          if-no-files-found: warn
+
+  database-evidence:
+    name: Database and RLS evidence
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run test:types
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:db
+      - run: npm run test:db:failure
+      - run: IR001_EVIDENCE_JOB=database npm run test:evidence:manifest
+      - name: Assert exact local database cleanup
+        if: always()
+        shell: bash
+        run: |
+          test -z "$(docker ps --all --format '{{.Names}}' --filter name=bachelor-trip-app-ir001)"
+          test -z "$(docker volume ls --format '{{.Name}}' --filter name=bachelor-trip-app-ir001)"
+          test -z "$(docker network ls --format '{{.Name}}' --filter name=bachelor-trip-app-ir001)"
+      - name: Retain database evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ir-001-database-evidence
+          path: artifacts/ir-001
+          retention-days: 14
+          if-no-files-found: warn
