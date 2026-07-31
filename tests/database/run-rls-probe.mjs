@@ -15,6 +15,7 @@ import {
   remainingProjectDockerResourceTypes,
   waitForExactProjectDockerCleanup,
 } from './local-docker-cleanup.mjs'
+import { parseRlsProbeResultContract } from './rls-probe-result-contract.mjs'
 
 const REPOSITORY_ROOT = fileURLToPath(new URL('../..', import.meta.url))
 const LOCAL_DATABASE_PORT = '56322'
@@ -314,6 +315,10 @@ function runPsql(databaseUrl, queryOrFile, isFile = false) {
   return runCommand('psql', args, { env: options.env }).trim()
 }
 
+function runPsqlResultContract(databaseUrl, query) {
+  return parseRlsProbeResultContract(runPsql(databaseUrl, query))
+}
+
 function waitForReadyLocalDatabase() {
   let lastReason = 'redacted-command-failure'
   for (let attempt = 1; attempt <= STARTUP_READINESS_ATTEMPTS; attempt += 1) {
@@ -341,41 +346,27 @@ function readAllowedResources(databaseUrl, claims) {
     'BEGIN;',
     'SET LOCAL ROLE authenticated;',
     `SET LOCAL request.jwt.claims = ${claimsLiteral};`,
-    'WITH probe_context AS (',
-    "  SELECT current_user = 'authenticated' AS authenticated_role,",
-    `    (current_setting('request.jwt.claims', true)::jsonb ->> 'relationship_state') = ${sqlLiteral(claims.relationship_state)}`,
-    `      AND (current_setting('request.jwt.claims', true)::jsonb ->> 'scope_id') = ${sqlLiteral(claims.scope_id)}`,
-    `      AND (current_setting('request.jwt.claims', true)::jsonb ->> 'sub') = ${sqlLiteral(claims.sub)} AS expected_claims`,
-    '), probe_resources AS (',
-    "  SELECT coalesce(string_agg(resource_id, ',' ORDER BY resource_id), '') AS resource_ids",
-    '  FROM ir001_probe.resources',
-    ')',
-    "SELECT json_build_object('role',",
-    "  CASE WHEN authenticated_role THEN 'role-authenticated' ELSE 'role-mismatch' END,",
-    "  'claims', CASE WHEN expected_claims THEN 'claims-matched' ELSE 'claims-mismatch' END,",
-    "  'resources', resource_ids)::text",
-    'FROM probe_context CROSS JOIN probe_resources;',
+    'COPY (',
+    '  WITH probe_context AS (',
+    "    SELECT current_user = 'authenticated' AS authenticated_role,",
+    `      (current_setting('request.jwt.claims', true)::jsonb ->> 'relationship_state') = ${sqlLiteral(claims.relationship_state)}`,
+    `        AND (current_setting('request.jwt.claims', true)::jsonb ->> 'scope_id') = ${sqlLiteral(claims.scope_id)}`,
+    `        AND (current_setting('request.jwt.claims', true)::jsonb ->> 'sub') = ${sqlLiteral(claims.sub)} AS expected_claims`,
+    '  ), probe_resources AS (',
+    "    SELECT coalesce(string_agg(resource_id, ',' ORDER BY resource_id), '') AS resource_ids",
+    '    FROM ir001_probe.resources',
+    '  )',
+    "  SELECT json_build_object('role',",
+    "    CASE WHEN authenticated_role THEN 'role-authenticated' ELSE 'role-mismatch' END,",
+    "    'claims', CASE WHEN expected_claims THEN 'claims-matched' ELSE 'claims-mismatch' END,",
+    "    'resources', resource_ids)::text",
+    '  FROM probe_context CROSS JOIN probe_resources',
+    ') TO STDOUT WITH (FORMAT text);',
     'ROLLBACK;',
   ].join('\n')
 
   try {
-    const jsonRecord = runPsql(databaseUrl, query)
-      .split('\n')
-      .map((line) => line.trim())
-      .find((line) => line.startsWith('{') && line.endsWith('}'))
-    const record = JSON.parse(jsonRecord ?? '')
-    if (
-      !record ||
-      typeof record !== 'object' ||
-      Array.isArray(record) ||
-      Object.keys(record).sort().join(',') !== 'claims,resources,role' ||
-      typeof record.role !== 'string' ||
-      typeof record.claims !== 'string' ||
-      typeof record.resources !== 'string'
-    ) {
-      throw new Error('invalid probe context record')
-    }
-    return record
+    return runPsqlResultContract(databaseUrl, query)
   } catch {
     return {
       role: 'context-unavailable',
