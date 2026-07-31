@@ -43,3 +43,12 @@ by inference.
   `43d839b4e546188b1e60e56ff0515ff8826b6cfa`.
 - No gate or status promotion occurred. IR-001 remains In progress and IR-002
   remains unauthorised.
+
+## Consolidated correction status — 2026-07-31
+
+- F-IR001-VER-001 passed the hosted browser artifact rehearsal after the
+  retry-safe retention correction.
+- F-IR001-VER-002 remains locally corrected; its hosted confirmation is
+  pending resolution of F-IR001-VER-005 in the consolidated blocker register.
+- No gate or status promotion occurred. IR-001 remains In progress and IR-002
+  remains unauthorised.

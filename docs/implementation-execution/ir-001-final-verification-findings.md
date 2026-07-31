@@ -31,3 +31,15 @@ The local unit, browser, database, failure-injection, portability,
 sequence-safety, manifest, checksum, and exact Docker-cleanup checks completed
 before this blocker was established. They do not waive the vulnerable
 browser-install boundary.
+
+## Consolidated correction status — 2026-07-31
+
+- F-IR001-VER-003 was corrected by the exact aligned Playwright `1.55.1`
+  update in `626ae2615f5f8d17d391287968afb8a4c096bbc5`; the advisory is absent
+  from the post-correction audit.
+- The hosted browser evidence rehearsal passed at
+  `e83554c410c934a28946be20dbd311916d92506a`.
+- The consolidated rehearsal also identified F-IR001-VER-005: hosted database
+  evidence fails before the first normal phase can be retained. No gate or
+  status promotion occurred; IR-001 remains In progress and IR-002 remains
+  blocked.
