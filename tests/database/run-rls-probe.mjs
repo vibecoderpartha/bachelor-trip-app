@@ -341,16 +341,60 @@ function readAllowedResources(databaseUrl, claims) {
     'BEGIN;',
     'SET LOCAL ROLE authenticated;',
     `SET LOCAL request.jwt.claims = ${claimsLiteral};`,
-    "SELECT coalesce(string_agg(resource_id, ',' ORDER BY resource_id), '') FROM ir001_probe.resources;",
+    'WITH probe_context AS (',
+    "  SELECT current_user = 'authenticated' AS authenticated_role,",
+    `    (current_setting('request.jwt.claims', true)::jsonb ->> 'relationship_state') = ${sqlLiteral(claims.relationship_state)}`,
+    `      AND (current_setting('request.jwt.claims', true)::jsonb ->> 'scope_id') = ${sqlLiteral(claims.scope_id)}`,
+    `      AND (current_setting('request.jwt.claims', true)::jsonb ->> 'sub') = ${sqlLiteral(claims.sub)} AS expected_claims`,
+    '), probe_resources AS (',
+    "  SELECT coalesce(string_agg(resource_id, ',' ORDER BY resource_id), '') AS resource_ids",
+    '  FROM ir001_probe.resources',
+    ')',
+    "SELECT concat(CASE WHEN authenticated_role THEN 'role-authenticated' ELSE 'role-mismatch' END,",
+    "  '|', CASE WHEN expected_claims THEN 'claims-matched' ELSE 'claims-mismatch' END,",
+    "  '|', resource_ids)",
+    'FROM probe_context CROSS JOIN probe_resources;',
     'ROLLBACK;',
   ].join('\n')
 
-  return runPsql(databaseUrl, query)
+  const fields = runPsql(databaseUrl, query).split('|')
+  if (fields.length !== 3) {
+    return {
+      role: 'context-unavailable',
+      claims: 'context-unavailable',
+      resources: '',
+    }
+  }
+  return { role: fields[0], claims: fields[1], resources: fields[2] }
 }
 
 function assertEqual(actual, expected, caseId) {
   if (actual !== expected) {
     throw new Error(`local probe assertion failed: ${caseId}`)
+  }
+}
+
+function assertionResultCategory(actual) {
+  if (actual === '') {
+    return 'empty-result'
+  }
+  if (actual === 'probe-resource-a' || actual === 'probe-resource-b') {
+    return 'unexpected-synthetic-resource'
+  }
+  return 'unexpected-result'
+}
+
+function assertProbeExpectation(actual, expected, caseId) {
+  if (actual.role !== 'role-authenticated') {
+    throw new Error(`local probe assertion failed: ${caseId}:${actual.role}`)
+  }
+  if (actual.claims !== 'claims-matched') {
+    throw new Error(`local probe assertion failed: ${caseId}:${actual.claims}`)
+  }
+  if (actual.resources !== expected) {
+    throw new Error(
+      `local probe assertion failed: ${caseId}:${assertionResultCategory(actual.resources)}`,
+    )
   }
 }
 
@@ -425,8 +469,22 @@ function safeErrorDetail(error) {
     return 'after-probe-setup'
   }
   if (error.message.startsWith('local probe assertion failed: ')) {
-    const caseId = error.message.slice('local probe assertion failed: '.length)
-    return ASSERTION_CASE_IDS.has(caseId) ? caseId : 'assertion-case-redacted'
+    const [caseId, detail] = error.message
+      .slice('local probe assertion failed: '.length)
+      .split(':', 2)
+    if (!ASSERTION_CASE_IDS.has(caseId)) {
+      return 'assertion-case-redacted'
+    }
+    return [
+      'role-mismatch',
+      'claims-mismatch',
+      'context-unavailable',
+      'empty-result',
+      'unexpected-synthetic-resource',
+      'unexpected-result',
+    ].includes(detail)
+      ? detail
+      : 'assertion-detail-redacted'
   }
   const [, , detail] = error.message.split(':', 3)
   return detail && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(detail)
@@ -484,7 +542,7 @@ try {
   injectControlledFailure('after-probe-setup')
 
   primaryFailureStep = 'same-scope-account-a'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-a',
       scope_id: 'fixture-group-a',
@@ -494,7 +552,7 @@ try {
     'same-scope-account-a',
   )
   primaryFailureStep = 'same-scope-account-b'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-b',
       scope_id: 'fixture-group-b',
@@ -504,7 +562,7 @@ try {
     'same-scope-account-b',
   )
   primaryFailureStep = 'cross-scope-account-a'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-a',
       scope_id: 'fixture-group-b',
@@ -514,7 +572,7 @@ try {
     'cross-scope-account-a',
   )
   primaryFailureStep = 'cross-scope-account-b'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-b',
       scope_id: 'fixture-group-a',
@@ -524,7 +582,7 @@ try {
     'cross-scope-account-b',
   )
   primaryFailureStep = 'inactive-relationship'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-a',
       scope_id: 'fixture-group-a',
@@ -534,7 +592,7 @@ try {
     'inactive-relationship',
   )
   primaryFailureStep = 'removed-relationship'
-  assertEqual(
+  assertProbeExpectation(
     readAllowedResources(databaseUrl, {
       sub: 'fixture-account-a',
       scope_id: 'fixture-group-a',
