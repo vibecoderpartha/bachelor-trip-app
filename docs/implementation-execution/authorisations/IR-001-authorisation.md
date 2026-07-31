@@ -5,9 +5,10 @@
 - IR item: IR-001
 - Title: Evidence Foundation
 - Wave: W1
+- IR-001 status: In progress
 - Authorisation decision: Approved
 - IR-001 authorised: Yes
-- IR-001 started: No
+- IR-001 started: 2026-07-31
 - IR-001 implemented: No
 - IR-001 verified: No
 - W1 status: Ready to start through IR-001 only
