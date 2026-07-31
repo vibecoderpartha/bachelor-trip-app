@@ -1,0 +1,2257 @@
+{
+ "package": "Trip multi-user pre-implementation UI/UX package",
+ "batch": "Cumulative — batches 1 to 8 of 8",
+ "formatNote": "Exported as 2x PNG. SVG was not practical: these are live DOM compositions using backdrop-filter, radial gradients and variable-font settings, which do not survive a DOM-to-SVG conversion faithfully. The master HTML is the vector-accurate source; request SVG per component if a specific one is needed for implementation.",
+ "components": [
+  {
+   "id": "CMP-01",
+   "name": "Button variants",
+   "board": "05",
+   "sourceAnalogue": "Confirmed — NeonBtn.tsx",
+   "classification": "Confirmed",
+   "variants": [
+    "primary",
+    "secondary",
+    "ghost",
+    "destructive",
+    "pressed",
+    "focused",
+    "disabled",
+    "loading",
+    "icon-button"
+   ],
+   "states": [
+    "primary",
+    "secondary",
+    "ghost",
+    "destructive",
+    "pressed",
+    "focused",
+    "disabled",
+    "loading",
+    "icon-button"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Geometry, radius and colour are unchanged from source. Added: 44x44 minimum target, a visible focus ring, accessible names on icon-only controls (correction A-01).",
+   "exportPath": "components/CMP-01-button-variants.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-02",
+   "name": "Identity — avatars, chips, badges",
+   "board": "05",
+   "sourceAnalogue": "Confirmed — Avatar.tsx, UserChips.tsx, VIPBadge.tsx",
+   "classification": "Confirmed",
+   "variants": [
+    "avatar 22/32/44",
+    "neutral avatar",
+    "selected chip",
+    "unselected chip",
+    "unclaimed chip",
+    "owner / member / pending / unclaimed / inactive / you badges"
+   ],
+   "states": [
+    "avatar 22/32/44",
+    "neutral avatar",
+    "selected chip",
+    "unselected chip",
+    "unclaimed chip",
+    "owner / member / pending / unclaimed / inactive / you badges"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Avatar fill and border keep the source colour+22 / colour+66 formula. Participant colour identifies a person only. Role always carries a word plus a glyph, never colour alone. Sixth participant onward uses warm neutral #C8B8A6 (exception E-09).",
+   "exportPath": "components/CMP-02-identity-avatars-chips-badges.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-03",
+   "name": "Group switcher",
+   "board": "05",
+   "sourceAnalogue": "New — extends the header identity chip",
+   "classification": "Extended",
+   "variants": [
+    "closed",
+    "open",
+    "current selected",
+    "other Group",
+    "create",
+    "join"
+   ],
+   "states": [
+    "closed",
+    "open",
+    "current selected",
+    "other Group",
+    "create",
+    "join"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "A menu anchored under the header chip, capped at the column width, never a full page. Single-Group accounts see the chip without a caret.",
+   "exportPath": "components/CMP-03-group-switcher.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-04",
+   "name": "Rows and cards",
+   "board": "05",
+   "sourceAnalogue": "Extended — surface + TodoRow",
+   "classification": "Extended",
+   "variants": [
+    "member row",
+    "pending member row",
+    "document row",
+    "expense row"
+   ],
+   "states": [
+    "member row",
+    "pending member row",
+    "document row",
+    "expense row"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "56px row-height floor so the whole row is a comfortable target. Dashed borders are reserved for pending or unclaimed. Expense rows carry historical recorder attribution.",
+   "exportPath": "components/CMP-04-rows-and-cards.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-05",
+   "name": "Invitation card states",
+   "board": "05",
+   "sourceAnalogue": "New — surface + pill",
+   "classification": "Extended",
+   "variants": [
+    "valid",
+    "expired",
+    "already used",
+    "revoked",
+    "other account"
+   ],
+   "states": [
+    "valid",
+    "expired",
+    "already used",
+    "revoked",
+    "other account"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "One card carries every invitation state; only the eyebrow, border and footer change. Never implies acceptance before the server confirms.",
+   "exportPath": "components/CMP-05-invitation-card-states.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-06",
+   "name": "Sheet, dialog, confirmation",
+   "board": "05",
+   "sourceAnalogue": "Confirmed — Modal.tsx",
+   "classification": "Confirmed",
+   "variants": [
+    "overlay",
+    "480px sheet",
+    "destructive confirmation"
+   ],
+   "states": [
+    "overlay",
+    "480px sheet",
+    "destructive confirmation"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Overlay rgba(15,11,8,.82), blur 14px, 480px cap, 20px radius, 22px padding, slide-up entry, scroll inside the overlay. Destructive actions gain confirmation, focus trapping and focus restoration (exception E-02).",
+   "exportPath": "components/CMP-06-sheet-dialog-confirmation.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-07",
+   "name": "Text, email and password inputs",
+   "board": "06",
+   "sourceAnalogue": "Confirmed — NeonInput.tsx",
+   "classification": "Confirmed",
+   "variants": [
+    "default",
+    "focused",
+    "error",
+    "password with reveal",
+    "strength meter",
+    "disabled"
+   ],
+   "states": [
+    "default",
+    "focused",
+    "error",
+    "password with reveal",
+    "strength meter",
+    "disabled"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Fill, border and focus behaviour are NeonInput. Added: a visible label, a 3px soft accent focus ring, and errors tied to their field (corrections A-03, A-04).",
+   "exportPath": "components/CMP-07-text-email-password-states.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-08",
+   "name": "Currency, textarea, search, segmented, toggle",
+   "board": "06",
+   "sourceAnalogue": "Confirmed — AddExpenseModal, ScanTab",
+   "classification": "Confirmed",
+   "variants": [
+    "currency + segmented",
+    "textarea",
+    "search",
+    "checkbox unchecked/checked",
+    "toggle on",
+    "toggle disabled"
+   ],
+   "states": [
+    "currency + segmented",
+    "textarea",
+    "search",
+    "checkbox unchecked/checked",
+    "toggle on",
+    "toggle disabled"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Segmented control and currency pairing are lifted from the current expense dialog. Every toggle gains a visible label, a helper line stating what off means, and a 44px row.",
+   "exportPath": "components/CMP-08-currency-textarea-search-segmented-toggle.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-09",
+   "name": "Validation timing and form feedback",
+   "board": "06",
+   "sourceAnalogue": "Extended — current dialog behaviour",
+   "classification": "Extended",
+   "variants": [
+    "on blur",
+    "on change after first error",
+    "on submit",
+    "form-level error",
+    "success"
+   ],
+   "states": [
+    "on blur",
+    "on change after first error",
+    "on submit",
+    "form-level error",
+    "success"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Documents when each check fires. The form-level summary moves focus to the first offending field and is announced politely.",
+   "exportPath": "components/CMP-09-validation-timing-form-feedback.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-10",
+   "name": "Loading, skeleton, in progress",
+   "board": "07",
+   "sourceAnalogue": "Confirmed — TripTab skeleton",
+   "classification": "Confirmed",
+   "variants": [
+    "three-row skeleton",
+    "inline spinner with label"
+   ],
+   "states": [
+    "three-row skeleton",
+    "inline spinner with label"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Three pulsing rows reused verbatim for member lists, documents and settlements. Polite loading status for screen readers; pulse dropped under reduced motion.",
+   "exportPath": "components/CMP-10-loading-skeleton-in-progress.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-11",
+   "name": "Empty states",
+   "board": "07",
+   "sourceAnalogue": "Confirmed — Todo and Settle Up empty states",
+   "classification": "Confirmed",
+   "variants": [
+    "no Groups",
+    "single member"
+   ],
+   "states": [
+    "no Groups",
+    "single member"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Fraunces line, Inter line, one action. Playful tone is allowed here and only here.",
+   "exportPath": "components/CMP-11-empty-states.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-12",
+   "name": "Connection states",
+   "board": "07",
+   "sourceAnalogue": "Extended — FX offline treatment",
+   "classification": "Extended",
+   "variants": [
+    "reconnecting",
+    "offline",
+    "reconnected",
+    "remote change conflict"
+   ],
+   "states": [
+    "reconnecting",
+    "offline",
+    "reconnected",
+    "remote change conflict"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "Sits as a pill directly under the sticky header, inside the column. Never covers content, never animates in from the edge.",
+   "exportPath": "components/CMP-12-connection-states.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-13",
+   "name": "Permission and access states",
+   "board": "07",
+   "sourceAnalogue": "New — plain-language blocks",
+   "classification": "Extended",
+   "variants": [
+    "read-only",
+    "owner-only action",
+    "private document",
+    "Group unavailable"
+   ],
+   "states": [
+    "read-only",
+    "owner-only action",
+    "private document",
+    "Group unavailable"
+   ],
+   "screensUsing": "See screen-manifest reusedComponents",
+   "accessibilityRules": "44x44 minimum target, visible focus ring, accessible name on icon-only controls, status never by colour alone.",
+   "notes": "No status codes, no policy names. Each block states the limit then the next move, and names a person who can help where one exists.",
+   "exportPath": "components/CMP-13-permission-and-access-states.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-14",
+   "name": "Member and participant rows",
+   "board": "05 / 12 / 13",
+   "sourceAnalogue": "Extended — derived from UserChips.tsx and the current 56px list row",
+   "classification": "Extended",
+   "variants": [
+    "Owner row",
+    "Member row",
+    "new participant row (initials)",
+    "pending invitation row",
+    "unclaimed participant row (dashed)",
+    "inactive historical participant row",
+    "claim selection row unselected",
+    "claim selection row selected"
+   ],
+   "states": [
+    "default",
+    "selected",
+    "unselected",
+    "disabled",
+    "inactive",
+    "pending"
+   ],
+   "screensUsing": [
+    "MBR-01",
+    "MBR-02",
+    "MBR-13",
+    "MBR-15",
+    "CLM-01",
+    "CLM-03",
+    "CLM-13",
+    "GRP-12"
+   ],
+   "accessibilityRules": "56px minimum row height; 44x44 kebab; role and status always word plus glyph so colour is never the only signal; name and initial always visible on neutral avatars; dashed ring conveys unclaimed alongside the 'Unclaimed' badge.",
+   "notes": "One row shell, six meanings. Migrated five keep their emoji (O-04); everyone else is initials on warm neutral #C8B8A6, dashed while unclaimed (E-09). Roles are Owner and Member only (O-01).",
+   "exportPath": "components/CMP-14-member-and-participant-rows.png",
+   "status": "Accepted"
+  },
+  {
+   "id": "CMP-15",
+   "name": "Read-only Group banner",
+   "board": "14",
+   "sourceAnalogue": "New — no analogue; nearest is the connection banner (CMP-12)",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "archived · Owner",
+    "archived · Member",
+    "stale membership",
+    "maintenance"
+   ],
+   "states": [
+    "default",
+    "with action",
+    "without action"
+   ],
+   "screensUsing": [
+    "PERM-05",
+    "PERM-10",
+    "PERM-11",
+    "PERM-12",
+    "GRP-06"
+   ],
+   "accessibilityRules": "Never labelled Viewer. Announced as a status region on entry; the action inside is a real 44px control with an accessible name.",
+   "exportPath": "components/CMP-15-read-only-group-banner.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-16",
+   "name": "Permission explanation card",
+   "board": "14",
+   "sourceAnalogue": "Extended — from the batch-1 permission block on board 07",
+   "classification": "Extended",
+   "variants": [
+    "inline · owner-only",
+    "inline · nothing changed",
+    "sheet · denied action"
+   ],
+   "states": [
+    "default",
+    "with owner names",
+    "with state marker"
+   ],
+   "screensUsing": [
+    "PERM-06",
+    "PERM-07",
+    "PERM-08",
+    "PERM-12",
+    "PERM-15",
+    "PERM-16",
+    "PERM-19"
+   ],
+   "accessibilityRules": "Heading is the rule, body is the next safe action, mono line carries the state so it is never colour-only. Associated with the control it explains via aria-describedby.",
+   "exportPath": "components/CMP-16-permission-explanation-card.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-17",
+   "name": "Unavailable-resource state",
+   "board": "14",
+   "sourceAnalogue": "New — page-level; extends the batch-1 empty-state geometry",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "not a member",
+    "unavailable Group",
+    "unavailable link"
+   ],
+   "states": [
+    "default",
+    "loading",
+    "no-recovery"
+   ],
+   "screensUsing": [
+    "PERM-01",
+    "PERM-02",
+    "PERM-03",
+    "PERM-04"
+   ],
+   "accessibilityRules": "Identical layout for every cause. Neutral mark has no alt text requirement because it carries no information; the heading is the h1 of the page and takes focus on entry.",
+   "exportPath": "components/CMP-17-unavailable-resource-state.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-18",
+   "name": "Owner-only setting row",
+   "board": "14",
+   "sourceAnalogue": "Extended — from the configuration row on board 05",
+   "classification": "Extended",
+   "variants": [
+    "Owner · editable",
+    "Member · Owner only",
+    "Member · own action"
+   ],
+   "states": [
+    "default",
+    "disabled",
+    "focused"
+   ],
+   "screensUsing": [
+    "PERM-05",
+    "PERM-06"
+   ],
+   "accessibilityRules": "56px minimum. Disabled rows are not focusable and are not announced as buttons; the OWNER ONLY marker is read as part of the row label.",
+   "exportPath": "components/CMP-18-owner-only-setting-row.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-19",
+   "name": "Last-Owner protection notice",
+   "board": "14",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "leaving",
+    "demoting yourself",
+    "being removed",
+    "archiving"
+   ],
+   "states": [
+    "blocked",
+    "with unblock action"
+   ],
+   "screensUsing": [
+    "PERM-09",
+    "GRP-12",
+    "MBR-13"
+   ],
+   "accessibilityRules": "Lives inside the blocking confirmation sheet. The unblock action replaces the blocked primary so no dead control receives focus.",
+   "exportPath": "components/CMP-19-last-owner-protection-notice.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-20",
+   "name": "Server-denied form summary",
+   "board": "14",
+   "sourceAnalogue": "Extended — from the form-level error block on board 06",
+   "classification": "Extended",
+   "variants": [
+    "access changed mid-form",
+    "role changed mid-action",
+    "preserved input"
+   ],
+   "states": [
+    "default",
+    "focused",
+    "announced"
+   ],
+   "screensUsing": [
+    "PERM-13",
+    "PERM-17",
+    "PERM-18"
+   ],
+   "accessibilityRules": "Takes focus on appearance, announced politely, and is the accessible description of the disabled submit. Input stays visible and copyable.",
+   "exportPath": "components/CMP-20-server-denied-form-summary.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-21",
+   "name": "Private-resource state",
+   "board": "14",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "stale direct reference",
+    "omission"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "PERM-10",
+    "PERM-14"
+   ],
+   "accessibilityRules": "Carries no metadata at all. The omission variant is documentation of an absence, not a rendered placeholder; screen readers encounter nothing where a private item would be.",
+   "exportPath": "components/CMP-21-private-resource-state.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-22",
+   "name": "Recovery block",
+   "board": "14",
+   "sourceAnalogue": "New — composed from existing buttons",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "choose another trip",
+    "back to your trip",
+    "ask an Owner",
+    "restore",
+    "choose a new Owner",
+    "try again",
+    "copy the details",
+    "sign in with another account",
+    "no recovery"
+   ],
+   "states": [
+    "default",
+    "pressed",
+    "focused",
+    "absent"
+   ],
+   "screensUsing": [
+    "PERM-01",
+    "PERM-02",
+    "PERM-03",
+    "PERM-04",
+    "PERM-08",
+    "PERM-13",
+    "PERM-15",
+    "PERM-16",
+    "PERM-20"
+   ],
+   "accessibilityRules": "One primary and at most one secondary; 44px minimum. The no-recovery variant renders a sentence, never a disabled button.",
+   "exportPath": "components/CMP-22-recovery-block.png",
+   "status": "Accepted — batch 3"
+  },
+  {
+   "id": "CMP-23",
+   "name": "Multi-payer contribution block",
+   "board": "15",
+   "sourceAnalogue": "Confirmed — AddExpenseModal split-payment block",
+   "classification": "Confirmed",
+   "variants": [
+    "filled",
+    "empty (zero)",
+    "inactive participant",
+    "total match"
+   ],
+   "states": [
+    "default",
+    "focused",
+    "error",
+    "disabled"
+   ],
+   "screensUsing": [
+    "FIN-12",
+    "FIN-13",
+    "FIN-15",
+    "FIN-20",
+    "FIN-25"
+   ],
+   "accessibilityRules": "Rows are 44px minimum; each field is labelled by the participant name, and the currency suffix is part of the field label rather than decoration.",
+   "exportPath": "components/CMP-23-multi-payer-contribution-block.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-24",
+   "name": "Participant-share display",
+   "board": "15",
+   "sourceAnalogue": "New — no current screen writes custom shares (E-13)",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "equal-split participant selection",
+    "historical exact-share display",
+    "migration and reconciliation review"
+   ],
+   "states": [
+    "default",
+    "focused",
+    "error"
+   ],
+   "screensUsing": [
+    "FIN-10",
+    "FIN-11",
+    "FIN-16"
+   ],
+   "accessibilityRules": "Three uses only. No arbitrary custom-share authoring: no amount, percentage or weight can be entered, because no such authoring surface exists in the product (O-10). Rows keep 44px targets and per-row accounting equivalents.",
+   "exportPath": "components/CMP-24-participant-share-display.png",
+   "status": "Revised in batch 5 — O-10, E-13 limited"
+  },
+  {
+   "id": "CMP-25",
+   "name": "Exact-total status",
+   "board": "15",
+   "sourceAnalogue": "Confirmed — AddExpenseModal total indicator",
+   "classification": "Confirmed",
+   "variants": [
+    "match",
+    "short",
+    "over",
+    "nothing entered"
+   ],
+   "states": [
+    "default",
+    "live-updating"
+   ],
+   "screensUsing": [
+    "FIN-10",
+    "FIN-12",
+    "FIN-13",
+    "FIN-14",
+    "FIN-15",
+    "FIN-16",
+    "FIN-20"
+   ],
+   "accessibilityRules": "A live region announced on change; it is also the accessible description of the disabled Save. Never colour-only — the tick and the wording carry the state.",
+   "exportPath": "components/CMP-25-exact-total-status.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-26",
+   "name": "Accounting-currency label",
+   "board": "15",
+   "sourceAnalogue": "Confirmed — header subtitle plus IDR/INR control",
+   "classification": "Confirmed",
+   "variants": [
+    "header",
+    "figure pair",
+    "input"
+   ],
+   "states": [
+    "default",
+    "selected"
+   ],
+   "screensUsing": [
+    "FIN-01",
+    "FIN-02",
+    "FIN-03",
+    "FIN-04",
+    "FIN-41"
+   ],
+   "accessibilityRules": "Currency is stated once per Group in the header; figures pair accounting value with original currency so no amount is ambiguous.",
+   "exportPath": "components/CMP-26-accounting-currency-label.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-27",
+   "name": "Original / accounting amount row",
+   "board": "15",
+   "sourceAnalogue": "New — assembled from existing mono key/value rows",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "original",
+    "accounting",
+    "rate recorded",
+    "unavailable"
+   ],
+   "states": [
+    "default",
+    "unavailable"
+   ],
+   "screensUsing": [
+    "FIN-25",
+    "FIN-29",
+    "FIN-42",
+    "FIN-44"
+   ],
+   "accessibilityRules": "Mono key, mono value, no table. The unavailable variant uses an em dash plus accent colour and the word is repeated in the body copy.",
+   "exportPath": "components/CMP-27-original-accounting-amount-row.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-28",
+   "name": "Historical FX explanation",
+   "board": "15",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "sheet",
+    "inline card"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "FIN-29",
+    "FIN-43"
+   ],
+   "accessibilityRules": "Two or three statements, never a paragraph. Dismissible; focus returns to the figure that opened it.",
+   "exportPath": "components/CMP-28-historical-fx-explanation.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-29",
+   "name": "Recorder attribution row",
+   "board": "15",
+   "sourceAnalogue": "New — created_by exists in the model but is not surfaced",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "recorded by",
+    "paid by",
+    "shared by"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "FIN-01",
+    "FIN-25",
+    "FIN-27",
+    "FIN-30"
+   ],
+   "accessibilityRules": "Three separate rows with mono keys. Names are text, avatars are supporting; attribution is never carried by an avatar alone.",
+   "exportPath": "components/CMP-29-recorder-attribution-row.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-30",
+   "name": "Inactive ledger participant",
+   "board": "15",
+   "sourceAnalogue": "Extended — from CMP-14 rows and E-09",
+   "classification": "Extended",
+   "variants": [
+    "inactive in an expense",
+    "unclaimed in a split",
+    "inactive in history"
+   ],
+   "states": [
+    "default",
+    "no actions"
+   ],
+   "screensUsing": [
+    "FIN-07",
+    "FIN-08",
+    "FIN-39"
+   ],
+   "accessibilityRules": "Warm neutral #C8B8A6 with a dashed ring plus the literal word on the row. No participant-management action is reachable from a ledger row.",
+   "exportPath": "components/CMP-30-inactive-ledger-participant.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-31",
+   "name": "Settlement confirmation summary",
+   "board": "15",
+   "sourceAnalogue": "New — source records on a single tap",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "confirmation",
+    "success recap"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "FIN-33",
+    "FIN-35",
+    "FIN-31"
+   ],
+   "accessibilityRules": "From, to, exact amount in both currencies, what changes, what becomes history — in that order, before an irreversible write.",
+   "exportPath": "components/CMP-31-settlement-confirmation-summary.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-32",
+   "name": "Idempotent-result notice",
+   "board": "15",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "settlement already recorded",
+    "invitation already accepted"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "FIN-37"
+   ],
+   "accessibilityRules": "Never styled as a fresh success. States the existing record and why the screen appeared.",
+   "exportPath": "components/CMP-32-idempotent-result-notice.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-33",
+   "name": "Finance conflict notice",
+   "board": "15",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "edit conflict",
+    "accounting value unavailable",
+    "what we did not do"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "FIN-28",
+    "FIN-44"
+   ],
+   "accessibilityRules": "Both sides stated; nothing merged, guessed or rounded. The choice stays with the person or with a controlled reconciliation.",
+   "exportPath": "components/CMP-33-finance-conflict-notice.png",
+   "status": "Accepted — batch 4"
+  },
+  {
+   "id": "CMP-34",
+   "name": "Selected-file row",
+   "board": "16",
+   "sourceAnalogue": "ScanTab selected-file line (file icon + ellipsised name)",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "PDF",
+    "image",
+    "unsupported",
+    "too large",
+    "long name"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "DOC-01",
+    "DOC-04",
+    "DOC-05",
+    "DOC-06",
+    "DOC-07",
+    "DOC-08",
+    "DOC-09",
+    "DOC-19",
+    "DOC-23"
+   ],
+   "accessibilityRules": "One line, min-width:0, ellipsised at the end and never wrapped. Replace and Remove are 44px targets. The accessible label carries the full filename.",
+   "exportPath": "components/CMP-34-selected-file-row.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-35",
+   "name": "File-type badge",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "PDF",
+    "image",
+    "not supported",
+    "unreadable"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "DOC-01",
+    "DOC-04",
+    "DOC-05",
+    "DOC-06"
+   ],
+   "accessibilityRules": "Reports the validator’s decision, never the file extension. The same value drives the row glyph so icon and badge cannot disagree.",
+   "exportPath": "components/CMP-35-file-type-badge.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-36",
+   "name": "Upload progress block",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "uploading",
+    "accepted",
+    "failed before acceptance",
+    "interrupted"
+   ],
+   "states": [
+    "in progress",
+    "success",
+    "error"
+   ],
+   "screensUsing": [
+    "DOC-01",
+    "DOC-19",
+    "DOC-20",
+    "DOC-23",
+    "DOC-72"
+   ],
+   "accessibilityRules": "Progress announced politely, not assertively. Every state names what does not exist yet. Reduced motion replaces the bar animation with a static fill.",
+   "exportPath": "components/CMP-36-upload-progress-block.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-37",
+   "name": "Parsing status",
+   "board": "16",
+   "sourceAnalogue": "ScanTab Scanning… spinner",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "parsing",
+    "slow",
+    "warnings",
+    "failed object kept",
+    "nothing usable",
+    "service unavailable"
+   ],
+   "states": [
+    "in progress",
+    "warning",
+    "error"
+   ],
+   "screensUsing": [
+    "DOC-20",
+    "DOC-21",
+    "DOC-22",
+    "DOC-24",
+    "DOC-25",
+    "DOC-28",
+    "DOC-73"
+   ],
+   "accessibilityRules": "The accepted spinner reused unmodified. Status changes are announced once, not per frame. Reduced motion shows a static indicator.",
+   "exportPath": "components/CMP-37-parsing-status.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-38",
+   "name": "Extracted-field review group",
+   "board": "16",
+   "sourceAnalogue": "Add Event form fields",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "confident",
+    "uncertain",
+    "required missing",
+    "Group timezone context"
+   ],
+   "states": [
+    "default",
+    "warning",
+    "error"
+   ],
+   "screensUsing": [
+    "DOC-26",
+    "DOC-27",
+    "DOC-30",
+    "DOC-31",
+    "DOC-32",
+    "DOC-33"
+   ],
+   "accessibilityRules": "Every field is a real labelled control with its provenance in the hint. Errors are programmatically associated. Primary action reads Continue until a person has reviewed it.",
+   "exportPath": "components/CMP-38-extracted-field-review-group.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-39",
+   "name": "Extraction warning",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "uncertain date",
+    "missing reference",
+    "ambiguous location",
+    "timezone",
+    "summary strip"
+   ],
+   "states": [
+    "warning"
+   ],
+   "screensUsing": [
+    "DOC-26",
+    "DOC-27",
+    "DOC-39"
+   ],
+   "accessibilityRules": "Caution styling, never error styling, for anything user review can resolve. The summary strip is focusable and moves focus to the first warning.",
+   "exportPath": "components/CMP-39-extraction-warning.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-40",
+   "name": "Scan provenance badge",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "from document scan",
+    "added by hand"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "DOC-30",
+    "DOC-34",
+    "DOC-36",
+    "DOC-42",
+    "DOC-65"
+   ],
+   "accessibilityRules": "Four words, recorded server-side. Never a provider, model, version or confidence value. Distinct from the manual badge by shape and colour, not colour alone.",
+   "exportPath": "components/CMP-40-scan-provenance-badge.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-41",
+   "name": "Event presentation summary",
+   "board": "16",
+   "sourceAnalogue": "ScanTab assign-to-everyone toggle",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "only you",
+    "everyone",
+    "selected participants",
+    "Event presentation",
+    "unclaimed in audience"
+   ],
+   "states": [
+    "default",
+    "denied"
+   ],
+   "screensUsing": [
+    "DOC-11",
+    "DOC-12",
+    "DOC-13",
+    "DOC-14",
+    "DOC-15",
+    "DOC-16",
+    "DOC-17",
+    "DOC-18",
+    "DOC-41"
+   ],
+   "accessibilityRules": "Renders document access and Event presentation as separate statements. The phrase private Event is prohibited. Unclaimed identity keeps warm neutral, dashed ring and a visible name. Corrected in batch 6: this summarises who an extracted Event is presented to. There is no per-document audience; document access is current same-Group authorisation.",
+   "exportPath": "components/CMP-41-event-presentation-summary.png",
+   "status": "Corrected in batch 6"
+  },
+  {
+   "id": "CMP-42",
+   "name": "Document list row",
+   "board": "16",
+   "sourceAnalogue": "ScanTab previously-scanned row",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default",
+    "no Event",
+    "not read",
+    "inactive uploader",
+    "held",
+    "new via realtime"
+   ],
+   "states": [
+    "default",
+    "dim",
+    "held"
+   ],
+   "screensUsing": [
+    "DOC-01",
+    "DOC-40",
+    "DOC-44",
+    "DOC-45",
+    "DOC-46",
+    "DOC-47",
+    "DOC-48",
+    "DOC-59",
+    "DOC-79"
+   ],
+   "accessibilityRules": "56px row, single ellipsised line, min-width:0 so a 120-character filename cannot push View off the edge. Status is a labelled badge, never colour alone. Corrected in batch 6: the row shows name, type, upload time, server-derived uploader provenance and Event status. No per-document audience summary is rendered.",
+   "exportPath": "components/CMP-42-document-list-row.png",
+   "status": "Corrected in batch 6"
+  },
+  {
+   "id": "CMP-43",
+   "name": "Associated-Event status",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "event created",
+    "no event",
+    "not read",
+    "event missing",
+    "needs reconciliation"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "DOC-40",
+    "DOC-42",
+    "DOC-43",
+    "DOC-44",
+    "DOC-66"
+   ],
+   "accessibilityRules": "NO EVENT is gold because nothing failed; EVENT MISSING is the defect. Every value is a word as well as a colour.",
+   "exportPath": "components/CMP-43-associated-event-status.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-44",
+   "name": "Private document viewer shell",
+   "board": "16",
+   "sourceAnalogue": "ScanTab View ↗ public-URL link",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "loading",
+    "PDF",
+    "image",
+    "unavailable"
+   ],
+   "states": [
+    "loading",
+    "default",
+    "denied"
+   ],
+   "screensUsing": [
+    "DOC-49",
+    "DOC-50",
+    "DOC-51",
+    "DOC-52"
+   ],
+   "accessibilityRules": "One shell for both types. In-app render from an authorised short-lived read: no address bar, no copyable link, no permanent URL, and no metadata before authorization returns. Escape closes and restores focus to the invoking row.",
+   "exportPath": "components/CMP-44-private-document-viewer-shell.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-45",
+   "name": "Removal impact summary",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "document only, Event kept",
+    "held document"
+   ],
+   "states": [
+    "confirmation"
+   ],
+   "screensUsing": [
+    "DOC-57"
+   ],
+   "accessibilityRules": "Consequences enumerated rather than a bare confirmation. Destructive action is never the focused default; Escape and backdrop cancel.",
+   "exportPath": "components/CMP-45-removal-impact-summary.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-46",
+   "name": "Orphan and reconciliation status",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "metadata without object",
+    "partial removal",
+    "reconciling",
+    "succeeded",
+    "failed safely",
+    "member view"
+   ],
+   "states": [
+    "warning",
+    "in progress",
+    "success",
+    "error",
+    "denied"
+   ],
+   "screensUsing": [
+    "DOC-61",
+    "DOC-63",
+    "DOC-65",
+    "DOC-66",
+    "DOC-67",
+    "DOC-68",
+    "DOC-69",
+    "DOC-70",
+    "DOC-82"
+   ],
+   "accessibilityRules": "Never reports success it cannot prove, never falls back to a public path, never shows repair controls or operational vocabulary to an ordinary Member.",
+   "exportPath": "components/CMP-46-orphan-reconciliation-status.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-47",
+   "name": "Document migration notice",
+   "board": "16",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "in progress",
+    "secured",
+    "held",
+    "mismatch"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "DOC-80",
+    "DOC-81",
+    "DOC-82",
+    "DOC-83"
+   ],
+   "accessibilityRules": "Calm and counted. No object path, bucket, identifier, error code or service name, and never the old public address.",
+   "exportPath": "components/CMP-47-document-migration-notice.png",
+   "status": "Accepted — batch 5"
+  },
+  {
+   "id": "CMP-48",
+   "name": "Configuration overview row",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "editable",
+    "read-only",
+    "locked"
+   ],
+   "states": [
+    "default",
+    "owner",
+    "member"
+   ],
+   "screensUsing": [
+    "CFG-01",
+    "CFG-02",
+    "CFG-03",
+    "CFG-06",
+    "CFG-59",
+    "CFG-68",
+    "CFG-75"
+   ],
+   "accessibilityRules": "One row, three renderings. Value is a single line with nowrap ellipsis; the affordance is absent for a Member rather than disabled. 56px minimum height and a 44px Edit target.",
+   "exportPath": "components/CMP-48-configuration-overview-row.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-49",
+   "name": "Settings section header",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "CFG-02",
+    "CFG-03",
+    "CFG-56"
+   ],
+   "accessibilityRules": "A mono label and a hairline. Decorative rule is aria-hidden; the label is the group heading for assistive technology.",
+   "exportPath": "components/CMP-49-settings-section-header.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-50",
+   "name": "Read-only configuration value",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "plain",
+    "with reason"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "CFG-03",
+    "CFG-06"
+   ],
+   "accessibilityRules": "No dimmed control ever renders. Where the reason is not obvious from context, it reads: Only an Owner can change these details. The word Viewer is never used.",
+   "exportPath": "components/CMP-50-read-only-configuration-value.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-51",
+   "name": "Editable configuration field",
+   "board": "17",
+   "sourceAnalogue": "Extends CMP-08 input",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default",
+    "focused",
+    "error",
+    "with configured limit"
+   ],
+   "states": [
+    "default",
+    "focus",
+    "error",
+    "disabled"
+   ],
+   "screensUsing": [
+    "CFG-07",
+    "CFG-08",
+    "CFG-09",
+    "CFG-10",
+    "CFG-15",
+    "CFG-16",
+    "CFG-56",
+    "CFG-65",
+    "CFG-74"
+   ],
+   "accessibilityRules": "Extends CMP-08. Validation on submit; the error is announced politely against its own field. The counter renders only when implementation supplies a configured limit — no invented number.",
+   "exportPath": "components/CMP-51-editable-configuration-field.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-52",
+   "name": "Date-range editor",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default",
+    "range error"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "CFG-21",
+    "CFG-22",
+    "CFG-24"
+   ],
+   "accessibilityRules": "Two fields treated as one value. The range error sits under the pair, not on a field, and dates are never auto-swapped. The Group timezone is named in the read-back line.",
+   "exportPath": "components/CMP-52-date-range-editor.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-53",
+   "name": "Timezone result row",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "unselected",
+    "selected"
+   ],
+   "states": [
+    "default",
+    "selected"
+   ],
+   "screensUsing": [
+    "CFG-29",
+    "CFG-30",
+    "CFG-31"
+   ],
+   "accessibilityRules": "Place label above the canonical identifier, always both. Two rows may share one identifier without being duplicates. 52px minimum height.",
+   "exportPath": "components/CMP-53-timezone-result-row.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-54",
+   "name": "IANA timezone identity block",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "CFG-28",
+    "CFG-30",
+    "CFG-35",
+    "CFG-69",
+    "CFG-76"
+   ],
+   "accessibilityRules": "Canonical IANA identifier presented as identity. No fixed UTC offset is displayed or stored as the canonical value; an abbreviation such as WITA is a presentation of the identifier.",
+   "exportPath": "components/CMP-54-iana-timezone-identity-block.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-55",
+   "name": "Configuration impact summary",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "neutral",
+    "with confirmed items"
+   ],
+   "states": [
+    "default",
+    "confirmed"
+   ],
+   "screensUsing": [
+    "CFG-17",
+    "CFG-24",
+    "CFG-32",
+    "CFG-54",
+    "CFG-71"
+   ],
+   "accessibilityRules": "Statements, not warnings. Never claims that Events were moved, shifted or repaired. Read as a list by assistive technology.",
+   "exportPath": "components/CMP-55-configuration-impact-summary.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-56",
+   "name": "Accounting-currency authority card",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "zero minor units",
+    "two minor units",
+    "with reference line"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "CFG-38",
+    "CFG-41",
+    "CFG-43",
+    "CFG-46",
+    "CFG-47",
+    "CFG-48",
+    "CFG-70",
+    "CFG-77"
+   ],
+   "accessibilityRules": "Minor units come from the currency, never from a default. Reference conversions render smaller, dimmer and prefixed with an approximation sign so they cannot be mistaken for the obligation.",
+   "exportPath": "components/CMP-56-accounting-currency-authority-card.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-57",
+   "name": "Accounting-currency lock notice",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "locked",
+    "blocked attempt"
+   ],
+   "states": [
+    "default",
+    "blocked"
+   ],
+   "screensUsing": [
+    "CFG-43",
+    "CFG-44",
+    "CFG-45"
+   ],
+   "accessibilityRules": "Replaces a selector rather than disabling one. Read as text, not as a disabled control. No Convert everything action exists in any state.",
+   "exportPath": "components/CMP-57-accounting-currency-lock-notice.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-58",
+   "name": "Display-currency selector",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "available",
+    "selected",
+    "required"
+   ],
+   "states": [
+    "default",
+    "selected",
+    "required"
+   ],
+   "screensUsing": [
+    "CFG-49",
+    "CFG-50",
+    "CFG-51",
+    "CFG-70"
+   ],
+   "accessibilityRules": "The accounting currency renders as REQUIRED with no removal affordance. Display context never becomes ledger authority.",
+   "exportPath": "components/CMP-58-display-currency-selector.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-59",
+   "name": "Bali-only content notice",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "available",
+    "not available"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "CFG-18",
+    "CFG-19",
+    "CFG-55"
+   ],
+   "accessibilityRules": "States the condition as well as the outcome. No worldwide guide is invented for a non-Bali destination.",
+   "exportPath": "components/CMP-59-bali-only-content-notice.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-60",
+   "name": "Configuration change summary",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "changed",
+    "unchanged",
+    "invalid"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "CFG-25",
+    "CFG-57",
+    "CFG-60"
+   ],
+   "accessibilityRules": "One line per field, from and to. Fields validate independently. The accounting currency is omitted entirely when it is not legally editable — never shown as unchanged.",
+   "exportPath": "components/CMP-60-configuration-change-summary.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-61",
+   "name": "Stale-configuration notice",
+   "board": "17",
+   "sourceAnalogue": "Extends PERM-17 stale notice",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "another Owner changed it",
+    "realtime with form open"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "CFG-14",
+    "CFG-27",
+    "CFG-37",
+    "CFG-62",
+    "CFG-74",
+    "CFG-80"
+   ],
+   "accessibilityRules": "Extends PERM-17. Never auto-merges and never overwrites an active local form; always offers to hand the unsaved text back.",
+   "exportPath": "components/CMP-61-stale-configuration-notice.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-62",
+   "name": "Migration configuration evidence",
+   "board": "17",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "timezone evidence",
+    "currency evidence",
+    "held for review"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "CFG-71",
+    "CFG-75",
+    "CFG-76",
+    "CFG-77",
+    "CFG-78",
+    "CFG-79"
+   ],
+   "accessibilityRules": "Evidence in product language. No migration table names, database field names or internal identifiers appear in any state.",
+   "exportPath": "components/CMP-62-migration-configuration-evidence.png",
+   "status": "Accepted — batch 6"
+  },
+  {
+   "id": "CMP-63",
+   "name": "Connection-status pill",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "interrupted",
+    "reconnecting",
+    "offline",
+    "realtime only",
+    "failed"
+   ],
+   "states": [
+    "default",
+    "warning",
+    "error"
+   ],
+   "screensUsing": [
+    "RT-01",
+    "RT-02",
+    "RT-03",
+    "RT-05",
+    "RT-07",
+    "RT-08",
+    "RT-09",
+    "RT-10"
+   ],
+   "accessibilityRules": "Absent when healthy. Sits under the sticky header, never floats. Word plus hue, never hue alone; reduced motion drops the pulse.",
+   "exportPath": "components/CMP-63-connection-status-pill.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-64",
+   "name": "Temporary update toast",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "neutral success",
+    "sync",
+    "caution"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-82",
+    "RT-04",
+    "RT-14",
+    "RT-19",
+    "RT-21",
+    "RT-22",
+    "RT-25",
+    "RT-26",
+    "RT-32",
+    "RT-35",
+    "RT-40"
+   ],
+   "accessibilityRules": "Four seconds, one line, no action. Announced politely; every outcome it carries also lands in durable screen state.",
+   "exportPath": "components/CMP-64-temporary-update-toast.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-65",
+   "name": "Persistent contextual update card",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "event",
+    "document"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "RT-11",
+    "RT-16",
+    "RT-29",
+    "RT-30",
+    "RT-31",
+    "RT-34"
+   ],
+   "accessibilityRules": "Level 3. Stays until viewed. An invitation to look, never an insertion — the list does not reorder under a reading finger.",
+   "exportPath": "components/CMP-65-persistent-contextual-update-card.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-66",
+   "name": "Realtime conflict card",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-06",
+    "RT-13",
+    "RT-15",
+    "RT-20",
+    "RT-24",
+    "RT-48"
+   ],
+   "accessibilityRules": "Level 4, the only realtime surface with actions. Never merges, never overwrites, always states that nothing has been sent.",
+   "exportPath": "components/CMP-66-realtime-conflict-card.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-67",
+   "name": "Stale-data notice",
+   "board": "18",
+   "sourceAnalogue": "Extends CMP-61 stale-configuration notice",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [],
+   "accessibilityRules": "Generalised from CMP-61 to any record. One vocabulary for “this changed somewhere else” across the product.",
+   "exportPath": "components/CMP-67-stale-data-notice.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-68",
+   "name": "Remote-change attribution line",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "person",
+    "system"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "RT-11",
+    "RT-12",
+    "RT-17",
+    "RT-18",
+    "RT-22",
+    "RT-23",
+    "RT-28"
+   ],
+   "accessibilityRules": "One line explaining why something on screen just moved. Mono timestamp, name in full colour, verb secondary.",
+   "exportPath": "components/CMP-68-remote-change-attribution-line.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-69",
+   "name": "Grouped-update summary",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "RT-51"
+   ],
+   "accessibilityRules": "Collapses a fan-out into one statement. One accepted mutation produces one message, never one per dependent change.",
+   "exportPath": "components/CMP-69-grouped-update-summary.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-70",
+   "name": "Out-of-sync notice",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "pill",
+    "with action"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "MIG-33",
+    "RT-09",
+    "RT-27",
+    "RT-53",
+    "RT-54"
+   ],
+   "accessibilityRules": "States that the screen may be stale and offers a real refresh. No code, payload, channel name or service name.",
+   "exportPath": "components/CMP-70-out-of-sync-notice.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-71",
+   "name": "Realtime permission-change notice",
+   "board": "18",
+   "sourceAnalogue": "Extends CMP-13 permission card",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "role changed",
+    "removed",
+    "archived",
+    "session expired"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [],
+   "accessibilityRules": "Four causes that must not collapse into one message; each routes somewhere different and means something different.",
+   "exportPath": "components/CMP-71-realtime-permission-change-notice.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-72",
+   "name": "Live-update screen-reader status",
+   "board": "18",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "polite",
+    "assertive"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [],
+   "accessibilityRules": "The non-visual half of every realtime state. Polite for background updates, assertive only when the person must act now. Never moves focus.",
+   "exportPath": "components/CMP-72-live-update-screen-reader-status.png",
+   "status": "Accepted — batch 7"
+  },
+  {
+   "id": "CMP-73",
+   "name": "Maintenance banner",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "scheduled",
+    "imminent",
+    "active"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "MIG-01",
+    "MIG-02",
+    "MIG-03",
+    "MIG-05",
+    "MIG-06",
+    "MIG-07"
+   ],
+   "accessibilityRules": "Banner, never modal. Removed the moment it stops being true, because a stale maintenance notice devalues every banner after it.",
+   "exportPath": "components/CMP-73-maintenance-banner.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-74",
+   "name": "Read-only maintenance state",
+   "board": "20",
+   "sourceAnalogue": "Extends CMP-15 read-only Group banner",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "whole group",
+    "finance only"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-03",
+    "MIG-04",
+    "MIG-05",
+    "MIG-42",
+    "MIG-69"
+   ],
+   "accessibilityRules": "Extends CMP-15. Mutation controls absent rather than disabled; copy always states that the account is fine.",
+   "exportPath": "components/CMP-74-read-only-maintenance-state.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-75",
+   "name": "Migration progress step",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "done",
+    "current",
+    "pending"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-09",
+    "MIG-10",
+    "MIG-11",
+    "MIG-12",
+    "MIG-13",
+    "MIG-14"
+   ],
+   "accessibilityRules": "Four-step spine in product language. Status differs by fill and weight as well as colour; read as a list by assistive technology.",
+   "exportPath": "components/CMP-75-migration-progress-step.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-76",
+   "name": "Migration status summary",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "running",
+    "slow",
+    "unknown"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "MIG-09",
+    "MIG-15",
+    "MIG-16",
+    "MIG-17",
+    "MIG-22",
+    "MIG-33",
+    "MIG-68"
+   ],
+   "accessibilityRules": "Refuses to render without status copy. A silent spinner is indistinguishable from a hang.",
+   "exportPath": "components/CMP-76-migration-status-summary.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-77",
+   "name": "Migration warning card",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "warning"
+   ],
+   "screensUsing": [
+    "MIG-16",
+    "MIG-23",
+    "MIG-37",
+    "MIG-78"
+   ],
+   "accessibilityRules": "Success and warning coexist. The warning always carries a destination.",
+   "exportPath": "components/CMP-77-migration-warning-card.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-78",
+   "name": "Safe-stop notice",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "stopped",
+    "release blocked"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "MIG-08",
+    "MIG-24",
+    "MIG-25",
+    "MIG-26",
+    "MIG-27",
+    "MIG-28",
+    "MIG-29",
+    "MIG-32",
+    "MIG-38",
+    "MIG-41",
+    "MIG-71",
+    "MIG-79"
+   ],
+   "accessibilityRules": "States what is authoritative, whether anything partial is exposed, and whether retry exists at all.",
+   "exportPath": "components/CMP-78-safe-stop-notice.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-79",
+   "name": "Rollback status",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "started",
+    "running",
+    "completed"
+   ],
+   "states": [
+    "default",
+    "success"
+   ],
+   "screensUsing": [
+    "MIG-31",
+    "MIG-34",
+    "MIG-35",
+    "MIG-36",
+    "MIG-37"
+   ],
+   "accessibilityRules": "A running rollback is reported as running. The completed state uses the sanctioned sentence and claims nothing beyond it.",
+   "exportPath": "components/CMP-79-rollback-status.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-80",
+   "name": "Recovery status",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "checking",
+    "recovered",
+    "failed safely"
+   ],
+   "states": [
+    "default",
+    "success",
+    "error"
+   ],
+   "screensUsing": [
+    "MIG-39",
+    "MIG-40",
+    "MIG-41",
+    "MIG-43"
+   ],
+   "accessibilityRules": "Verification creates nothing, deletes nothing and widens no access. Repair restores consistency, never privilege.",
+   "exportPath": "components/CMP-80-recovery-status.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-81",
+   "name": "Preserved-data summary",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "default"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-17",
+    "MIG-21",
+    "MIG-44",
+    "MIG-50",
+    "MIG-54",
+    "MIG-57",
+    "MIG-80"
+   ],
+   "accessibilityRules": "Counts, not adjectives. Carries a footnote refusing to claim perfection without accepted evidence.",
+   "exportPath": "components/CMP-81-preserved-data-summary.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-82",
+   "name": "Claim-after-migration card",
+   "board": "20",
+   "sourceAnalogue": "Extends CLM-01 claim card",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "available",
+    "not required",
+    "conflict"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "MIG-13",
+    "MIG-18",
+    "MIG-19",
+    "MIG-20",
+    "MIG-28",
+    "MIG-45",
+    "MIG-46",
+    "MIG-47",
+    "MIG-48",
+    "MIG-49",
+    "MIG-58",
+    "MIG-59",
+    "MIG-60",
+    "MIG-63"
+   ],
+   "accessibilityRules": "Extends CLM-01. Migration creates the opportunity and never performs the claim; no automatic linking, no Owner review queue.",
+   "exportPath": "components/CMP-82-claim-after-migration-card.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-83",
+   "name": "Document-security migration notice",
+   "board": "20",
+   "sourceAnalogue": "Extends CMP-47 document migration notice",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "in progress",
+    "secured",
+    "legacy link"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-11",
+    "MIG-27",
+    "MIG-52",
+    "MIG-53",
+    "MIG-73",
+    "MIG-74"
+   ],
+   "accessibilityRules": "Describes the destination without printing the address being replaced, at any stage.",
+   "exportPath": "components/CMP-83-document-security-migration-notice.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-84",
+   "name": "Finance-evidence migration card",
+   "board": "20",
+   "sourceAnalogue": "Extends CMP-56 accounting-currency authority card",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "evidence",
+    "mismatch"
+   ],
+   "states": [
+    "default",
+    "warning"
+   ],
+   "screensUsing": [
+    "MIG-12",
+    "MIG-26",
+    "MIG-51",
+    "MIG-55",
+    "MIG-70",
+    "MIG-71",
+    "MIG-72"
+   ],
+   "accessibilityRules": "The four finance facts a reviewer will test. Live-rate substitution is named explicitly as absent.",
+   "exportPath": "components/CMP-84-finance-evidence-migration-card.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-85",
+   "name": "Migration truth-state badge",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "nothing changed",
+    "committed",
+    "rolled back",
+    "still running",
+    "unknown",
+    "review required"
+   ],
+   "states": [
+    "default"
+   ],
+   "screensUsing": [
+    "MIG-89"
+   ],
+   "accessibilityRules": "Six mutually exclusive claims. The weakest badge the evidence supports is the one used; readable in greyscale.",
+   "exportPath": "components/CMP-85-migration-truth-state-badge.png",
+   "status": "Accepted — batch 8"
+  },
+  {
+   "id": "CMP-86",
+   "name": "Implementation-readiness gate card",
+   "board": "20",
+   "sourceAnalogue": "New — no analogue",
+   "classification": "Extended (new for multi-user)",
+   "variants": [
+    "blocked",
+    "cleared"
+   ],
+   "states": [
+    "default",
+    "error"
+   ],
+   "screensUsing": [
+    "MIG-29",
+    "MIG-30",
+    "MIG-38",
+    "MIG-57",
+    "MIG-88",
+    "MIG-90"
+   ],
+   "accessibilityRules": "The release gate as a design object. Fully protected or unavailable; no degraded middle setting.",
+   "exportPath": "components/CMP-86-implementation-readiness-gate-card.png",
+   "status": "Accepted — batch 8"
+  }
+ ],
+ "totals": {
+  "components": 86,
+  "batch1": 13,
+  "batch2": 1,
+  "batch3": 8,
+  "batch4": 11,
+  "batch5": 14,
+  "batch6": 15,
+  "batch7": 10,
+  "batch8": 14
+ }
+}

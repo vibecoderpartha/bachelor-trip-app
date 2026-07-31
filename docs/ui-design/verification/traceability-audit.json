@@ -1,0 +1,44 @@
+{
+  "generated": "2026-07-29",
+  "roadmapVocabulary": {
+    "allowedIR": "IR-001 through IR-022",
+    "allowedWaves": "W1 through W7",
+    "mappedPrimaryOwners": 462,
+    "mappedWaves": 462,
+    "unmappedScreens": 0,
+    "activeInventedIdentifiersRemaining": 0,
+    "activeIrWShorthandRemaining": 0,
+    "activeW8OrW9Remaining": 0,
+    "reviewBlockerR01": "Closed"
+  },
+  "uiRequirements": {
+    "total": 14,
+    "mapped": 14,
+    "unmapped": 0,
+    "status": "Complete design traceability; implementation evidence remains pending"
+  },
+  "screenFamilies": {
+    "total": 13,
+    "mappedToRoadmap": 13
+  },
+  "waveCoverage": {
+    "W1": { "primaryScreens": 0, "status": "Foundation work has no UI-owned primary screen" },
+    "W2": { "primaryScreens": 18, "status": "Mapped" },
+    "W3": { "primaryScreens": 147, "status": "Mapped" },
+    "W4": { "primaryScreens": 206, "status": "Mapped" },
+    "W5": { "primaryScreens": 72, "status": "Mapped" },
+    "W6": { "primaryScreens": 19, "status": "Mapped" },
+    "W7": { "primaryScreens": 0, "status": "Separately authorised release has no UI-owned primary screen" }
+  },
+  "fixtures": {
+    "EQ-01": "FIN-11, FIN-13, CMP-24",
+    "SET-01": "FIN-29 through FIN-33",
+    "USD-01": "CFG-46, FIN-42",
+    "RATE-01": "CFG-77, MIG-51"
+  },
+  "accessibilityReview": {
+    "R-02": "Specified; implementation verification required",
+    "staticDesignFailure": false
+  },
+  "result": "PASS — 462 Screen IDs validly mapped; R-02 remains open for implementation verification"
+}

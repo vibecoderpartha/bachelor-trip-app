@@ -1,0 +1,25 @@
+{
+ "generated": "2026-07-29",
+ "screens": 462,
+ "cleanFiles": 462,
+ "annotatedFiles": 462,
+ "checks": {
+  "uniqueScreenIds": true,
+  "duplicateIds": [],
+  "everyScreenHasClean": true,
+  "missingClean": [],
+  "everyScreenHasAnnotated": true,
+  "missingAnnotated": [],
+  "noOrphanClean": true,
+  "orphanClean": [],
+  "noOrphanAnnotated": true,
+  "orphanAnnotated": [],
+  "filenamesMatchManifest": true,
+  "exportScale": "2x, 786px wide (393px design width)",
+  "fullShellHeight": "786x1704",
+  "variableHeight": "sheet, card and outcome states at intrinsic height",
+  "noBrowserOrOsChrome": true,
+  "tabletOrDesktopExports": 0
+ },
+ "result": "PASS"
+}

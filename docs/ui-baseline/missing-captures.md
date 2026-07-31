@@ -43,4 +43,14 @@ P2 items do not block factual UI-baseline acceptance unless a review explicitly 
 
 ## 5. Acceptance impact
 
-Factual P0 baseline evidence is complete and the package is ready for UI Baseline Acceptance Review. It is not Accepted or Locked, and it is not a locked design system until review and commit.
+Factual P0 baseline evidence is complete. Formal acceptance and lock details are recorded in [`acceptance-record.md`](acceptance-record.md).
+
+- Current UI Baseline: Accepted
+- Current UI Baseline Lock: Complete
+- P0 blocking gaps: 0
+- Full UI/UX Design Package: Not yet imported
+- Full UI/UX Design Acceptance: Not complete
+- Full UI/UX Design Lock: Not complete
+- Application implementation: Not started
+
+P1 and P2 items remain retained as non-blocking evidence. Baseline acceptance does not make this package a complete target design system, accept or lock the full UI/UX design package, or authorize implementation.
